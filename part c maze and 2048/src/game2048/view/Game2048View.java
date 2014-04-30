@@ -158,6 +158,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					public void widgetSelected(SelectionEvent arg0) {
 						shell.close();
 						display.dispose();
+						System.exit(0);
 					}
 					
 					@Override
@@ -355,6 +356,7 @@ public class Game2048View extends Observable implements View, Runnable{
 						display.sleep();
 						shell.dispose();
 						display.dispose();
+						System.exit(0);
 					}
 					
 					@Override
@@ -384,6 +386,7 @@ public class Game2048View extends Observable implements View, Runnable{
 				display.sleep();
 				shell.dispose();
 				display.dispose();
+				System.exit(0);
 			}
 		}else{
 		/*	MessageBox winBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CLOSE); // close doesnt work !! :O
@@ -482,6 +485,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					display.sleep();
 					shell.dispose();
 					display.dispose();
+					System.exit(0);
 				}
 				
 				@Override

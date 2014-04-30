@@ -3,6 +3,8 @@ package gameMaze.view;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -13,7 +15,7 @@ public class BoardMazeView extends Canvas {
 	int maxX;
 	int maxY;
 
-	public BoardMazeView(Composite parent, int style, final int rows,final int columns) {
+	public BoardMazeView(final Composite parent, int style, final int rows,final int columns) {
 		super(parent, style);
 		mazeData =  new int[rows][columns];
 		
@@ -46,16 +48,28 @@ public class BoardMazeView extends Canvas {
 									e.gc.fillRectangle(new Rectangle(i*mx, j*my, mx, my));
 									break;
 								case 1:
-									e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_GRAY)); 
+								/*	Image imgM = new Image(parent.getDisplay(),"imagesMaze/white_mouse.png");
+									ImageData idM =imgM.getImageData().scaledTo(mx, my);									
+									Image imgMnew = new Image(parent.getDisplay(), idM);
+									e.gc.drawImage(imgMnew, i*mx, j*my);
+								*/	e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_GRAY)); 
 									e.gc.fillRectangle(new Rectangle(i*mx, j*my, mx, my));
 									break;
 								case 2:
-									e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW)); 
+								/*	Image imgC = new Image(parent.getDisplay(),"imagesMaze/usb.jpg");
+									ImageData idC =imgC.getImageData().scaledTo(mx, my);									
+									Image imgCnew = new Image(parent.getDisplay(), idC);
+									e.gc.drawImage(imgCnew, i*mx, j*my);
+								*/	e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW)); 
 									e.gc.fillRectangle(new Rectangle(i*mx, j*my, mx, my));
 									break;
 								//e.gc.fillRectangle(i*mx, j*my, mx, my);
-								case 3:
-									e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_GREEN)); 
+								case 3: 
+								/*	Image imgG = new Image(parent.getDisplay(),"imagesMaze/mouse_clipart.png");
+									ImageData idG =imgG.getImageData().scaledTo(mx, my);									
+									Image imgGnew = new Image(parent.getDisplay(), idG);
+									e.gc.drawImage(imgGnew, i*mx, j*my);
+								*/	e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_GREEN));
 									e.gc.fillRectangle(new Rectangle(i*mx, j*my, mx, my));
 									break;	
 								
