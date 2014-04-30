@@ -15,6 +15,7 @@ public class Run {
 		Presenter presenter 		= new Presenter(model2048, view2048);		
 		((Observable) view2048).addObserver(presenter);
 		((Observable) model2048).addObserver(presenter);
+		System.out.println("observers initialized");
 
 		Thread viewThread = new Thread((Game2048View) view2048);
 		viewThread.start();
