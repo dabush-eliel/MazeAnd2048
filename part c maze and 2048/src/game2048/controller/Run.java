@@ -12,6 +12,7 @@ public class Run {
 	public static void main(String[] args) {
 		Model model2048				= new Game2048Model();	
 		View view2048				= new Game2048View(model2048.getBoard());
+		System.out.println("game2048 model&view initialized!");
 		Presenter presenter 		= new Presenter(model2048, view2048);		
 		((Observable) view2048).addObserver(presenter);
 		((Observable) model2048).addObserver(presenter);
