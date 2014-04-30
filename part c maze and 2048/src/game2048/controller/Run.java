@@ -19,7 +19,6 @@ public class Run {
 		System.out.println("observers initialized");
 
 		Thread viewThread = new Thread((Game2048View) view2048);
-		viewThread.start();
+		viewThread.start();	
 	}
-
 }
