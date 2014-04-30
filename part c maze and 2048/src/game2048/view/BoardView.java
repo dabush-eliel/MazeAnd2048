@@ -3,6 +3,7 @@ package game2048.view;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -31,7 +32,7 @@ public class BoardView extends Canvas {
 						
 						maxX = board.getSize().x;
 						maxY = board.getSize().y;
-	//					int mx = maxX/2, my = maxY/2;
+						int mx = maxX/2, my = maxY/2;
 						
 				//		int lineSize = Math.min(maxX, maxY);
 						
@@ -39,6 +40,7 @@ public class BoardView extends Canvas {
 						
 						int sqrWidth 	= (maxX-25)/4;
 						int sqrHeight 	= (maxY-25)/4;
+						int min 		= Math.min(sqrWidth, sqrHeight);
 					//	Image imgBoard = new Image(board.getDisplay(),"Z:/Prog/dev/2048_view/myBoard.png");
 					//	e.gc.drawImage(imgBoard, 1, 1);
 					//	e.gc.drawImage(image, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight);
@@ -60,59 +62,87 @@ public class BoardView extends Canvas {
 									switch(boardData[i][j]){
 									case 0:
 										Image img0 = new Image(board.getDisplay(),"images/my_0.png");
-										e.gc.drawImage(img0, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id0 =img0.getImageData().scaledTo(min, min);									
+										Image img0new = new Image(board.getDisplay(), id0);
+										e.gc.drawImage(img0new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 2:
 										Image img2 = new Image(board.getDisplay(),"images/my_2.png");
-										e.gc.drawImage(img2, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id2 = img2.getImageData().scaledTo(min, min);
+										Image img2new = new Image(board.getDisplay(), id2);
+										e.gc.drawImage(img2new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 4:
 										Image img4 = new Image(board.getDisplay(),"images/my_4.png");
-										e.gc.drawImage(img4,(j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id4 = img4.getImageData().scaledTo(min, min);
+										Image img4new = new Image(board.getDisplay(), id4);
+										e.gc.drawImage(img4new,(j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 8:
 										Image img8 = new Image(board.getDisplay(),"images/my_8.png");
-										e.gc.drawImage(img8,(j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id8 = img8.getImageData().scaledTo(min, min);
+										Image img8new = new Image(board.getDisplay(), id8);
+										e.gc.drawImage(img8new,(j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 16:
 										Image img16 = new Image(board.getDisplay(),"images/my_16.png");
-										e.gc.drawImage(img16,(j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id16 = img16.getImageData().scaledTo(min, min);
+										Image img16new = new Image(board.getDisplay(), id16);
+										e.gc.drawImage(img16new,(j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 32:
 										Image img32 = new Image(board.getDisplay(),"images/my_32.png");
-										e.gc.drawImage(img32, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id32 = img32.getImageData().scaledTo(min, min);
+										Image img32new = new Image(board.getDisplay(), id32);
+										e.gc.drawImage(img32new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 64:
 										Image img64 = new Image(board.getDisplay(),"images/my_64.png");
-										e.gc.drawImage(img64, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id64 = img64.getImageData().scaledTo(min, min);
+										Image img64new = new Image(board.getDisplay(), id64);
+										e.gc.drawImage(img64new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 128:
 										Image img128 = new Image(board.getDisplay(),"images/my_128.png");
-										e.gc.drawImage(img128, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id128 = img128.getImageData().scaledTo(min, min);
+										Image img128new = new Image(board.getDisplay(), id128);
+										e.gc.drawImage(img128new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 256:
 										Image img256 = new Image(board.getDisplay(),"images/my_256.png");
-										e.gc.drawImage(img256, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id256 = img256.getImageData().scaledTo(min, min);
+										Image img256new = new Image(board.getDisplay(), id256);
+										e.gc.drawImage(img256new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 512:
 										Image img512= new Image(board.getDisplay(),"images/my_512.png");
-										e.gc.drawImage(img512, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id512 = img512.getImageData().scaledTo(min, min);
+										Image img512new = new Image(board.getDisplay(), id512);
+										e.gc.drawImage(img512new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 1024:
 										Image img1024 = new Image(board.getDisplay(),"images/my_1024.png");
-										e.gc.drawImage(img1024, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id1024 = img1024.getImageData().scaledTo(min, min);
+										Image img1024new = new Image(board.getDisplay(), id1024);
+										e.gc.drawImage(img1024new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 2048:
 										Image img2048 = new Image(board.getDisplay(),"images/my_2048.png");
-										e.gc.drawImage(img2048, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id2048 = img2048.getImageData().scaledTo(min, min);
+										Image img2048new = new Image(board.getDisplay(), id2048);
+										e.gc.drawImage(img2048new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 4096:
 										Image img4096 = new Image(board.getDisplay(),"images/my_4096.png");
-										e.gc.drawImage(img4096, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id4096 = img4096.getImageData().scaledTo(min, min);
+										Image img4096new = new Image(board.getDisplay(), id4096);
+										e.gc.drawImage(img4096new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									case 8192:
 										Image img8192 = new Image(board.getDisplay(),"images/my_8192.png");
-										e.gc.drawImage(img8192, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
+										ImageData id8192 = img8192.getImageData().scaledTo(min, min);
+										Image img8192new = new Image(board.getDisplay(), id8192);
+										e.gc.drawImage(img8192new, (j+1)*5+j*sqrWidth, (i+1)*5+i*sqrHeight);
 										break;
 									}
 								}
