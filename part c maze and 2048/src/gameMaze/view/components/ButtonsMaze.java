@@ -10,6 +10,7 @@ public class ButtonsMaze {
 	private Button undo;
 	private Button save;
 	private Button load;
+	private Button exit;
 //	private int command = 0;
 	
 
@@ -28,7 +29,11 @@ public class ButtonsMaze {
 	public Button getLoad() {
 		return load;
 	}
-
+	
+	public Button getExit(){
+		return exit;
+	}
+	
 	public ButtonsMaze(Composite parent, int style) {
 		restart = new Button(parent,style);
 		restart.setText("Restart");
@@ -42,7 +47,10 @@ public class ButtonsMaze {
 		load = new Button(parent, style);
 		load.setText("Load");
 		
-		int maxX = parent.getSize().x;
+		exit = new Button(parent, style);
+		exit.setText("Exit");
+		
+//		int maxX = parent.getSize().x;
 //		int maxY = parent.getSize().y;
 		
 		restart.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
@@ -56,5 +64,7 @@ public class ButtonsMaze {
 		
 		save.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 //		save.setLocation(load.getLocation().x,load.getLocation().y+5);
+		
+		exit.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 	}
 }

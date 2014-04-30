@@ -21,8 +21,11 @@ public class Presenter implements Observer,Runnable{
 	@Override
 	public void update(Observable o, Object arg1) {
 		if (o == model){
-//			view.displayBoard(model.getBoard());
-//			view.displayScore(model.getScore());
+			view.displayData(model.getMaze());
+			view.displayScore(model.getScore());
+			if(model.isSucceed()){
+				view.gameOver(true);
+			}
 		}
 		if (o == view){
 			model.doUserCommand(view.getUserCommand());		

@@ -1,11 +1,8 @@
 package gameMaze.view;
 
-import game2048.view.BoardView;
-import game2048.view.components.Buttons2048;
-import game2048.view.components.Menu2048;
-import game2048.view.components.ScoreLabel;
 import gameMaze.view.components.ButtonsMaze;
 import gameMaze.view.components.MenuMaze;
+import gameMaze.view.components.ScoreLabel;
 
 import java.util.Observable;
 import java.util.Timer;
@@ -47,7 +44,7 @@ public class MazeView extends Observable implements View,Runnable {
 	@Override
 	public void displayData(int [][] data) {
 		board.setMazeData(data);
-		display.asyncExec(new Runnable() {		
+		display.syncExec(new Runnable() {		
 			@Override
 			public void run() {	
 				board.redraw();
@@ -71,19 +68,20 @@ public class MazeView extends Observable implements View,Runnable {
 		shell = new Shell(display);
 		
 		shell.setText("Eliel's MAZE");
-		shell.setLayout(new GridLayout(3,false));
-		shell.setSize(500 , 525);
+		shell.setLayout(new GridLayout(4,true));
+		shell.setSize(550 , 525);
 		
 		menu = new MenuMaze(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
-		buttons = new ButtonsMaze(shell, SWT.PUSH);
 		
 		board = new BoardMazeView(shell, SWT.BORDER, data.length, data[0].length);
-		board.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true,3,1));
+		board.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true,3,10));
 		board.setMazeData(data);	
 		board.setFocus();
+		
+		buttons = new ButtonsMaze(shell, SWT.PUSH);
 		
 		menuListeners();
 		movementListener();
@@ -97,7 +95,7 @@ public class MazeView extends Observable implements View,Runnable {
 	@Override
 	public void gameOver(boolean succeed) {
 		this.succeed = succeed;		
-//		gameOverAction();		
+		gameOverAction();		
 	}
 
 	@Override
@@ -210,84 +208,53 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void mouseUp(MouseEvent e) {
-						
+
 					}
 					
 					@Override
 					public void mouseDown(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
+
 					}
 					
 					@Override
 					public void mouseDoubleClick(MouseEvent e) {
-						shell.setFocus();
+						board.setFocus();
 					}
 				});
 				
 				board.addKeyListener(new KeyListener() {	
 					@Override
 					public void keyReleased(KeyEvent e) { 
-	/*					switch(e.keyCode){
-						case SWT.ARROW_UP:
-							userCommand = 1;
-							setChanged();
-							notifyObservers();
-							break;
-						case SWT.ARROW_DOWN:
-							userCommand = 2;
-							setChanged();
-							notifyObservers();
-							break;
-						case SWT.ARROW_RIGHT:
-							userCommand = 3;
-							setChanged();
-							notifyObservers();
-							break;
-						case SWT.ARROW_LEFT:
-							userCommand = 4;
-							setChanged();
-							notifyObservers();
-							break;
-						}		
-			*/			
+						
 					}
 					
 					@Override
 					public void keyPressed(KeyEvent e) {
 						switch(e.keyCode){
 						case SWT.ARROW_UP:
-							board.addKeyListener(new KeyListener() {
-								
-								@Override
-								public void keyReleased(KeyEvent arg0) {
-									// TODO Auto-generated method stub
-									
-								}
-								
-								@Override
-								public void keyPressed(KeyEvent arg0) {
-									// TODO Auto-generated method stub
-									
-								}
-							});
 							userCommand = 1;
+							setChanged();
+							notifyObservers();
 							break;
 						case SWT.ARROW_DOWN:
 							userCommand = 2;
+							setChanged();
+							notifyObservers();
 							break;
 						case SWT.ARROW_RIGHT:
 							userCommand = 3;
+							setChanged();
+							notifyObservers();
 							break;
 						case SWT.ARROW_LEFT:
 							userCommand = 4;
+							setChanged();
+							notifyObservers();
 							break;
 						default:
-							userCommand = 0;
+							//userCommand = 0;
 							break;
 						}
-						setChanged();
-						notifyObservers();
 					}
 				});			
 			}
@@ -330,44 +297,44 @@ public class MazeView extends Observable implements View,Runnable {
 						
 					}
 				});
+				
+				buttons.getExit().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						// EXIT
+						display.sleep();
+						shell.dispose();
+						display.dispose();						
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 			}
 		});
 	}
 	
 	public void gameOverAction(){
-		if(!succeed){
-			MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-			gameOverBox.setText("Game Over");
-			gameOverBox.setMessage("Game Over. Restart game?");				
-			int msg = gameOverBox.open();
-			if(msg == SWT.YES){
-				// start a new game
-				userCommand  = 5;
-				shell.setFocus();
-				setChanged();
-				notifyObservers();
-			}else if(msg == SWT.NO){
-				// EXIT
-				System.exit(0);
-			}
-		}else{
-			MessageBox winBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CLOSE); // close doesnt work !! :O
-			winBox.setText("Congrats");
-			winBox.setMessage("Congratulations. You won the game! \n Do you want continue the game?");				
-			int msg = winBox.open();
-			if(msg == SWT.NO){
-				// start a new game
-				userCommand  = 5;
-				setChanged();
-				notifyObservers();
-			}else if(msg == SWT.YES){
-				userCommand = 11;
-				setChanged();
-				notifyObservers();
-			}/*else if(msg == SWT.CLOSE){
-				System.exit(0);
-			}*/
-
+		MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+		gameOverBox.setText("You found the goal");
+		gameOverBox.setMessage("Game Over. Start a new game?");				
+		int msg = gameOverBox.open();
+		if(msg == SWT.YES){
+			// start a new game
+			userCommand  = 5;
+			board.setFocus();
+			setChanged();
+			notifyObservers();
+		}else if(msg == SWT.NO){
+			// EXIT
+			display.sleep();
+			shell.dispose();
+			display.dispose();	
+			
 		}
 	}
 

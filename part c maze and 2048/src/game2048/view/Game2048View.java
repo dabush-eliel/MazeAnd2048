@@ -445,7 +445,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					userCommand = 11;
 					setChanged();
 					notifyObservers();
-					shell2.close();
+					shell2.dispose();
 					board.setFocus();
 				}
 				
@@ -462,7 +462,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					userCommand = 5;
 					setChanged();
 					notifyObservers();
-					shell2.close();
+					shell2.dispose();
 					board.setFocus();
 				}
 				
@@ -478,6 +478,7 @@ public class Game2048View extends Observable implements View, Runnable{
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					// EXIT
+					shell2.dispose();
 					display.sleep();
 					shell.dispose();
 					display.dispose();

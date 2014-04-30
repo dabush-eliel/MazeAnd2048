@@ -148,6 +148,7 @@ public class BoardView extends Canvas {
 								}
 							}				
 						}
+					e.gc.dispose();
 					}
 				});
 				

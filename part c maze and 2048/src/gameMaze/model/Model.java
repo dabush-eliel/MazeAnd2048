@@ -15,4 +15,6 @@ public interface Model {
 	public void undoMove();
 	public void initGame();
 	public void doUserCommand(int num);
+	public int getScore();
+	public boolean isSucceed();
 }
