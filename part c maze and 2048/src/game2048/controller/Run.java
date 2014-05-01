@@ -20,5 +20,7 @@ public class Run {
 
 		Thread viewThread = new Thread((Game2048View) view2048);
 		viewThread.start();	
+		
+		System.out.println("HELLO WORLD");
 	}
 }
