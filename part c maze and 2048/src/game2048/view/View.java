@@ -8,4 +8,6 @@ public interface View {
 	public void initView(int [][] data);
 //	public void run();
 	public void gameOver(boolean succeed);
+	public String getFileNamePath();
+	public void setFileNamePath(String save);
 }

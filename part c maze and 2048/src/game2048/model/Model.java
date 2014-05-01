@@ -14,4 +14,10 @@ public interface Model {
 	public void doUserCommand(int num);
 	public boolean isStuck();
 	public boolean isSucceed();
+	public void save();
+	public void load();
+	public String getFileNameToSave();
+	public void setFileNameToSave(String save);
+	public String getFileNameToLoad();
+	public void setFileNameToLoad(String load);
 }

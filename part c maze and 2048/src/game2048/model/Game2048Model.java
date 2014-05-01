@@ -1,8 +1,16 @@
 package game2048.model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
+
 
 
 
@@ -16,6 +24,9 @@ public class Game2048Model extends Observable implements Model {
 	private boolean stuck 				= false;
 	private boolean check				= true;
 	
+	private String fileNameToSave;
+	private String fileNameToLoad;
+	
 	public Game2048Model() {
 		initGame();	
 	}
@@ -28,6 +39,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 	//	board2048[1][2] = 1024;
 	//	board2048[2][3] = 1024;
+		
 		// initialize 2 random Squares with the value: 2 OR 4 --> 90% for 2 and 10% for 4
 		int sqr1val = squareVal();		
 		int sqr1plc = squarePlace(getFreeSpotsNum());
@@ -46,12 +58,20 @@ public class Game2048Model extends Observable implements Model {
 	// get random value - 2 or 4
 	private int squareVal(){
 		Random rand = new Random();
+	/*	int probs[] = new int[10];
+		for (int i 	= 0 ; i < 9 ; i++){
+			probs[i] = 2;
+		}
+		for (int i 	= 9 ; i<10 ; i++){
+			probs[i] = 4;
+		}*/
 		int x = rand.nextInt(10);
 		if(x < 9){
 			return 2;
 		}else{
 			return 4;
 		}
+	//	return probs[rand.nextInt(10)];
 	}
 	// get where to put the new square 
 	private int squarePlace(int num){		// get number of free possible squares
@@ -348,6 +368,77 @@ public class Game2048Model extends Observable implements Model {
 			notifyObservers();
 		}		
 	}
+	
+	@Override
+	public void save(){
+		File file = new File(fileNameToSave);
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			System.out.println(old_moves.size() + "stack_moves");
+			System.out.println(old_score.size() + "stack_score");
+			out.write("" + old_moves.size());
+			out.write("\n");
+			for(int k = (old_moves.size() - 1) ; k >= 0 ; k--){
+				int[][] gameArrayToWrite = old_moves.get(k);
+				for(int i = 0; i < size ; i++ ){
+					for(int j = 0 ; j < size; j++){
+						out.write("" + gameArrayToWrite[i][j]);
+						out.write(",");
+					}
+					out.write("@");
+				}
+				out.write("#" + old_score.get(k));
+				out.write("\n");
+			}
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void load() {
+		File file = new File(fileNameToLoad);
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			int numLines = 0;
+			try {
+				numLines = Integer.parseInt(in.readLine());
+			} catch (NumberFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				String tempLine = "";
+				int helper = 0;
+				int[][] tempArrayToAdd = new int[size][size];
+				for(int k = 0 ; k < numLines ; k++){
+					tempLine = in.readLine();
+					for(int i = 0 ; i < size; i++){
+						for(int j = 0; j < size*2 ; j++){
+							int numToAdd = Integer.parseInt(Character.toString(tempLine.charAt(i+j+helper)));
+							tempArrayToAdd[i][j] = numToAdd;
+							j++;
+							helper+=2;
+						}
+						helper+=2;
+					}
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	@Override
 	public void doUserCommand(int num) {
@@ -373,16 +464,19 @@ public class Game2048Model extends Observable implements Model {
 		case 6:
 			undoMove();
 			break;
+		case 7:
+			save();
+			break;
+		case 8:
+			load();
+			break;
+//		case 9:		exit
 		case 11:
 			succeed = false;
 			check 	= false;
 			break;
 		default:
 			break;
-			
-//		case 7:		save
-//		case 8:		load			
-//		case 9:		exit
 		}
 	}
 
@@ -413,6 +507,26 @@ public class Game2048Model extends Observable implements Model {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public String getFileNameToSave() {
+		return fileNameToSave;
+	}
+
+	@Override
+	public String getFileNameToLoad() {
+		return fileNameToLoad;
+	}
+
+	@Override
+	public void setFileNameToSave(String save) {
+		fileNameToSave = save;
+	}
+
+	@Override
+	public void setFileNameToLoad(String load) {
+		fileNameToLoad = load;
 	}
 
 }

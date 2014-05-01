@@ -30,9 +30,19 @@ public class Presenter implements Observer{
 			view.displayBoard(model.getBoard());
 			view.displayScore(model.getScore());
 		}
-		if (o == view){
+		if (o == view && arg1 == null){
 			model.doUserCommand(view.getUserCommand());		
 		}	
+		
+		if(o == view && arg1 == "save"){
+			model.setFileNameToSave(view.getFileNamePath());
+			model.doUserCommand(view.getUserCommand());
+		}
+		
+		if(o == view && arg1 == "load"){
+			model.setFileNameToLoad(view.getFileNamePath());
+			model.doUserCommand(view.getUserCommand());
+		}
 	}
 	
 	public Model getModel() {

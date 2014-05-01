@@ -2,9 +2,7 @@ package game2048.view;
 import game2048.view.components.Buttons2048;
 import game2048.view.components.Menu2048;
 import game2048.view.components.ScoreLabel;
-
 import java.util.Observable;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -22,6 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -37,6 +36,8 @@ public class Game2048View extends Observable implements View, Runnable{
 	private int [][] data;
 	private Buttons2048 buttons;
 	private boolean succeed = false;
+	
+	private String fileName = "";
 	
 	public Game2048View(int [][] data) {
 		this.data = new int[data.length][data[0].length];
@@ -126,13 +127,18 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-						
+						userCommand = 7;
+						String path = saveAction();
+						if(path != null){
+							setFileNamePath(path);
+							setChanged();
+							notifyObservers("save");
+						}
+						board.setFocus();
 					}
 					
 					@Override
 					public void widgetDefaultSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
 						
 					}
 				});
@@ -141,7 +147,13 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
+						userCommand = 8;
+						if(loadAction() != null){
+							setFileNamePath(loadAction());
+							setChanged();
+							notifyObservers("load");
+							board.setFocus();
+						}
 						
 					}
 					
@@ -158,7 +170,6 @@ public class Game2048View extends Observable implements View, Runnable{
 					public void widgetSelected(SelectionEvent arg0) {
 						shell.close();
 						display.dispose();
-						System.exit(0);
 					}
 					
 					@Override
@@ -322,8 +333,14 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-						
+						userCommand = 7;
+						String path = saveAction();
+						if(path != null){
+							setFileNamePath(path);
+							setChanged();
+							notifyObservers("save");
+						}
+						board.setFocus();
 					}
 					
 					@Override
@@ -337,8 +354,13 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-						
+						userCommand = 8;
+						if(loadAction() != null){
+							setFileNamePath(loadAction());
+							setChanged();
+							notifyObservers("load");
+							board.setFocus();
+						}
 					}
 					
 					@Override
@@ -353,9 +375,6 @@ public class Game2048View extends Observable implements View, Runnable{
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						// EXIT
-						display.sleep();
-						shell.dispose();
-						display.dispose();
 						System.exit(0);
 					}
 					
@@ -383,9 +402,6 @@ public class Game2048View extends Observable implements View, Runnable{
 				notifyObservers();
 			}else if(msg == SWT.NO){
 				// EXIT
-				display.sleep();
-				shell.dispose();
-				display.dispose();
 				System.exit(0);
 			}
 		}else{
@@ -404,9 +420,7 @@ public class Game2048View extends Observable implements View, Runnable{
 				setChanged();
 				notifyObservers();
 			}/*else if(msg == SWT.CLOSE){
-				display.sleep();
-				shell.dispose();
-				display.dispose();
+				System.exit(0);
 			}	*/
 			
 			final Shell shell2 = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
@@ -448,7 +462,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					userCommand = 11;
 					setChanged();
 					notifyObservers();
-					shell2.dispose();
+					shell2.close();
 					board.setFocus();
 				}
 				
@@ -465,7 +479,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					userCommand = 5;
 					setChanged();
 					notifyObservers();
-					shell2.dispose();
+					shell2.close();
 					board.setFocus();
 				}
 				
@@ -480,11 +494,6 @@ public class Game2048View extends Observable implements View, Runnable{
 				
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					// EXIT
-					shell2.dispose();
-					display.sleep();
-					shell.dispose();
-					display.dispose();
 					System.exit(0);
 				}
 				
@@ -500,6 +509,53 @@ public class Game2048View extends Observable implements View, Runnable{
 
 		}
 	}
+	
+	public String saveAction(){
+		FileDialog fd = new FileDialog(shell, SWT.SAVE);
+		fd.setText("save");
+		fd.setFilterPath("LoadAndSave/");
+		String[] filterExt = {"*.txt", "*.xml" , "*.*"};
+		String[] filterNames = {"Text Files (*.txt)", "XML Files (*.xml)", "All Files (*.*)"};
+		fd.setFilterExtensions(filterExt);
+		fd.setFilterNames(filterNames);
+		String path = fd.open();
+		if(path != null){
+			String selected = path;
+			fileName = selected;
+			return fileName;
+		}
+		return null;
+	}
+	
+	public String loadAction(){
+		FileDialog fd = new FileDialog(shell, SWT.OPEN);
+		fd.setText("open");
+		fd.setFilterPath("LoadAndSave/");
+		String[] filterExt = {"*.txt", "*.xml" , "*.*"};
+		String[] filterNames = {"Text Files (*.txt)", "XML Files (*.xml)", "All Files (*.*)"};
+		fd.setFilterExtensions(filterExt);
+		fd.setFilterNames(filterNames);
+		String path = fd.open();
+		if(path != null){
+			String selected = path;
+			fileName = selected;
+			return fileName;
+		}
+		else{
+			return null;
+		}
+	}
+	
+	@Override
+	public String getFileNamePath(){
+		return this.fileName;
+	}
+
+	@Override
+	public void setFileNamePath(String save) {
+		this.fileName = save;
+	}
+
 	
 	
 }
