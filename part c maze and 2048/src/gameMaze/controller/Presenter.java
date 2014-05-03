@@ -3,12 +3,15 @@ package gameMaze.controller;
 import gameMaze.model.Model;
 import gameMaze.view.View;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.thoughtworks.xstream.XStream;
 
 
-public class Presenter implements Observer,Runnable{
+
+public class Presenter implements Observer,Runnable, Serializable{
 	
 	Model model;
 	View view;
@@ -28,6 +31,18 @@ public class Presenter implements Observer,Runnable{
 			}
 		}
 		if (o == view){
+			if(arg1 == "save"){
+				XStream xstream = new XStream();
+				String modelXML = xstream.toXML(model);
+				String viewXML = xstream.toXML(view);
+				
+				System.out.println(modelXML);
+				System.out.println(viewXML);
+			}
+			if(arg1 == "load"){
+				
+			}
+			
 			model.doUserCommand(view.getUserCommand());		
 		}	
 	}

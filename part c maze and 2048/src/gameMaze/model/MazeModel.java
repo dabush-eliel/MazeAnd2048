@@ -6,6 +6,8 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
+import com.thoughtworks.xstream.XStream;
+
 import maze.Maze;
 import maze.MazeDomain;
 import model.algorithms.State;
@@ -473,14 +475,14 @@ public class MazeModel extends Observable implements Model{
 
 				maze[mouse[0]][mouse[1]] = 0; 
 				mouse[0]++;
-				mouse[1]--;
+				mouse[1]++;
 				maze[mouse[0]][mouse[1]] = 3;
 				score += 15;
 			}else{
 				// make the move
 				maze[mouse[0]][mouse[1]] = 0;
 				mouse[0]++;
-				mouse[1]--;
+				mouse[1]++;
 				maze[mouse[0]][mouse[1]] = 1;
 				score += 15;
 			}
@@ -586,7 +588,7 @@ public class MazeModel extends Observable implements Model{
 
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

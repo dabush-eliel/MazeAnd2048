@@ -1,6 +1,10 @@
 package gameMaze.view;
 
+import java.awt.event.MouseListener;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
@@ -11,17 +15,24 @@ import org.eclipse.swt.widgets.Composite;
 
 public class BoardMazeView extends Canvas {
 	
-	int[][] mazeData;
-	int maxX;
-	int maxY;
-//	final Image imgW = new Image(getDisplay(), "imagesMaze/brown_wall.jpg");
-	final Image imgM = new Image(getDisplay(),"imagesMaze/white_mouse.png");
-	final Image imgM2 = new Image(getDisplay(),"imagesMaze/cabel_mouse.jpg");
-	final Image imgM3 = new Image(getDisplay(),"imagesMaze/red_mouse.jpg");
-	final Image imgC = new Image(getDisplay(),"imagesMaze/usb.jpg");
-	final Image imgC2 = new Image(getDisplay(),"imagesMaze/usb_symb.png");
-	final Image imgG = new Image(getDisplay(),"imagesMaze/mouse_clipart.png");
-	final Image imgG2 = new Image(getDisplay(),"imagesMaze/red_curser.png");
+	private int[][] mazeData;
+	private int maxX,mx;
+	private int maxY,my;
+	private int xBm, yBm; // x and y before mouse movement
+	private int x,y;	// position of the mouse
+	private boolean drag = false;
+	private boolean mouseMoved = false;
+	
+
+
+	//	final Image imgW = new Image(getDisplay(), "imagesMaze/brown_wall.jpg");
+	final private Image imgM = new Image(getDisplay(),"imagesMaze/white_mouse.png");
+	final private Image imgM2 = new Image(getDisplay(),"imagesMaze/cabel_mouse.jpg");
+	final private Image imgM3 = new Image(getDisplay(),"imagesMaze/red_mouse.jpg");
+	final private Image imgC = new Image(getDisplay(),"imagesMaze/usb.jpg");
+	final private Image imgC2 = new Image(getDisplay(),"imagesMaze/usb_symb.png");
+	final private Image imgG = new Image(getDisplay(),"imagesMaze/mouse_clipart.png");
+	final private Image imgG2 = new Image(getDisplay(),"imagesMaze/red_curser.png");
 	
 
 	public BoardMazeView(final Composite parent, int style, final int rows,final int columns) {
@@ -40,9 +51,9 @@ public class BoardMazeView extends Canvas {
 						maxX = maze.getSize().x;
 						maxY = maze.getSize().y;
 						
-						int mx = maxX/rows, my = maxY/columns;
-					//	mx -= 1;
-					//	my -= 1;
+						mx = maxX/rows;
+						my = maxY/columns;
+
 						
 						for(int j=0; j<rows;j++){
 							for(int i=0;i<columns;i++){
@@ -60,10 +71,16 @@ public class BoardMazeView extends Canvas {
 									e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE)); 
 									e.gc.fillRectangle(new Rectangle(i*mx, j*my, mx, my));
 									break;
-								case 1:									
+								case 1:	
+									if(!drag){
+										x = mx;
+										y = my;
+										x = x * i;
+										y = y * j;
+									}
 									ImageData idM =imgM3.getImageData().scaledTo(mx, my);									
 									Image imgMnew = new Image(getDisplay(), idM);
-									e.gc.drawImage(imgMnew, i*mx, j*my);
+									e.gc.drawImage(imgMnew, x,y);
 							//		e.gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_DARK_RED)); 
 							//		e.gc.fillRectangle(new Rectangle(i*mx, j*my, mx, my));
 									imgMnew.dispose();
@@ -100,6 +117,47 @@ public class BoardMazeView extends Canvas {
 						e.gc.dispose();
 					}
 				});
+				
+				addMouseMoveListener(new MouseMoveListener() {
+					
+					@Override
+					public void mouseMove(MouseEvent e) {
+						if(drag){
+							mouseMoved = true;
+							x = e.x;
+							y = e.y;
+							redraw();	
+						}
+					}
+				});
+				
+				addMouseListener(new org.eclipse.swt.events.MouseListener() {
+					
+					@Override
+					public void mouseUp(MouseEvent arg0) {						
+						getDisplay().timerExec(100, new Runnable() {
+							@Override
+							public void run() {
+								drag = false;
+								mouseMoved = false;
+								redraw();								
+							}
+						});
+					}
+					
+					@Override
+					public void mouseDown(MouseEvent arg0) {
+						// save the mouse state b4 the move 
+						xBm = x;
+						yBm = y;
+						drag = true;
+					}
+					
+					@Override
+					public void mouseDoubleClick(MouseEvent arg0) {
+						setFocus();
+					}
+				});;
 			}
 		});
 	}
@@ -111,5 +169,34 @@ public class BoardMazeView extends Canvas {
 			}
 		}
 	}
+	
+	public int getMx() {
+		return mx;
+	}
+
+	public int getMy() {
+		return my;
+	}
+
+	public int getxBm() {
+		return xBm;
+	}
+
+	public int getyBm() {
+		return yBm;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+	
+	public boolean isMouseMoved() {
+		return mouseMoved;
+	}
+
 
 }
