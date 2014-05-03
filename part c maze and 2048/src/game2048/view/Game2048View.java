@@ -375,6 +375,8 @@ public class Game2048View extends Observable implements View, Runnable{
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						// EXIT
+						shell.dispose();
+						display.dispose();
 						System.exit(0);
 					}
 					

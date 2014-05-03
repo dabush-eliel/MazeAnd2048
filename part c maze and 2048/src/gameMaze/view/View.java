@@ -7,5 +7,7 @@ public interface View {
 	public int getUserCommand();
 	public void initView();
 	public void gameOver(boolean succeed);
-
+	public String getFileNamePath();
+	public void setFileNamePath(String save);
+	
 }

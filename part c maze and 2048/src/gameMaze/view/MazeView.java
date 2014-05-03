@@ -168,7 +168,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 5;
+						userCommand = 9;
 						setChanged();
 						notifyObservers();
 					}
@@ -184,7 +184,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 6;
+						userCommand = 10;
 						setChanged();
 						notifyObservers();
 					}
@@ -272,7 +272,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						userCommand  = 5;
+						userCommand  = 9;
 						setChanged();
 						notifyObservers();
 					}
@@ -287,7 +287,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						userCommand = 6;
+						userCommand = 10;
 						setChanged();
 						notifyObservers();
 					}
@@ -325,7 +325,7 @@ public class MazeView extends Observable implements View,Runnable {
 		int msg = gameOverBox.open();
 		if(msg == SWT.YES){
 			// start a new game
-			userCommand  = 5;
+			userCommand  = 9;
 			board.setFocus();
 			setChanged();
 			notifyObservers();
@@ -336,6 +336,18 @@ public class MazeView extends Observable implements View,Runnable {
 			display.dispose();	
 			
 		}
+	}
+
+	@Override
+	public String getFileNamePath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setFileNamePath(String save) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
