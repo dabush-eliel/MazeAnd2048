@@ -12,11 +12,13 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -28,9 +30,17 @@ public class MazeView extends Observable implements View,Runnable {
 	private MenuMaze menu ;		//= new Menu2048(shell, SWT.BAR);
 	private BoardMazeView board;
 	private int userCommand = 0;
+	private int doubleMoveUcommand = 0;
 	private int [][] data;
 	private ButtonsMaze buttons;
-	private boolean succeed = false;
+	private boolean succeed 	= false;
+	private boolean twoMoves 	= false;
+	private boolean  up 	  = false;
+	private boolean  down 	= false;
+	private boolean right 	= false;
+	private boolean left  	= false;
+	private String fileName	  	= null;
+	
 	
 	public MazeView(int [][] data) {
 		this.data = new int[data.length][data[0].length];
@@ -69,7 +79,7 @@ public class MazeView extends Observable implements View,Runnable {
 		
 		shell.setText("Eliel's MAZE");
 		shell.setLayout(new GridLayout(4,true));
-		shell.setSize(550 , 525);
+		shell.setSize(750,600);;
 		
 		menu = new MenuMaze(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
@@ -123,8 +133,10 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-						
+						userCommand = 11;
+						setChanged();
+						notifyObservers("save");
+						board.setFocus();
 					}
 					
 					@Override
@@ -138,8 +150,10 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-						
+						userCommand = 12;
+						setChanged();
+						notifyObservers("load");
+						board.setFocus();						
 					}
 					
 					@Override
@@ -168,7 +182,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 5;
+						userCommand = 9;
 						setChanged();
 						notifyObservers();
 					}
@@ -184,7 +198,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 6;
+						userCommand = 10;
 						setChanged();
 						notifyObservers();
 					}
@@ -204,16 +218,82 @@ public class MazeView extends Observable implements View,Runnable {
 		display.syncExec(new Runnable() {	
 			@Override
 			public void run() {
+				board.addMouseMoveListener(new MouseMoveListener() {
+					
+					@Override
+					public void mouseMove(MouseEvent e) {
+					}
+				});
+				
 				board.addMouseListener(new MouseListener() {
 					
 					@Override
 					public void mouseUp(MouseEvent e) {
-
+						if(board.isMouseMoved()){
+							int x_move = board.getxBm()-board.getX();
+							int y_move = board.getyBm()-board.getY();
+							int mvx = x_move;
+							int mvy = y_move;
+							boolean up = true;
+							boolean right = false;
+							
+							if((x_move) < 0 ){
+								right = true;
+								mvx = x_move*-1;
+							}
+							if(y_move < 0){
+								up = false;
+								mvy = y_move*-1;
+							}
+							if(mvx>board.getMx() && mvy>board.getMy() ){
+								if (up == true) {
+									if(right == true){
+										userCommand = 5;
+										setChanged();
+										notifyObservers();
+									}else{
+										userCommand = 6;
+										setChanged();
+										notifyObservers();
+									}
+								} else {
+									if(right){
+										userCommand = 7;
+										setChanged();
+										notifyObservers();
+									}else{
+										userCommand = 8;
+										setChanged();
+										notifyObservers();
+									}
+								}
+							}else if(mvx>board.getMx()){
+								if(right){
+									userCommand = 3;
+									setChanged();
+									notifyObservers();
+								}else{
+									userCommand = 4;
+									setChanged();
+									notifyObservers();
+								}
+							}else{
+								if(up == true){
+									userCommand = 1;
+									setChanged();
+									notifyObservers();
+								}else{
+									userCommand = 2;
+									setChanged();
+									notifyObservers();
+								}
+							}
+						}
 					}
 					
 					@Override
 					public void mouseDown(MouseEvent e) {
-
+						
 					}
 					
 					@Override
@@ -230,31 +310,171 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void keyPressed(KeyEvent e) {
+						int pressed = 0;
+						
 						switch(e.keyCode){
+						
 						case SWT.ARROW_UP:
-							userCommand = 1;
-							setChanged();
-							notifyObservers();
+							pressed = SWT.ARROW_UP;		
+						/*	if(pressed == SWT.ARROW_UP){
+								userCommand = 1;
+								setChanged();
+								notifyObservers();
+								break;
+							}*/
+							if(getTwoMoves()){
+								twoMoves = false;
+								if(right){
+									userCommand = 5;
+									setChanged();
+									notifyObservers();
+									right = false;
+								}else if(left){
+									userCommand = 6;
+									setChanged();
+									notifyObservers();
+									left = false;
+								}
+							}else{								
+								twoMoves = true;
+								up = true;
+								display.timerExec(120, new Runnable() {
+									@Override
+									public void run() {										
+										if(getTwoMoves()){
+											userCommand = 1;
+											setChanged();
+											notifyObservers();
+											twoMoves = false;
+											up = false;	
+										}							
+									}
+								});
+							}							
 							break;
+							
 						case SWT.ARROW_DOWN:
-							userCommand = 2;
-							setChanged();
-							notifyObservers();
+							pressed = SWT.ARROW_DOWN;							
+							if(getTwoMoves()){
+								twoMoves = false;
+						/*		if(pressed == SWT.ARROW_DOWN){
+									userCommand = 2;
+									setChanged();
+									notifyObservers();
+									break;
+								}*/
+								if(right){
+									userCommand = 7;
+									setChanged();
+									notifyObservers();
+									right = false;
+								}
+								if(left){
+									userCommand = 8;
+									setChanged();
+									notifyObservers();
+									left = false;
+								}
+							}else{								
+								twoMoves = true;
+								down = true;								
+								display.timerExec(120, new Runnable() {
+									@Override
+									public void run() {									
+										if(getTwoMoves()){
+											userCommand = 2;
+											setChanged();
+											notifyObservers();
+											twoMoves = false;
+											down = false;
+										}															
+									}
+								});
+							}
 							break;
-						case SWT.ARROW_RIGHT:
-							userCommand = 3;
-							setChanged();
-							notifyObservers();
+							
+						case SWT.ARROW_RIGHT:	
+							pressed = SWT.ARROW_RIGHT;							
+							if(getTwoMoves()){
+								twoMoves = false;
+							/*	if(pressed == SWT.ARROW_RIGHT){
+									userCommand = 3;
+									setChanged();
+									notifyObservers();
+									break;
+								}*/
+								if(up){
+									userCommand = 5;
+									setChanged();
+									notifyObservers();
+									up = false;
+									break;
+								}
+								if(down){
+									userCommand = 7;
+									setChanged();
+									notifyObservers();
+									down = false;
+									break;
+								}								
+							}else{
+								twoMoves = true;
+								right = true;
+								display.timerExec(120, new Runnable() {
+									@Override
+									public void run() {										
+										if(getTwoMoves()){
+											userCommand = 3;
+											setChanged();
+											notifyObservers();
+											twoMoves = false;
+											right = false;
+										}							
+									}
+								});
+							}
 							break;
+							
 						case SWT.ARROW_LEFT:
-							userCommand = 4;
-							setChanged();
-							notifyObservers();
-							break;
-						default:
-							//userCommand = 0;
-							break;
-						}
+							pressed = SWT.ARROW_LEFT;							
+							if(getTwoMoves()){
+								twoMoves = false;
+							/*	if(pressed == SWT.ARROW_LEFT){
+									userCommand = 4;
+									setChanged();
+									notifyObservers();
+									break;
+								}*/
+								if(up){
+									userCommand = 6;
+									setChanged();
+									notifyObservers();
+									up = false;
+								}
+								if(down){
+									userCommand = 8;
+									setChanged();
+									notifyObservers();
+									down = false;
+								}
+							}else{								
+								twoMoves = true;
+								left = true;
+								display.timerExec(120, new Runnable() {
+									@Override
+									public void run() {
+										if(getTwoMoves()){
+											userCommand = 4;
+											setChanged();
+											notifyObservers();
+											twoMoves = false;
+											left = false;
+										}										
+									}
+								});
+							}
+							break;					
+						}						
 					}
 				});			
 			}
@@ -272,9 +492,10 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						userCommand  = 5;
+						userCommand  = 9;
 						setChanged();
 						notifyObservers();
+						board.setFocus();
 					}
 					
 					@Override
@@ -287,13 +508,49 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						userCommand = 6;
+						userCommand = 10;
 						setChanged();
 						notifyObservers();
+						board.setFocus();
 					}
 					
 					@Override
 					public void widgetDefaultSelected(SelectionEvent arg0) {
+						
+					}
+				});
+				
+				buttons.getSave().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						userCommand = 11;
+						setChanged();
+						notifyObservers("save");
+						board.setFocus();
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+				buttons.getLoad().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						load();
+						userCommand = 12;
+						setChanged();
+						notifyObservers("load");
+						board.setFocus();
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
 						
 					}
 				});
@@ -303,9 +560,10 @@ public class MazeView extends Observable implements View,Runnable {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						// EXIT
-						display.sleep();
+						board.dispose();
 						shell.dispose();
-						display.dispose();						
+						display.dispose();
+						System.exit(0);
 					}
 					
 					@Override
@@ -325,10 +583,10 @@ public class MazeView extends Observable implements View,Runnable {
 		int msg = gameOverBox.open();
 		if(msg == SWT.YES){
 			// start a new game
-			userCommand  = 5;
-			board.setFocus();
+			userCommand  = 9;
 			setChanged();
 			notifyObservers();
+			board.setFocus();
 		}else if(msg == SWT.NO){
 			// EXIT
 			display.sleep();
@@ -336,6 +594,51 @@ public class MazeView extends Observable implements View,Runnable {
 			display.dispose();	
 			
 		}
+	}
+	
+	public String save(){
+		FileDialog fd = new FileDialog(shell, SWT.SAVE);
+		fd.setText("Save Game");
+		fd.setFilterPath("C:/Users/user/Desktop");
+		String[] filterExt = {"*.maze","*.txt","*.xml" , "*.*"};
+		String[] filterNames = {"Maze Files (*.maze)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
+		fd.setFilterExtensions(filterExt);
+		fd.setFilterNames(filterNames);
+		fileName = fd.open();
+		return fileName;
+		/*String path = fd.open();
+		if(path != null){
+			String selected = path;
+			fileName = selected;
+			return fileName;
+		}
+		return null;*/
+	}
+	
+	public String load(){
+		FileDialog fd = new FileDialog(shell, SWT.OPEN);
+		fd.setText("Load Maze");
+		fd.setFilterPath("C:/Users/user/Desktop");
+		String[] filterExt = {"*.xml" , "*.*"};
+		String[] filterNames = {"XML Files (*.xml)", "All Files (*.*)"};
+		fd.setFilterExtensions(filterExt);
+		fd.setFilterNames(filterNames);
+		fileName = fd.open();
+		return fileName;
+	}
+	
+	@Override
+	public String getFileNamePath() {
+		return save();
+	}
+
+	@Override
+	public void setFileNamePath(String save) {
+		
+	}
+	
+	public boolean getTwoMoves(){
+		return twoMoves;
 	}
 
 }
