@@ -9,7 +9,7 @@ import gameMaze.view.View;
 import java.util.Observable;
 
 public class RunForTest {
-	/*
+	
 	public static void main(String[] args) {
 		Model modelMaze				= new MazeModel();	
 		View viewMaze				= new MazeView(modelMaze.getMaze());
@@ -21,5 +21,5 @@ public class RunForTest {
 		Thread viewThread = new Thread((MazeView) viewMaze);
 		viewThread.start();
 	}
-	*/
+	
 }
