@@ -2,7 +2,7 @@ package gameMaze.view;
 
 import gameMaze.view.components.ButtonsMaze;
 import gameMaze.view.components.MenuMaze;
-import gameMaze.view.components.ScoreLabel;
+import gameMaze.view.components.oldScoreLabel;
 
 import java.util.Observable;
 import java.util.Timer;
@@ -26,7 +26,7 @@ public class MazeView extends Observable implements View,Runnable {
 	
 	private Display display;	// = new Display();
 	private Shell shell 	;	//= new Shell(display);
-	private ScoreLabel scoreLabel;
+	private oldScoreLabel scoreLabel;
 	private MenuMaze menu ;		//= new Menu2048(shell, SWT.BAR);
 	private BoardMazeView board;
 	private int userCommand = 0;
@@ -84,7 +84,7 @@ public class MazeView extends Observable implements View,Runnable {
 		menu = new MenuMaze(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
 		
-		scoreLabel = new ScoreLabel(shell,SWT.FILL);
+		scoreLabel = new oldScoreLabel(shell,SWT.FILL);
 		
 		board = new BoardMazeView(shell, SWT.BORDER, data.length, data[0].length);
 		board.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true,3,10));
