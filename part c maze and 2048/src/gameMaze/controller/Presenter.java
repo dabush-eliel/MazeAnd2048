@@ -2,16 +2,19 @@ package gameMaze.controller;
 
 import gameMaze.model.Model;
 import gameMaze.view.View;
-
 import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
-
 import com.thoughtworks.xstream.XStream;
 
 
 
 public class Presenter implements Observer,Runnable, Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3689180634467621262L;
 	
 	Model model;
 	View view;
@@ -36,8 +39,6 @@ public class Presenter implements Observer,Runnable, Serializable{
 				String modelXML = xstream.toXML(model);
 				String viewXML = xstream.toXML(view);
 				
-				System.out.println(modelXML);
-				System.out.println(viewXML);
 			}
 			if(arg1 == "load"){
 				
