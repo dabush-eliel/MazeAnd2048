@@ -3,7 +3,6 @@ package gameMaze.controller;
 import gameMaze.model.MazeModel;
 import gameMaze.model.Model;
 import gameMaze.view.View;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,8 +10,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
-
-import com.thoughtworks.xstream.XStream;
 
 
 
@@ -58,12 +55,12 @@ public class Presenter implements Observer,Runnable, Serializable{
 	}
 
 	public void loadGame(){
-		XStream xstream = new XStream();
-		MazeModel mm = new MazeModel();
-		mm = (MazeModel) xstream.fromXML(view.getFileNamePath());
-		if(mm != null){
-			model = mm;
-		}
+	//	XStream xstream = new XStream();
+	//	MazeModel mm = new MazeModel();
+	//	mm = (MazeModel) xstream.fromXML(view.getFileNamePath());
+	//	if(mm != null){
+	//		model = mm;
+	//	}
 	}
 	
 	public void save() {
@@ -73,8 +70,8 @@ public class Presenter implements Observer,Runnable, Serializable{
 		BufferedWriter out;
 		try {
 			out = new BufferedWriter(new FileWriter(file));
-			XStream xstream = new XStream();
-			out.write(xstream.toXML(model));
+		//	XStream xstream = new XStream();
+		//	out.write(xstream.toXML(model));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();

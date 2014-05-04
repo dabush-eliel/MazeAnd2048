@@ -13,12 +13,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
-import com.thoughtworks.xstream.XStream;
-
-import maze.Maze;
-import maze.MazeDomain;
-import model.algorithms.State;
-
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   // NEED TO SET	height + 2
 	private int columns						= 20+2;	// NEED TO SET	width + 2
@@ -35,13 +29,6 @@ public class MazeModel extends Observable implements Model{
 	private Stack <int [][]> old_states		= new Stack <int [][]>();
 	private String fileName					= null;
 	
-// ------------------------ Maze & MazeDomain & algorithms ---------------------------//
-	
-	State start;
-	State goal;
-//	Maze m;
-//	MazeDomain md;
-	
 	
 	public MazeModel(int r, int c){
 		// we want to get the size of the maze from the player
@@ -55,9 +42,6 @@ public class MazeModel extends Observable implements Model{
 	public MazeModel() {
 		this.maze = new int[rows][columns];
 		initGame();
-		start = new State(start_s[0]+","+start_s[1]);
-		goal  = new State(goal_s[0]+","+goal_s[1]);
-//		md = new MazeDomain(new Maze(height, width, start, goal, walls));
 	}
 	
 	// we find some path from the start to the goal and we open the access to this path if there any walls - because we must a some path in the maze
@@ -643,17 +627,6 @@ public class MazeModel extends Observable implements Model{
 		this.old_states = old_states;
 	}
 
-
-	public void setStart(State start) {
-		this.start = start;
-	}
-
-
-	public void setGoal(State goal) {
-		this.goal = goal;
-	}
-
-
 	public int getRows() {
 		return rows;
 	}
@@ -682,17 +655,6 @@ public class MazeModel extends Observable implements Model{
 	public Stack<int[]> getOld_mouse() {
 		return old_mouse;
 	}
-
-
-	public State getStart() {
-		return start;
-	}
-
-
-	public State getGoal() {
-		return goal;
-	}
-
 
 	/**
 	 * Save method: 
@@ -856,14 +818,14 @@ public class MazeModel extends Observable implements Model{
 		}
 	}
 	
-	public void saveXML() {
+/*	public void saveXML() {
 		// get file full path&name by fileName 
 		File file = new File(fileName);
 		BufferedWriter out;
 		try {
 			out = new BufferedWriter(new FileWriter(file));
-			XStream xstream = new XStream();
-			out.write(xstream.toXML(this));
+	//		XStream xstream = new XStream();
+	//		out.write(xstream.toXML(this));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -872,11 +834,11 @@ public class MazeModel extends Observable implements Model{
 	}
 
 	public void loadXML() {
-		XStream xstream = new XStream();
+		//XStream xstream = new XStream();
 		MazeModel mm = new MazeModel();
 		Object obj = (MazeModel) xstream.fromXML(new File(fileName));
 		System.out.println(obj);
-	}
+	}*/
 
 
 	@Override
