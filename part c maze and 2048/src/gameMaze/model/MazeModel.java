@@ -1,9 +1,16 @@
 package gameMaze.model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Stack;
 
 import com.thoughtworks.xstream.XStream;
@@ -13,8 +20,8 @@ import maze.MazeDomain;
 import model.algorithms.State;
 
 public class MazeModel extends Observable implements Model{
-	final private int rows					= 20+2;   // NEED TO SET	height + 2
-	final private int columns				= 20+2;	// NEED TO SET	width + 2
+	private int rows						= 20+2;   // NEED TO SET	height + 2
+	private int columns						= 20+2;	// NEED TO SET	width + 2
 	private int walls[][]					= {{6,4},{5,5},{7,7},{19,20},{19,19},{19,18},{19,17},{19,16},{19,15},{19,13},{19,12}};		// NEED TO SET	
 	private int maze[][];
 	// we use int array of 2 num's as a point - s[0] = X , s[1] = Y
@@ -26,6 +33,7 @@ public class MazeModel extends Observable implements Model{
 	private Stack <int []> old_mouse		= new Stack<int []>();
 	private Stack <Integer>	old_score		= new Stack <Integer>();
 	private Stack <int [][]> old_states		= new Stack <int [][]>();
+	private String fileName					= null;
 	
 // ------------------------ Maze & MazeDomain & algorithms ---------------------------//
 	
@@ -586,45 +594,300 @@ public class MazeModel extends Observable implements Model{
 	}
 
 
-	@Override
-	public void save() {
+	public void setWalls(int[][] walls) {
+		this.walls = walls;
+	}
 
+
+	public void setMaze(int[][] maze) {
+		this.maze = maze;
+	}
+
+
+	public void setStart_s(int[] start_s) {
+		this.start_s = start_s;
+	}
+
+
+	public void setGoal_s(int[] goal_s) {
+		this.goal_s = goal_s;
+	}
+
+
+	public void setMouse(int[] mouse) {
+		this.mouse = mouse;
+	}
+
+
+	public void setSucceed(boolean succeed) {
+		this.succeed = succeed;
+	}
+
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+
+	public void setOld_mouse(Stack<int[]> old_mouse) {
+		this.old_mouse = old_mouse;
+	}
+
+
+	public void setOld_score(Stack<Integer> old_score) {
+		this.old_score = old_score;
+	}
+
+
+	public void setOld_states(Stack<int[][]> old_states) {
+		this.old_states = old_states;
+	}
+
+
+	public void setStart(State start) {
+		this.start = start;
+	}
+
+
+	public void setGoal(State goal) {
+		this.goal = goal;
+	}
+
+
+	public int getRows() {
+		return rows;
+	}
+
+
+	public int getColumns() {
+		return columns;
+	}
+
+
+	public int[][] getWalls() {
+		return walls;
+	}
+
+
+	public int[] getStart_s() {
+		return start_s;
+	}
+
+
+	public int[] getGoal_s() {
+		return goal_s;
+	}
+
+
+	public Stack<int[]> getOld_mouse() {
+		return old_mouse;
+	}
+
+
+	public State getStart() {
+		return start;
+	}
+
+
+	public State getGoal() {
+		return goal;
+	}
+
+
+	/**
+	 * Save method: 
+	 * (r = rows) \ (c = columns) \ (\n = newLine)
+	 *  				first - push the current state to the stack's
+	 *  				to load a game, read:
+	 *  								size: rows \n columns \n
+	 *  								goal: goal[0],goal[1], \n
+	 *  								start: start[0],start[1] \n
+	 *  								walls: walls.lenght \n  r,c, @ r,c, @ r,c, @...@ \n
+	 * 									stacks size: old_*.size (for three history stacks) \n
+	 * 									mouse's: start[row],start[columns], @ r,c, @ r,c, @ r,c, @...@ \n   
+	 * 									score's: score1,score2,score3..., \n
+	 * 									states: [0][0],[0][1],..,[0][c],...[1][0],[1][1]..,[1][c]...,[r][c] \n
+	 * 									state of succeed: true=1 \ false=0
+	 */
+	@Override
+	public void save(){
+		// get file full path&name by fileName 
+		File file = new File(fileName);
+		BufferedWriter out;
+		
+		System.out.println("bufferedWriter.out created");
+		
+				//	save the last board - put it in history
+				int [][] lastPosition = new int[rows][columns];
+				for(int i=0;i<rows;i++){
+					for(int j=0;j<columns;j++){
+						lastPosition[i][j] = maze[i][j];
+					}
+				}	
+				
+				int lastMouse[] = new int[2];
+				lastMouse[0] = mouse[0];
+				lastMouse[1] = mouse[1];
+				
+				old_mouse.push(lastMouse);
+				old_score.push(score);
+				old_states.push(lastPosition);
+		
+		
+		try {
+			out = new BufferedWriter(new FileWriter(file));
+			System.out.println("bufferedWriter.out initialized");
+			// save size of the maze;
+			out.write(""+rows);
+			out.newLine();
+			out.write(""+columns);
+			out.newLine();			
+			// -------- save start&goal locations -------- //
+			// gives:  "row,column" of the goal 
+			for(int i : goal_s){
+				out.write(""+i+',');
+			}
+			out.newLine();
+			// gives:  "row,column" of the start 
+			for(int i : start_s){
+				out.write(""+i+',');
+			}
+			out.newLine(); 
+			// save walls 
+			out.write(""+walls.length);
+			out.newLine();
+			for(int w[]  : walls ){
+				for(int n : w){
+					out.write(""+n+',');
+				}
+				out.write(" @ ");
+			}
+			out.newLine();			
+			// ---------- save history ---------- // 
+			// save our history size - get size of some  old_stack (all have to be the same size)
+			out.write(""+old_states.size());
+			out.newLine();
+			// save mouse history : in one row separated by '@' ; mouse rows/columns separated by ','
+			for(int[] m: old_mouse){
+				for(int n: m){
+					out.write(""+n+',');
+				}
+				out.write(" @ ");
+			}
+			out.newLine();
+			// save score history : in one row separated by ','
+			for(Integer s : old_score){
+				out.write(""+s+',');
+			}
+			out.newLine();
+			// save maze state history : each state separated by new line "\n" ; each number (cell value) separated by ','
+			for(int [][] s: old_states){
+				for(int  i=0 ; i < rows ; i++){
+					for(int j=0 ; j < columns ; j++){
+						out.write(" "+maze[i][j]+',');
+					}
+				}
+				out.newLine();
+			}			
+		// save succeed value
+			if(succeed){
+				out.newLine();
+				out.write(""+1);
+			}else{
+				out.newLine();
+				out.write(""+0);
+			}
+			out.close();			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 
-
+	
+	/**
+	 * Load method: 
+	 * (r = rows) \ (c = columns) \ (\n = newLine)
+	 *  				to load a game, read:
+	 *  								size: rows \n columns \n
+	 *  								goal: goal[0],goal[1], \n
+	 *  								start: start[0],start[1] \n
+	 *  								walls: walls.lenght \n  r,c, @ r,c, @ r,c, @...@ \n
+	 * 									stacks size: old_*.size (for three history stacks) \n
+	 * 									mouse's: start[row],start[columns], @ r,c, @ r,c, @ r,c, @...@ \n   
+	 * 									score's: score1,score2,score3..., \n
+	 * 									states: [0][0],[0][1],..,[0][c],...[1][0],[1][1]..,[1][c]...,[r][c] \n
+	 * 									state of succeed: true=1 \ false=0
+	 * 
+	 * 				---After we loaded we have to do undone action---
+	 */
+	
 	@Override
-	public void load() {
-		// TODO Auto-generated method stub
+	public void load(){
+		// get file full path&name by fileName 
+		File file = new File(fileName);
+		BufferedReader in;
+		
+		System.out.println("bufferedReader.out created");
+		
+		try {
+			in = new BufferedReader(new FileReader(file));
+			System.out.println("bufferedReader.out initialized");
+			
+			Scanner s = new Scanner(file);
+			this.rows = s.nextInt();//Integer.parseInt(s.nextLine());
+			this.columns = s.nextInt();//Integer.parseInt(s.nextLine());
+			s.useDelimiter(",");
+			this.goal_s[0] = s.nextInt();
+			this.goal_s[1] = s.nextInt();
+			this.start_s[0] = s.nextInt();
+			this.goal_s[1] = s.nextInt();
+			
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveXML() {
+		// get file full path&name by fileName 
+		File file = new File(fileName);
+		BufferedWriter out;
+		try {
+			out = new BufferedWriter(new FileWriter(file));
+			XStream xstream = new XStream();
+			out.write(xstream.toXML(this));
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 		
 	}
 
-
-	@Override
-	public String getFileNameToSave() {
-		// TODO Auto-generated method stub
-		return null;
+	public void loadXML() {
+		XStream xstream = new XStream();
+		MazeModel mm = new MazeModel();
+		Object obj = (MazeModel) xstream.fromXML(new File(fileName));
+		System.out.println(obj);
 	}
 
 
 	@Override
-	public void setFileNameToSave(String save) {
-		// TODO Auto-generated method stub
-		
+	public String getFileName() {
+		return fileName;
 	}
 
 
 	@Override
-	public String getFileNameToLoad() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void setFileNameToLoad(String load) {
-		// TODO Auto-generated method stub
-		
+	public void setFileName(String name) {
+		fileName = name;
 	}
 
 }

@@ -19,8 +19,8 @@ public interface Model {
 	public boolean isSucceed();
 	public void save();
 	public void load();
-	public String getFileNameToSave();
-	public void setFileNameToSave(String save);
-	public String getFileNameToLoad();
-	public void setFileNameToLoad(String load);
+	public String getFileName();
+	public void setFileName(String save);
+//	public String getFileNameToLoad();
+//	public void setFileNameToLoad(String load);
 }

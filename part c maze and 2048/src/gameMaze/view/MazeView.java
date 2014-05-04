@@ -18,6 +18,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -35,9 +36,10 @@ public class MazeView extends Observable implements View,Runnable {
 	private boolean succeed 	= false;
 	private boolean twoMoves 	= false;
 	private boolean  up 	  = false;
-	private boolean  down  = false;
-	private boolean right = false;
-	private boolean left  = false;
+	private boolean  down 	= false;
+	private boolean right 	= false;
+	private boolean left  	= false;
+	private String fileName	  	= null;
 	
 	
 	public MazeView(int [][] data) {
@@ -131,8 +133,10 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						userCommand = 11;
 						setChanged();
 						notifyObservers("save");
+						board.setFocus();
 					}
 					
 					@Override
@@ -146,8 +150,10 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-						
+						userCommand = 12;
+						setChanged();
+						notifyObservers("load");
+						board.setFocus();						
 					}
 					
 					@Override
@@ -514,6 +520,41 @@ public class MazeView extends Observable implements View,Runnable {
 					}
 				});
 				
+				buttons.getSave().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						userCommand = 11;
+						setChanged();
+						notifyObservers("save");
+						board.setFocus();
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+				buttons.getLoad().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						load();
+						userCommand = 12;
+						setChanged();
+						notifyObservers("load");
+						board.setFocus();
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
 				buttons.getExit().addSelectionListener(new SelectionListener() {
 					
 					@Override
@@ -543,9 +584,9 @@ public class MazeView extends Observable implements View,Runnable {
 		if(msg == SWT.YES){
 			// start a new game
 			userCommand  = 9;
-			board.setFocus();
 			setChanged();
 			notifyObservers();
+			board.setFocus();
 		}else if(msg == SWT.NO){
 			// EXIT
 			display.sleep();
@@ -554,16 +595,45 @@ public class MazeView extends Observable implements View,Runnable {
 			
 		}
 	}
-
+	
+	public String save(){
+		FileDialog fd = new FileDialog(shell, SWT.SAVE);
+		fd.setText("Save Game");
+		fd.setFilterPath("C:/Users/user/Desktop");
+		String[] filterExt = {"*.maze","*.txt","*.xml" , "*.*"};
+		String[] filterNames = {"Maze Files (*.maze)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
+		fd.setFilterExtensions(filterExt);
+		fd.setFilterNames(filterNames);
+		fileName = fd.open();
+		return fileName;
+		/*String path = fd.open();
+		if(path != null){
+			String selected = path;
+			fileName = selected;
+			return fileName;
+		}
+		return null;*/
+	}
+	
+	public String load(){
+		FileDialog fd = new FileDialog(shell, SWT.OPEN);
+		fd.setText("Load Maze");
+		fd.setFilterPath("C:/Users/user/Desktop");
+		String[] filterExt = {"*.xml" , "*.*"};
+		String[] filterNames = {"XML Files (*.xml)", "All Files (*.*)"};
+		fd.setFilterExtensions(filterExt);
+		fd.setFilterNames(filterNames);
+		fileName = fd.open();
+		return fileName;
+	}
+	
 	@Override
 	public String getFileNamePath() {
-		// TODO Auto-generated method stub
-		return null;
+		return save();
 	}
 
 	@Override
 	public void setFileNamePath(String save) {
-		// TODO Auto-generated method stub
 		
 	}
 	
