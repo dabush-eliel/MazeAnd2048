@@ -124,7 +124,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 		
-		old_score.push(score);
+		//old_score.push(score);
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
@@ -146,6 +146,7 @@ public class Game2048Model extends Observable implements Model {
 		// if board doesn't changed don't add new square
 		// also, if there is no more free spot & can't make any merge - we stuck ! 
 		if(boardChanged(last_board2048, board2048)){
+			old_score.push(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -170,7 +171,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		old_score.push(score);
+		//old_score.push(score);
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -191,6 +192,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
+			old_score.push(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -214,7 +216,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		old_score.push(score);
+		//old_score.push(score);
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -235,6 +237,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
+			old_score.push(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
 			setChanged();
@@ -258,7 +261,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		old_score.push(score);
+		//old_score.push(score);
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
@@ -279,6 +282,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
+			old_score.push(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -371,23 +375,29 @@ public class Game2048Model extends Observable implements Model {
 	
 	@Override
 	public void save(){
+		old_moves.push(board2048);
+		old_score.push(score);
 		File file = new File(fileNameToSave);
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			System.out.println(old_moves.size() + "stack_moves");
-			System.out.println(old_score.size() + "stack_score");
 			out.write("" + old_moves.size());
 			out.write("\n");
-			for(int k = (old_moves.size() - 1) ; k >= 0 ; k--){
+			for(int k = 0 ; k < old_moves.size() ; k++){
 				int[][] gameArrayToWrite = old_moves.get(k);
 				for(int i = 0; i < size ; i++ ){
 					for(int j = 0 ; j < size; j++){
 						out.write("" + gameArrayToWrite[i][j]);
+						System.out.print(gameArrayToWrite[i][j]);
 						out.write(",");
 					}
-					out.write("@");
+					System.out.println();
+				}
+				if(k == old_moves.size() -1){
+					System.out.println(1);
 				}
 				out.write("#" + old_score.get(k));
+				System.out.println("score:" + old_score.get(k));
+				System.out.println("scoreLast" + old_score.get(old_moves.size() -1));
 				out.write("\n");
 			}
 			out.close();
@@ -404,7 +414,10 @@ public class Game2048Model extends Observable implements Model {
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			int numLines = 0;
 			try {
-				numLines = Integer.parseInt(in.readLine());
+				//ready() is to check if buffer is empty
+				if(in.ready()){
+					numLines = Integer.parseInt(in.readLine());
+				}
 			} catch (NumberFormatException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -413,22 +426,69 @@ public class Game2048Model extends Observable implements Model {
 				e1.printStackTrace();
 			}
 			try {
+				//ready() is to check if buffer is empty
+				if(in.ready()){
+				//here it contains each line from text that it reading from it
 				String tempLine = "";
-				int helper = 0;
-				int[][] tempArrayToAdd = new int[size][size];
-				for(int k = 0 ; k < numLines ; k++){
+				//here it contains score for each line
+				int tempScore = 0;
+				old_moves.clear();
+				old_score.clear();
+				for(int k = 0; k < numLines; k++){
+					int[][] tempArrayToAdd = new int[size][size];
 					tempLine = in.readLine();
-					for(int i = 0 ; i < size; i++){
-						for(int j = 0; j < size*2 ; j++){
-							int numToAdd = Integer.parseInt(Character.toString(tempLine.charAt(i+j+helper)));
-							tempArrayToAdd[i][j] = numToAdd;
-							j++;
-							helper+=2;
+					System.out.println(tempLine);
+					int i = 0;
+					int j = 0;
+					boolean flag;
+					int indexRunner = 0;
+					//run for 17 blocks from text, each ',' separate the block
+					for(int z = 0 ; z < 17 ; z++){
+						//numToAdd is variable that add number to right [i][j] in tempArrayToAdd
+						int numToAdd = 0;
+						String strNum = "";
+						flag = true;
+						while(flag){
+							if(Character.toString(tempLine.charAt(indexRunner)).equals(",")){
+								numToAdd = Integer.parseInt(strNum);
+								indexRunner++;
+								flag = false;
+							}
+							else if(Character.toString(tempLine.charAt(indexRunner)).equals("#")){
+								++indexRunner;
+								strNum = tempLine.substring(indexRunner);
+								tempScore = Integer.parseInt(strNum);
+								flag = false;
+							}
+							else {
+								strNum += Character.toString(tempLine.charAt(indexRunner));
+								indexRunner++;
+							}
 						}
-						helper+=2;
+						if(z < 16){
+							tempArrayToAdd[i][j] = numToAdd;
+						}
+						j++;
+						if(j == 4){
+							j = 0;
+							i++;
+						}
+						if(i == 4){
+							i = 0;
+						}
 					}
+					indexRunner = 0;
+					//for display to show the board and right score
+					if(k == numLines -1){
+						board2048 = tempArrayToAdd;
+						score = tempScore;
+					}
+					old_moves.push(tempArrayToAdd);
+					old_score.push(tempScore);
 				}
-				
+				setChanged();
+				notifyObservers();
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -470,7 +530,6 @@ public class Game2048Model extends Observable implements Model {
 		case 8:
 			load();
 			break;
-//		case 9:		exit
 		case 11:
 			succeed = false;
 			check 	= false;

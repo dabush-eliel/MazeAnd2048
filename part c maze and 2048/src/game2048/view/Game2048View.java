@@ -148,8 +148,9 @@ public class Game2048View extends Observable implements View, Runnable{
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						userCommand = 8;
-						if(loadAction() != null){
-							setFileNamePath(loadAction());
+						String path = loadAction();
+						if(path != null){
+							setFileNamePath(path);
 							setChanged();
 							notifyObservers("load");
 							board.setFocus();
@@ -355,8 +356,9 @@ public class Game2048View extends Observable implements View, Runnable{
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						userCommand = 8;
-						if(loadAction() != null){
-							setFileNamePath(loadAction());
+						String path = loadAction();
+						if(path != null){
+							setFileNamePath(path);
 							setChanged();
 							notifyObservers("load");
 							board.setFocus();
@@ -375,6 +377,8 @@ public class Game2048View extends Observable implements View, Runnable{
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
 						// EXIT
+						shell.dispose();
+						display.dispose();
 						System.exit(0);
 					}
 					

@@ -3,6 +3,7 @@ package game2048.controller;
 import game2048.model.Game2048Model;
 
 public class RunForTest {
+	/*
 	public static void main(String []args){
 		Game2048Model game = new Game2048Model();
 		int [][] board = game.getBoard();
@@ -37,5 +38,6 @@ public class RunForTest {
 		System.out.println("Score: "+game.getScore());
 		
 	}
+	*/
 
 }
