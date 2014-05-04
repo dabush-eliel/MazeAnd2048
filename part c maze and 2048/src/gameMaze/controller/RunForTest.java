@@ -20,6 +20,7 @@ public class RunForTest {
 
 		Thread viewThread = new Thread((MazeView) viewMaze);
 		viewThread.start();
+		System.out.println("thread started");
 	}
 	
 }
