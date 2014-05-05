@@ -339,6 +339,7 @@ public class MazeView extends Observable implements View,Runnable {
 									notifyObservers();
 									left = false;
 								}
+								up = false;
 							}else{								
 								twoMoves = true;
 								up = true;
@@ -350,8 +351,8 @@ public class MazeView extends Observable implements View,Runnable {
 											setChanged();
 											notifyObservers();
 											twoMoves = false;
-											up = false;	
-										}							
+										}
+										up = false;	
 									}
 								});
 							}							
@@ -379,6 +380,7 @@ public class MazeView extends Observable implements View,Runnable {
 									notifyObservers();
 									left = false;
 								}
+								down = false;
 							}else{								
 								twoMoves = true;
 								down = true;								
@@ -390,8 +392,8 @@ public class MazeView extends Observable implements View,Runnable {
 											setChanged();
 											notifyObservers();
 											twoMoves = false;
-											down = false;
-										}															
+										}
+										down = false;
 									}
 								});
 							}
@@ -420,7 +422,8 @@ public class MazeView extends Observable implements View,Runnable {
 									notifyObservers();
 									down = false;
 									break;
-								}								
+								}		
+								right = false;
 							}else{
 								twoMoves = true;
 								right = true;
@@ -431,9 +434,9 @@ public class MazeView extends Observable implements View,Runnable {
 											userCommand = 3;
 											setChanged();
 											notifyObservers();
-											twoMoves = false;
-											right = false;
-										}							
+											twoMoves = false;											
+										}					
+										right = false;
 									}
 								});
 							}
@@ -461,6 +464,7 @@ public class MazeView extends Observable implements View,Runnable {
 									notifyObservers();
 									down = false;
 								}
+								left = false;
 							}else{								
 								twoMoves = true;
 								left = true;
@@ -471,9 +475,9 @@ public class MazeView extends Observable implements View,Runnable {
 											userCommand = 4;
 											setChanged();
 											notifyObservers();
-											twoMoves = false;
-											left = false;
-										}										
+											twoMoves = false;											
+										}					
+										left = false;
 									}
 								});
 							}
