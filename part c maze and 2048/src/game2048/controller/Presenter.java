@@ -42,6 +42,7 @@ public class Presenter implements Observer{
 		if(o == view && arg1 == "load"){
 			model.setFileNameToLoad(view.getFileNamePath());
 			model.doUserCommand(view.getUserCommand());
+			model.undoMove();
 		}
 	}
 	

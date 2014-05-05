@@ -486,6 +486,7 @@ public class Game2048Model extends Observable implements Model {
 					old_moves.push(tempArrayToAdd);
 					old_score.push(tempScore);
 				}
+				score = old_score.pop();
 				setChanged();
 				notifyObservers();
 				}

@@ -2,12 +2,16 @@ package game2048.view;
 import game2048.view.components.Buttons2048;
 import game2048.view.components.Menu2048;
 import game2048.view.components.ScoreLabel;
+
+import java.sql.Time;
 import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,6 +41,9 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Buttons2048 buttons;
 	private boolean succeed = false;
 	
+	int mouseDownX = 0;
+	int mouseDownY = 0;
+	
 	private String fileName = "";
 	
 	public Game2048View(int [][] data) {
@@ -54,10 +61,15 @@ public class Game2048View extends Observable implements View, Runnable{
 		
 		shell.setText("2048 Eliel's edition");
 		shell.setLayout(new GridLayout(3,true));
-		shell.setSize(400 , 345);
+		shell.setSize(650 , 500);
 		
 		menu = new Menu2048(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
+		
+		MessageBox msgBox = new MessageBox(shell);
+		msgBox.setText("Information about game");
+		msgBox.setMessage("Instructions: To play use arrow keys up,down,right,left or the mouse by clicking somewhere and pull it to the side u want it to move.\nYou can save your position during the game and load it from the place u saved it\nYou can undo moves till the begining of the game.\nEnjoy :)");
+		msgBox.open();
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
 		
@@ -212,7 +224,7 @@ public class Game2048View extends Observable implements View, Runnable{
 						// TODO Auto-generated method stub
 						
 					}
-				});				
+				});	
 			}
 		});
 	}
@@ -225,21 +237,48 @@ public class Game2048View extends Observable implements View, Runnable{
 				board.addMouseListener(new MouseListener() {
 					
 					@Override
-					public void mouseUp(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
+					public void mouseDown(MouseEvent eventClickDown) {
+						setMouseDownX(eventClickDown.x);
+						setMouseDownY(eventClickDown.y);
 					}
 					
 					@Override
-					public void mouseDown(MouseEvent e) {
-						// TODO Auto-generated method stub
+					public void mouseUp(final MouseEvent eventClickUp) {
+						int differenceX = getMouseDownX() - eventClickUp.x;
+						int differenceY = getMouseDownY() - eventClickUp.y;
+						boolean up = (-50 <= differenceX) && (differenceX <= 50) && (40 <= differenceY) && (differenceY <= 160 );
+						boolean down = (-50 <= differenceX) && (differenceX <= 50) && (-160 <= differenceY) && (differenceY <= -60);
+						boolean right = (-190 <= differenceX) && (differenceX <= -130) && (-80 <= differenceY) && (differenceY <= 80);
+						boolean left = (50 <= differenceX) && (differenceX <= 190) && (-90 <= differenceY) && (differenceY <= 90);
 						
+						if(up){
+							userCommand = 1;
+							setChanged();
+							notifyObservers();
+						}
+						else if(down){
+							userCommand = 2;
+							setChanged();
+							notifyObservers();
+						}
+						
+						else if(right){
+							userCommand = 3;
+							setChanged();
+							notifyObservers();
+						}
+						else if(left){
+							userCommand = 4;
+							setChanged();
+							notifyObservers();
+						}
 					}
 					
 					@Override
 					public void mouseDoubleClick(MouseEvent e) {
 						board.setFocus();
 					}
+					
 				});
 				
 				board.addKeyListener(new KeyListener() {	
@@ -559,7 +598,18 @@ public class Game2048View extends Observable implements View, Runnable{
 	public void setFileNamePath(String save) {
 		this.fileName = save;
 	}
-
 	
+	public void setMouseDownX(int x){
+		mouseDownX = x;
+	}
+	public int getMouseDownX(){
+		return mouseDownX;
+	}
+	public void setMouseDownY(int y){
+		mouseDownY = y;
+	}
+	public int getMouseDownY(){
+		return mouseDownY;
+	}
 	
 }
