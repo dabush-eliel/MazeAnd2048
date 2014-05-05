@@ -30,7 +30,6 @@ public class MazeView extends Observable implements View,Runnable {
 	private MenuMaze menu ;		//= new Menu2048(shell, SWT.BAR);
 	private BoardMazeView board;
 	private int userCommand = 0;
-	private int doubleMoveUcommand = 0;
 	private int [][] data;
 	private ButtonsMaze buttons;
 	private boolean succeed 	= false;
@@ -120,7 +119,6 @@ public class MazeView extends Observable implements View,Runnable {
 	}
 	
 	
-	
 	// ----------			LISTENERS          ----------
 	
 	// menu buttons listener
@@ -133,9 +131,12 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 11;
-						setChanged();
-						notifyObservers("save");
+						String path = save();
+						if(path != null){
+							userCommand = 11;
+							setChanged();
+							notifyObservers("save");
+						}
 						board.setFocus();
 					}
 					
@@ -150,10 +151,13 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 12;
-						setChanged();
-						notifyObservers("load");
-						board.setFocus();						
+						String path = save();
+						if(path != null){
+							userCommand = 12;
+							setChanged();
+							notifyObservers("load");
+						}						
+						board.setFocus();
 					}
 					
 					@Override
@@ -473,7 +477,29 @@ public class MazeView extends Observable implements View,Runnable {
 									}
 								});
 							}
-							break;					
+							break;	
+							
+						// play with the numbers on the right side of the keyboard --> num lk should be off	
+						case SWT.PAGE_UP:
+							userCommand = 5;
+							setChanged();
+							notifyObservers();
+							break;
+						case SWT.HOME:
+							userCommand = 6;
+							setChanged();
+							notifyObservers();
+							break;
+						case SWT.PAGE_DOWN:
+							userCommand = 7;
+							setChanged();
+							notifyObservers();
+							break;
+						case SWT.END:
+							userCommand = 8;
+							setChanged();
+							notifyObservers();
+							break;
 						}						
 					}
 				});			
@@ -524,9 +550,12 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						userCommand = 11;
-						setChanged();
-						notifyObservers("save");
+						String path = save();
+						if(path != null){
+							userCommand = 11;
+							setChanged();
+							notifyObservers("save");
+						}
 						board.setFocus();
 					}
 					
@@ -541,10 +570,12 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						load();
-						userCommand = 12;
-						setChanged();
-						notifyObservers("load");
+						String path = load();
+						if(path != null){
+							userCommand = 12;
+							setChanged();
+							notifyObservers("load");
+						}
 						board.setFocus();
 					}
 					
@@ -591,8 +622,7 @@ public class MazeView extends Observable implements View,Runnable {
 			// EXIT
 			display.sleep();
 			shell.dispose();
-			display.dispose();	
-			
+			display.dispose();		
 		}
 	}
 	
@@ -600,27 +630,20 @@ public class MazeView extends Observable implements View,Runnable {
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setText("Save Game");
 		fd.setFilterPath("C:/Users/user/Desktop");
-		String[] filterExt = {"*.maze","*.txt","*.xml" , "*.*"};
-		String[] filterNames = {"Maze Files (*.maze)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
+		String[] filterExt = {"*.maze.txt","*.txt","*.xml" , "*.*"};
+		String[] filterNames = {"Maze Text Files (*.maze.txt)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
 		fd.setFilterExtensions(filterExt);
 		fd.setFilterNames(filterNames);
 		fileName = fd.open();
 		return fileName;
-		/*String path = fd.open();
-		if(path != null){
-			String selected = path;
-			fileName = selected;
-			return fileName;
-		}
-		return null;*/
 	}
 	
 	public String load(){
 		FileDialog fd = new FileDialog(shell, SWT.OPEN);
 		fd.setText("Load Maze");
 		fd.setFilterPath("C:/Users/user/Desktop");
-		String[] filterExt = {"*.xml" , "*.*"};
-		String[] filterNames = {"XML Files (*.xml)", "All Files (*.*)"};
+		String[] filterExt = {"*.maze.txt","*.txt","*.xml" , "*.*"};
+		String[] filterNames = {"Maze Text Files (*.maze.txt)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
 		fd.setFilterExtensions(filterExt);
 		fd.setFilterNames(filterNames);
 		fileName = fd.open();
@@ -629,12 +652,7 @@ public class MazeView extends Observable implements View,Runnable {
 	
 	@Override
 	public String getFileNamePath() {
-		return save();
-	}
-
-	@Override
-	public void setFileNamePath(String save) {
-		
+		return fileName;
 	}
 	
 	public boolean getTwoMoves(){

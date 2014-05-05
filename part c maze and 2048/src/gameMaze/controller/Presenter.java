@@ -1,6 +1,5 @@
 package gameMaze.controller;
 
-import gameMaze.model.MazeModel;
 import gameMaze.model.Model;
 import gameMaze.view.View;
 import java.io.BufferedWriter;
@@ -13,7 +12,7 @@ import java.util.Observer;
 
 
 
-public class Presenter implements Observer,Runnable, Serializable{
+public class Presenter implements Observer,Runnable{
 	
 	Model model;
 	View view;

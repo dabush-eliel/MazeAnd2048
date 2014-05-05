@@ -188,6 +188,7 @@ public class MazeModel extends Observable implements Model{
 			load();
 			setChanged();
 			notifyObservers();
+			undoMove();
 			break;
 		}
 	}
@@ -664,9 +665,9 @@ public class MazeModel extends Observable implements Model{
 	 *  								size: rows \n columns \n
 	 *  								goal: goal[0],goal[1], \n
 	 *  								start: start[0],start[1] \n
-	 *  								walls: walls.lenght \n  r,c, @ r,c, @ r,c, @...@ \n
+	 *  								walls: walls.lenght \n  r,c,r,c,r,c,... \n
 	 * 									stacks size: old_*.size (for three history stacks) \n
-	 * 									mouse's: start[row],start[columns], @ r,c, @ r,c, @ r,c, @...@ \n   
+	 * 									mouse's: start[row],start[columns],r,c,r,c,r,c,... \n   
 	 * 									score's: score1,score2,score3..., \n
 	 * 									states: [0][0],[0][1],..,[0][c],...[1][0],[1][1]..,[1][c]...,[r][c] \n
 	 * 									state of succeed: true=1 \ false=0
@@ -676,25 +677,22 @@ public class MazeModel extends Observable implements Model{
 		// get file full path&name by fileName 
 		File file = new File(fileName);
 		BufferedWriter out;
-		
 		System.out.println("bufferedWriter.out created");
 		
-				//	save the last board - put it in history
-				int [][] lastPosition = new int[rows][columns];
-				for(int i=0;i<rows;i++){
-					for(int j=0;j<columns;j++){
-						lastPosition[i][j] = maze[i][j];
-					}
-				}	
-				
-				int lastMouse[] = new int[2];
-				lastMouse[0] = mouse[0];
-				lastMouse[1] = mouse[1];
-				
-				old_mouse.push(lastMouse);
-				old_score.push(score);
-				old_states.push(lastPosition);
+		//	save the last board - put it in history
+		int [][] lastPosition = new int[rows][columns];
+		for(int i=0;i<rows;i++){
+			for(int j=0;j<columns;j++){
+				lastPosition[i][j] = maze[i][j];
+			}
+		}		
+		int lastMouse[] = new int[2];
+		lastMouse[0] = mouse[0];
+		lastMouse[1] = mouse[1];
 		
+		old_mouse.push(lastMouse);
+		old_score.push(score);
+		old_states.push(lastPosition);		
 		
 		try {
 			out = new BufferedWriter(new FileWriter(file));
@@ -722,7 +720,7 @@ public class MazeModel extends Observable implements Model{
 				for(int n : w){
 					out.write(""+n+',');
 				}
-				out.write(" @ ");
+				//out.write(" @ ");
 			}
 			out.newLine();			
 			// ---------- save history ---------- // 
@@ -734,7 +732,7 @@ public class MazeModel extends Observable implements Model{
 				for(int n: m){
 					out.write(""+n+',');
 				}
-				out.write(" @ ");
+			//	out.write(" @ ");
 			}
 			out.newLine();
 			// save score history : in one row separated by ','
@@ -746,17 +744,21 @@ public class MazeModel extends Observable implements Model{
 			for(int [][] s: old_states){
 				for(int  i=0 ; i < rows ; i++){
 					for(int j=0 ; j < columns ; j++){
-						out.write(" "+maze[i][j]+',');
+					/*	if(maze[i][j] == -1){
+							out.write(""+5+',');
+						}else{
+							out.write(""+maze[i][j]+',');
+						}*/
+						out.write(""+maze[i][j]+',');
+						
 					}
+					out.newLine();
 				}
-				out.newLine();
 			}			
 		// save succeed value
 			if(succeed){
-				out.newLine();
 				out.write(""+1);
 			}else{
-				out.newLine();
 				out.write(""+0);
 			}
 			out.close();			
@@ -776,13 +778,13 @@ public class MazeModel extends Observable implements Model{
 	 *  								size: rows \n columns \n
 	 *  								goal: goal[0],goal[1], \n
 	 *  								start: start[0],start[1] \n
-	 *  								walls: walls.lenght \n  r,c, @ r,c, @ r,c, @...@ \n
+	 *  								walls: walls.lenght \n  r,c,r,c,r,c,... \n
 	 * 									stacks size: old_*.size (for three history stacks) \n
-	 * 									mouse's: start[row],start[columns], @ r,c, @ r,c, @ r,c, @...@ \n   
+	 * 									mouse's: start[row],start[columns],r,c,r,c,r,c,... \n   
 	 * 									score's: score1,score2,score3..., \n
 	 * 									states: [0][0],[0][1],..,[0][c],...[1][0],[1][1]..,[1][c]...,[r][c] \n
 	 * 									state of succeed: true=1 \ false=0
-	 * 
+	 *  
 	 * 				---After we loaded we have to do undone action---
 	 */
 	
@@ -790,24 +792,111 @@ public class MazeModel extends Observable implements Model{
 	public void load(){
 		// get file full path&name by fileName 
 		File file = new File(fileName);
-		BufferedReader in;
-		
+		BufferedReader in;		
 		System.out.println("bufferedReader.out created");
 		
 		try {
 			in = new BufferedReader(new FileReader(file));
 			System.out.println("bufferedReader.out initialized");
 			
-			Scanner s = new Scanner(file);
-			this.rows = s.nextInt();//Integer.parseInt(s.nextLine());
-			this.columns = s.nextInt();//Integer.parseInt(s.nextLine());
+			while(!in.ready()){
+				// wait until buffer is ready - i must wait because we depends on that action. can't continue without it;
+			}
+			// read first line
+			this.rows 		= Integer.parseInt(in.readLine());			
+			this.columns 	= Integer.parseInt(in.readLine());
+			// debug syso
+			System.out.println("rows:"+rows+" colus:"+columns);
+			
+			Scanner s = new Scanner(in.readLine());
 			s.useDelimiter(",");
-			this.goal_s[0] = s.nextInt();
-			this.goal_s[1] = s.nextInt();
-			this.start_s[0] = s.nextInt();
-			this.goal_s[1] = s.nextInt();
+			for(int i=0; i<2; i++){
+				this.goal_s[i] = s.nextInt();				
+			}
+			s.close();
 			
+			s = new Scanner(in.readLine());
+			s.useDelimiter(",");
+			for(int i=0; i<2; i++){
+				this.start_s[i] = s.nextInt();				
+			}
+			s.close();	
 			
+			// debug syso
+			System.out.println("start position: "+start_s[0]+","+start_s[1]);
+			System.out.println("goal position: "+goal_s[0]+","+goal_s[1]);
+			// clear stacks 
+			this.old_mouse.clear();
+			this.old_score.clear();
+			this.old_states.clear();
+		//	s = new Scanner(in.readLine());
+		//	s.close();
+			int numOfWalls = Integer.parseInt(in.readLine());
+			// debug syso
+			System.out.println("num of walls:" + numOfWalls);
+			// load walls
+			s = new Scanner(in.readLine());
+			s.useDelimiter(",");
+			walls = new int[numOfWalls][2];
+			for(int i=0 ; i<numOfWalls-1 ; i++){
+				for(int j=0;j<2;j++){
+					walls[i][j] = s.nextInt();	
+				}
+			}
+			s.close();
+			
+			int numOfMoves = Integer.parseInt(in.readLine());
+			// debug syso
+			System.out.println("number Of States: "+numOfMoves);
+			// mouse states
+			s = new Scanner(in.readLine());
+			s.useDelimiter(",");
+			for(int i=0 ; i<numOfMoves ; i++){
+				int mlast[] = new int[2];
+				for(int j=0; j<2; j++){
+					mlast[j] = s.nextInt();
+				}
+				old_mouse.push(mlast);
+			}
+			s.close();
+			
+			// load all score history
+			s = new Scanner(in.readLine());
+			s.useDelimiter(",");
+			for(int i=0 ; i<numOfMoves ; i++){
+				old_score.push(s.nextInt());
+			}
+			s.close();
+			
+			// debug syso
+			System.out.println("current score: "+old_score.peek());
+			// load all maze states from file
+			for(int i=0 ; i<numOfMoves ; i++){
+				int [][] last = new int[rows][columns];
+				for(int m=0 ; m<rows ; m++ ){
+					s = new Scanner(in.readLine());
+					s.useDelimiter(",");
+					for(int n=0 ; n<columns ; n++){
+						last[m][n] = s.nextInt();
+						if(last[m][n] == 5){
+							last[m][n] = -1;
+						}
+					}
+				}
+				old_states.push(last);
+			}
+			s.close();
+			
+			int x = Integer.parseInt(in.readLine());
+			// debug syso
+			System.out.println("succeed = "+x);
+			if(x == 0){
+				succeed = false;
+			}else{
+				succeed = true;
+			}
+			
+			in.close();
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
