@@ -315,7 +315,6 @@ public class MazeView extends Observable implements View,Runnable {
 					@Override
 					public void keyPressed(KeyEvent e) {
 						int pressed = 0;
-						
 						switch(e.keyCode){
 						
 						case SWT.ARROW_UP:
@@ -633,7 +632,7 @@ public class MazeView extends Observable implements View,Runnable {
 	public String save(){
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setText("Save Game");
-		fd.setFilterPath("C:/Users/user/Desktop");
+		fd.setFilterPath("LoadAndSave/");
 		String[] filterExt = {"*.maze.txt","*.txt","*.xml" , "*.*"};
 		String[] filterNames = {"Maze Text Files (*.maze.txt)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
 		fd.setFilterExtensions(filterExt);
@@ -645,7 +644,7 @@ public class MazeView extends Observable implements View,Runnable {
 	public String load(){
 		FileDialog fd = new FileDialog(shell, SWT.OPEN);
 		fd.setText("Load Maze");
-		fd.setFilterPath("C:/Users/user/Desktop");
+		fd.setFilterPath("LoadAndSave/");
 		String[] filterExt = {"*.maze.txt","*.txt","*.xml" , "*.*"};
 		String[] filterNames = {"Maze Text Files (*.maze.txt)","Text Files (*.txt)","XML Files (*.xml)", "All Files (*.*)"};
 		fd.setFilterExtensions(filterExt);

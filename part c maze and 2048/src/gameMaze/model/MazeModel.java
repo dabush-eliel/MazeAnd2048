@@ -16,7 +16,8 @@ import java.util.Stack;
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   // NEED TO SET	height + 2
 	private int columns						= 20+2;	// NEED TO SET	width + 2
-	private int walls[][]					= {{6,4},{5,5},{7,7},{19,20},{19,19},{19,18},{19,17},{19,16},{19,15},{19,13},{19,12}};		// NEED TO SET	
+	private int walls[][]					= {{19,20},{19,19},{19,14},{19,17},{19,16},{19,15},{19,13},{19,12},{19,1},{19,3},{19,4},{19,5},{19,6},{19,8},{19,7},{19,10},{19,9},
+								{2,1},{2,2},{2,3},{2,4},{3,4},{3,5},{3,6},{3,7},{4,7},{5,7},{6,7},{7,7},{18,17},{17,17},{16,17},{15,17},{6,4},{5,5},{7,7},};
 	private int maze[][];
 	// we use int array of 2 num's as a point - s[0] = X , s[1] = Y
 	private int[] start_s 					= new int[2]; 			// NEED TO SET
@@ -56,13 +57,13 @@ public class MazeModel extends Observable implements Model{
 		ArrayList<int[]> usedWalls = new ArrayList<int[]>();
 		
 		//int start[] = new int[2];
-		start_s[0] = rand.nextInt(rows-2)+1;
+/*		start_s[0] = rand.nextInt(rows-2)+1;
 		start_s[1] = rand.nextInt(columns-2)+1;
 		
 		//int goal[] = new int[2];
 		goal_s[0] = rand.nextInt(rows-2)+1;
 		goal_s[1] = rand.nextInt(columns-2)+1;
-		
+*/		
 		for(int i=0;i<numOfWalls;i++){			
 			go = true;
 			while(go){
@@ -89,7 +90,7 @@ public class MazeModel extends Observable implements Model{
 		
 		// method to find automatically what will be the start & goal & walls for the maze that user asked for
 		
-			//	setPositions();	
+		// setPositions();	
 		
 		// set maze start = 1, goal = 2, walls = -1, allowed moves = 0 / 2 -> goal;
 		// we also set the boundaries to be -1 instead of been out of the array limits
