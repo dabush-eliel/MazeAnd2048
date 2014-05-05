@@ -21,6 +21,4 @@ public interface Model {
 	public void load();
 	public String getFileName();
 	public void setFileName(String save);
-//	public String getFileNameToLoad();
-//	public void setFileNameToLoad(String load);
 }
