@@ -1,7 +1,4 @@
 package gameMaze.view;
-
-import java.awt.event.MouseListener;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -124,8 +121,9 @@ public class BoardMazeView extends Canvas {
 					public void mouseMove(MouseEvent e) {
 						if(drag){
 							mouseMoved = true;
-							x = e.x;
-							y = e.y;
+							// put the mouse img on the center of the curser
+							x = e.x-(mx/2);
+							y = e.y-(my/2);
 							redraw();	
 						}
 					}
@@ -134,7 +132,7 @@ public class BoardMazeView extends Canvas {
 				addMouseListener(new org.eclipse.swt.events.MouseListener() {
 					
 					@Override
-					public void mouseUp(MouseEvent arg0) {						
+					public void mouseUp(MouseEvent e) {						
 						getDisplay().timerExec(100, new Runnable() {
 							@Override
 							public void run() {
@@ -146,15 +144,20 @@ public class BoardMazeView extends Canvas {
 					}
 					
 					@Override
-					public void mouseDown(MouseEvent arg0) {
+					public void mouseDown(MouseEvent e) {
 						// save the mouse state b4 the move 
-						xBm = x;
-						yBm = y;
-						drag = true;
+						System.out.println("e.x:"+e.x+" e.y:"+e.y);
+						System.out.println("x = "+x+" y= "+y);
+						// only if the click is down on the mouse img we will set drag = true
+						if((e.x>x && e.x<x+mx) && (e.y>y && e.y<y+my)){
+							xBm = x;
+							yBm = y;
+							drag = true;
+						}
 					}
 					
 					@Override
-					public void mouseDoubleClick(MouseEvent arg0) {
+					public void mouseDoubleClick(MouseEvent e) {
 						setFocus();
 					}
 				});;

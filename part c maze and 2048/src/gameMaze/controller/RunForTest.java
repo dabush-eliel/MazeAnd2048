@@ -5,7 +5,6 @@ import gameMaze.model.MazeModel;
 import gameMaze.model.Model;
 import gameMaze.view.MazeView;
 import gameMaze.view.View;
-
 import java.util.Observable;
 
 public class RunForTest {
