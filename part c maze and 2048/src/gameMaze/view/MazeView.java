@@ -1,10 +1,12 @@
 package gameMaze.view;
 
 import gameMaze.view.components.ButtonsMaze;
+import gameMaze.view.components.MenuGameListeners;
 import gameMaze.view.components.MenuMaze;
 import gameMaze.view.components.ScoreLabel;
 
 import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
