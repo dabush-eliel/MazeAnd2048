@@ -24,7 +24,7 @@ public class MazeModel extends Observable implements Model{
 							{15,3},{14,3},{13,3},{13,4},{11,5},{11,6},{11,7},{11,8},{10,9},{13,7},{13,8},{13,9},{12,9},{8,11},{7,14},{7,15},{7,16},{6,16},{9,15},{10,15},{11,15},{8,6},{9,7},{4,1},{4,3},
 							{3,2},{2,6},{2,2},{2,3},{2,4},{3,4},{3,5},{3,6},{3,7},{4,7},{5,7},{6,7},{7,7},{18,17},{17,17},{16,17},{15,17},{6,4},{5,5},{7,7},{17,3},{17,4},{8,5},{7,5},{9,4}};
 	private int maze[][];
-	// start/goal [0] = rows position and [1] = column position
+	// start/goal [0] = rows position & [1] = column position
 	private int[] start_s 					= new int[2]; 			// NEED TO SET
 	private int[] goal_s					= new int[2]; 			// NEED TO SET
 	private int[] mouse						= new int[2];			// current position
@@ -36,14 +36,15 @@ public class MazeModel extends Observable implements Model{
 	private String fileName					= null;
 	
 	
-	public MazeModel(int r, int c){
-		// we want to get the size of the maze from the player
+/*	public MazeModel(int r, int c){
+	// we want to get the size of the maze from the player
 	//	this.rows = r;
 	//	this.columns = c;
 		this.maze = new int[rows][columns];
 		initGame();
 	}
-	
+*/	
+
 	
 	public MazeModel() {
 		this.maze = new int[rows][columns];
@@ -192,9 +193,9 @@ public class MazeModel extends Observable implements Model{
 			break;
 		case 12:
 			load();
+			undoMove();
 			setChanged();
 			notifyObservers();
-			undoMove();
 			break;
 		}
 	}
@@ -546,11 +547,12 @@ public class MazeModel extends Observable implements Model{
 
 	@Override
 	public void undoMove() {
-		if(!(old_states.empty()) && !(old_score.empty())){
+		if(!(old_states.empty())){
 			int [][] last_board2048		= new int[rows][columns];
 			last_board2048 				= old_states.pop();
 			score 						= old_score.pop();
 			int [] last_mosue			= old_mouse.pop(); 
+			
 			mouse[0] = last_mosue[0];
 			mouse[1] = last_mosue[1];
 			
@@ -558,9 +560,7 @@ public class MazeModel extends Observable implements Model{
 				for (int j = 0 ; j < columns ; j++){
 					maze[i][j] = last_board2048[i][j];
 				}	
-			}	
-			setChanged();
-			notifyObservers();
+			}
 		}
 	}
 	
@@ -617,21 +617,6 @@ public class MazeModel extends Observable implements Model{
 
 	public void setScore(int score) {
 		this.score = score;
-	}
-
-
-	public void setOld_mouse(Stack<int[]> old_mouse) {
-		this.old_mouse = old_mouse;
-	}
-
-
-	public void setOld_score(Stack<Integer> old_score) {
-		this.old_score = old_score;
-	}
-
-
-	public void setOld_states(Stack<int[][]> old_states) {
-		this.old_states = old_states;
 	}
 
 	public int getRows() {
@@ -750,13 +735,7 @@ public class MazeModel extends Observable implements Model{
 			for(int [][] s: old_states){
 				for(int  i=0 ; i < rows ; i++){
 					for(int j=0 ; j < columns ; j++){
-					/*	if(maze[i][j] == -1){
-							out.write(""+5+',');
-						}else{
-							out.write(""+maze[i][j]+',');
-						}*/
-						out.write(""+maze[i][j]+',');
-						
+						out.write(""+s[i][j]+',');	
 					}
 					out.newLine();
 				}
@@ -771,9 +750,7 @@ public class MazeModel extends Observable implements Model{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
+		}	
 	}
 
 	
@@ -884,9 +861,6 @@ public class MazeModel extends Observable implements Model{
 					s.useDelimiter(",");
 					for(int n=0 ; n<columns ; n++){
 						last[m][n] = s.nextInt();
-						if(last[m][n] == 5){
-							last[m][n] = -1;
-						}
 					}
 				}
 				old_states.push(last);
