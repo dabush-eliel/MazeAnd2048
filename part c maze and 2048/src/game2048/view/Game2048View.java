@@ -41,8 +41,8 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Buttons2048 buttons;
 	private boolean succeed = false;
 	
-	int mouseDownX = 0;
-	int mouseDownY = 0;
+	int mouseDownX = 0;		    //when mouse pressed, its X
+	int mouseDownY = 0; 	    //when mouse pressed, its Y
 	
 	private String fileName = "";
 	
@@ -66,10 +66,6 @@ public class Game2048View extends Observable implements View, Runnable{
 		menu = new Menu2048(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
 		
-		MessageBox msgBox = new MessageBox(shell);
-		msgBox.setText("Information about game");
-		msgBox.setMessage("Instructions: To play use arrow keys up,down,right,left or the mouse by clicking somewhere and pull it to the side u want it to move.\nYou can save your position during the game and load it from the place u saved it\nYou can undo moves till the begining of the game.\nEnjoy :)");
-		msgBox.open();
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
 		
@@ -139,6 +135,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						//save
 						userCommand = 7;
 						String path = saveAction();
 						if(path != null){
@@ -159,6 +156,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						//load
 						userCommand = 8;
 						String path = loadAction();
 						if(path != null){
@@ -196,6 +194,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						//restart
 						userCommand = 5;
 						setChanged();
 						notifyObservers();
@@ -213,6 +212,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						//undo
 						userCommand = 6;
 						setChanged();
 						notifyObservers();
@@ -252,22 +252,26 @@ public class Game2048View extends Observable implements View, Runnable{
 						boolean left = (50 <= differenceX) && (differenceX <= 190) && (-90 <= differenceY) && (differenceY <= 90);
 						
 						if(up){
+							//up
 							userCommand = 1;
 							setChanged();
 							notifyObservers();
 						}
 						else if(down){
+							//down
 							userCommand = 2;
 							setChanged();
 							notifyObservers();
 						}
 						
 						else if(right){
+							//right
 							userCommand = 3;
 							setChanged();
 							notifyObservers();
 						}
 						else if(left){
+							//left
 							userCommand = 4;
 							setChanged();
 							notifyObservers();
@@ -310,21 +314,8 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void keyPressed(KeyEvent e) {
-		/*				switch(e.keyCode){
-						case SWT.ARROW_UP:
-							userCommand = 1;
-						case SWT.ARROW_DOWN:
-							userCommand = 2;
-						case SWT.ARROW_RIGHT:
-							userCommand = 3;
-						case SWT.ARROW_LEFT:
-							userCommand = 4;					
-						default:
-							userCommand = 0;
-						}
-						setChanged();
-						notifyObservers();
-		*/			}
+					
+					}
 				});			
 			}
 		});
@@ -341,6 +332,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
+						//restart
 						userCommand  = 5;
 						setChanged();
 						notifyObservers();
@@ -357,6 +349,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
+						//undo
 						userCommand = 6;
 						setChanged();
 						notifyObservers();
@@ -373,6 +366,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						//save
 						userCommand = 7;
 						String path = saveAction();
 						if(path != null){
@@ -394,6 +388,7 @@ public class Game2048View extends Observable implements View, Runnable{
 					
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
+						//load
 						userCommand = 8;
 						String path = loadAction();
 						if(path != null){
@@ -448,31 +443,13 @@ public class Game2048View extends Observable implements View, Runnable{
 				System.exit(0);
 			}
 		}else{
-		/*	MessageBox winBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CLOSE); // close doesnt work !! :O
-			winBox.setText("Congrats");
-			winBox.setMessage("Congratulations. You won the game! \n Do you want continue the game?");				
-			int msg = winBox.open();
-			//winBox.
-			if(msg == SWT.NO){
-				// start a new game
-			//	userCommand  = 5;
-			//	setChanged();
-				notifyObservers();
-			}else if(msg == SWT.YES){
-				userCommand = 11;
-				setChanged();
-				notifyObservers();
-			}/*else if(msg == SWT.CLOSE){
-				System.exit(0);
-			}	*/
-			
+			//continue
 			final Shell shell2 = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
 			shell2.setText("Amazing!");
 			shell2.setSize(220, 200);
 			shell2.setLocation(new Point(shell.getLocation().x + 50, shell.getLocation().y + 50));
 			shell2.setLayout(new FillLayout());
 			
-		//	Image winBG = new Image(display, "images/congrats.png");
 			Canvas c = new Canvas(shell2, SWT.BORDER);
 			c.setSize(shell2.getSize());
 			Button con = new Button(c, SWT.PUSH);
@@ -519,6 +496,7 @@ public class Game2048View extends Observable implements View, Runnable{
 				
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
+					//restart
 					userCommand = 5;
 					setChanged();
 					notifyObservers();
