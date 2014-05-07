@@ -24,8 +24,8 @@ public class Game2048Model extends Observable implements Model {
 	private boolean stuck 				= false;
 	private boolean check				= true;
 	
-	private String fileNameToSave;
-	private String fileNameToLoad;
+	private String fileNameToSave;            						//holds path name to save
+	private String fileNameToLoad;									//holds path name to load
 	
 	public Game2048Model() {
 		initGame();	
@@ -58,13 +58,6 @@ public class Game2048Model extends Observable implements Model {
 	// get random value - 2 or 4
 	private int squareVal(){
 		Random rand = new Random();
-	/*	int probs[] = new int[10];
-		for (int i 	= 0 ; i < 9 ; i++){
-			probs[i] = 2;
-		}
-		for (int i 	= 9 ; i<10 ; i++){
-			probs[i] = 4;
-		}*/
 		int x = rand.nextInt(10);
 		if(x < 9){
 			return 2;
@@ -216,7 +209,6 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		//old_score.push(score);
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -261,7 +253,6 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		//old_score.push(score);
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
