@@ -66,10 +66,6 @@ public class Game2048View extends Observable implements View, Runnable{
 		menu = new Menu2048(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
 		
-		MessageBox msgBox = new MessageBox(shell);
-		msgBox.setText("Information about game");
-		msgBox.setMessage("Instructions: To play use arrow keys up,down,right,left or the mouse by clicking somewhere and pull it to the side u want it to move.\nYou can save your position during the game and load it from the place u saved it\nYou can undo moves till the begining of the game.\nEnjoy :)");
-		msgBox.open();
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
 		
