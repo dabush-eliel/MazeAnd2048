@@ -13,10 +13,17 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
@@ -34,10 +41,10 @@ public class MazeView extends Observable implements View,Runnable {
 	private ButtonsMaze buttons;
 	private boolean succeed 	= false;
 	private boolean twoMoves 	= false;
-	private boolean  up 	  = false;
-	private boolean  down 	= false;
-	private boolean right 	= false;
-	private boolean left  	= false;
+	private boolean  up 	  	= false;
+	private boolean  down 		= false;
+	private boolean right 		= false;
+	private boolean left  		= false;
 	private String fileName	  	= null;
 	
 	
@@ -611,7 +618,76 @@ public class MazeView extends Observable implements View,Runnable {
 	}
 	
 	public void gameOverAction(){
-		MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+		
+		final Shell shell2 = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE));
+		shell2.setText("Amazing!");
+		shell2.setSize(220, 200);
+		shell2.setLocation(new Point(shell.getLocation().x + 50, shell.getLocation().y + 50));
+		shell2.setLayout(new FillLayout());
+		
+	//	Image winBG = new Image(display, "images/congrats.png");
+		Canvas c = new Canvas(shell2, SWT.BORDER);
+		c.setSize(shell2.getSize());
+	//	Button con = new Button(c, SWT.PUSH);
+		Button restartB = new Button(c, SWT.PUSH);
+		Button exitB = new Button(c, SWT.PUSH);
+		
+	//	con.setText("Continue the game");
+		restartB.setText("Restart");
+		exitB.setText("Exit");
+		
+	//	con.setBounds(5, 50, 200, 25);
+		restartB.setBounds(5, 80, 200, 25);
+		exitB.setBounds(5, 110, 200, 25);
+		
+		c.setBackground(new Color(display, 139, 139, 131));
+		c.addPaintListener(new PaintListener() {
+			
+			@Override
+			public void paintControl(PaintEvent e) {
+				e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_WHITE));
+				e.gc.drawString("Congrats! \n You won the game.", 10, 5, true);
+				
+			}
+		});
+		
+		restartB.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				userCommand = 9;
+				setChanged();
+				notifyObservers();
+				shell2.close();
+				board.setFocus();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		exitB.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				display.dispose();
+				System.exit(0);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		shell2.setFocus();
+		shell2.open();
+		
+	/*	MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 		gameOverBox.setText("You found the goal");
 		gameOverBox.setMessage("Game Over. Start a new game?");				
 		int msg = gameOverBox.open();
@@ -623,11 +699,12 @@ public class MazeView extends Observable implements View,Runnable {
 			board.setFocus();
 		}else if(msg == SWT.NO){
 			// EXIT
-			board.dispose();
-			shell.dispose();
-			display.dispose();	
-			System.exit(0);
+//			board.dispose();
+//			shell.dispose();
+//			display.dispose();	
+//			System.exit(0);
 		}
+	*/	
 	}
 	
 	public String save(){
