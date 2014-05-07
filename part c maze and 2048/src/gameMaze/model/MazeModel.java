@@ -14,8 +14,8 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class MazeModel extends Observable implements Model{
-	private int rows						= 20+2;   // NEED TO SET	height + 2
-	private int columns						= 20+2;	// NEED TO SET	width + 2
+	private int rows						= 20+2;   	// NEED TO SET	height + 2
+	private int columns						= 20+2;		// NEED TO SET	width + 2
 	private int walls[][]					= {{1,7},{1,10},{2,10},{3,10},{1,13},{2,13},{3,14},{7,3},{8,2},{8,9},{6,18},{6,19},{5,19},{4,19},{2,17},{3,17},{4,17},{2,20},{2,19},{7,19},{4,12},
 							{19,20},{19,19},{19,14},{19,17},{19,16},{19,13},{19,12},{19,1},{19,3},{19,4},{19,5},{19,6},{19,8},{19,7},{19,10},{19,9},{10,3},{10,4},{12,2},{2,9},{4,15},{5,3},
 							{5,8},{5,14},{4,14},{7,11},{7,12},{7,13},{5,10},{5,11},{5,12},{6,9},{7,9},{8,9},{9,9},{9,17},{9,18},{9,19},{11,19},{11,20},{10,1},{10,2},{10,5},{15,12},{17,12},{18,12},
@@ -24,7 +24,7 @@ public class MazeModel extends Observable implements Model{
 							{15,3},{14,3},{13,3},{13,4},{11,5},{11,6},{11,7},{11,8},{10,9},{13,7},{13,8},{13,9},{12,9},{8,11},{7,14},{7,15},{7,16},{6,16},{9,15},{10,15},{11,15},{8,6},{9,7},{4,1},{4,3},
 							{3,2},{2,6},{2,2},{2,3},{2,4},{3,4},{3,5},{3,6},{3,7},{4,7},{5,7},{6,7},{7,7},{18,17},{17,17},{16,17},{15,17},{6,4},{5,5},{7,7},{17,3},{17,4},{8,5},{7,5},{9,4}};
 	private int maze[][];
-	// we use int array of 2 num's as a point - s[0] = X , s[1] = Y
+	// start/goal [0] = rows position and [1] = column position
 	private int[] start_s 					= new int[2]; 			// NEED TO SET
 	private int[] goal_s					= new int[2]; 			// NEED TO SET
 	private int[] mouse						= new int[2];			// current position

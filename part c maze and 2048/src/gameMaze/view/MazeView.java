@@ -1,11 +1,11 @@
 package gameMaze.view;
 
 import gameMaze.view.components.ButtonsMaze;
+import gameMaze.view.components.MenuGameListeners;
 import gameMaze.view.components.MenuMaze;
 import gameMaze.view.components.ScoreLabel;
 
 import java.util.Observable;
-import java.util.Timer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -623,9 +623,10 @@ public class MazeView extends Observable implements View,Runnable {
 			board.setFocus();
 		}else if(msg == SWT.NO){
 			// EXIT
-			display.sleep();
+			board.dispose();
 			shell.dispose();
-			display.dispose();		
+			display.dispose();	
+			System.exit(0);
 		}
 	}
 	

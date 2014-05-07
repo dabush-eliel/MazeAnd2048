@@ -15,10 +15,14 @@ public class MenuMaze {
 	MenuItem fileLoadItem;
 	MenuItem fileExitItem;
 	MenuItem editUndoItem;
-	MenuItem editRestartItem;	
+	MenuItem editRestartItem;
+//	MenuActions action;
 	
 	public MenuMaze(Decorations parent, int style) {
 		//super(parent, style);
+		
+		//this.action = action;
+		
 		menuBar = new Menu(parent, style);
 		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 	    fileMenuHeader.setText("File");
@@ -48,6 +52,22 @@ public class MenuMaze {
 	    editRestartItem.setText("Restart");
 	}
 	
+/*	public int doAction(){
+		MenuMaze m = new MenuMaze(menuBar.getShell(), menuBar.getStyle(), null);
+		m.menuBar = this.menuBar;
+		m.fileMenuHeader = this.fileMenuHeader;
+		m.editMenuHeader = this.editMenuHeader;
+		m.fileMenu = this.fileMenu;
+		m.editMenu = this.editMenu;
+		m.fileSaveItem = this.fileSaveItem;
+		m.fileLoadItem = this.fileLoadItem;
+		m.fileExitItem = this.fileExitItem;
+		m.editUndoItem = this.editUndoItem;
+		m.editRestartItem = this.editRestartItem;
+
+		return action.doAction(menuBar.getShell(), m);
+	}
+	*/
 	
 	public Menu getMenuBar() {
 		return menuBar;

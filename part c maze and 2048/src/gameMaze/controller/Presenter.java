@@ -6,7 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
