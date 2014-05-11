@@ -1,7 +1,6 @@
 package gameMaze.view;
 
 import gameMaze.view.components.ButtonsMaze;
-import gameMaze.view.components.MenuGameListeners;
 import gameMaze.view.components.MenuMaze;
 import gameMaze.view.components.ScoreLabel;
 
