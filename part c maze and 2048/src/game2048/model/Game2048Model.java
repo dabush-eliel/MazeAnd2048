@@ -354,9 +354,6 @@ public class Game2048Model extends Observable implements Model {
 
 	@Override
 	public void undoMove() {
-		if(!old_score.empty()){
-			old_score.pop();
-		{
 		if(!(old_moves.empty()) && !(old_score.empty())){		// we can check just one of the Stacks but i prefer to check both
 			int [][] last_board2048		= new int[size][size];
 			last_board2048 				= old_moves.pop();
@@ -369,8 +366,6 @@ public class Game2048Model extends Observable implements Model {
 			System.out.println("previus score:" + score);
 			setChanged();
 			notifyObservers();
-		}
-		}
 		}		
 	}
 	
