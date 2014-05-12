@@ -23,7 +23,7 @@ public class Game2048Model extends Observable implements Model {
 	private boolean succeed				= false;
 	private boolean stuck 				= false;
 	private boolean check				= true;
-	
+	private int tempScore				= 0;
 	private String fileNameToSave;            						//holds path name to save
 	private String fileNameToLoad;									//holds path name to load
 	
