@@ -117,7 +117,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 		
-		//old_score.push(score);
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
@@ -139,7 +139,7 @@ public class Game2048Model extends Observable implements Model {
 		// if board doesn't changed don't add new square
 		// also, if there is no more free spot & can't make any merge - we stuck ! 
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			System.out.println("added score:" +score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
@@ -165,7 +165,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		//old_score.push(score);
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -186,7 +186,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			System.out.println(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
@@ -211,6 +211,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -231,7 +232,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			System.out.println(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
@@ -256,6 +257,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
@@ -276,7 +278,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			System.out.println(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
@@ -354,9 +356,6 @@ public class Game2048Model extends Observable implements Model {
 
 	@Override
 	public void undoMove() {
-		if(!old_score.empty()){
-			old_score.pop();
-		{
 		if(!(old_moves.empty()) && !(old_score.empty())){		// we can check just one of the Stacks but i prefer to check both
 			int [][] last_board2048		= new int[size][size];
 			last_board2048 				= old_moves.pop();
@@ -369,8 +368,6 @@ public class Game2048Model extends Observable implements Model {
 			System.out.println("previus score:" + score);
 			setChanged();
 			notifyObservers();
-		}
-		}
 		}		
 	}
 	
