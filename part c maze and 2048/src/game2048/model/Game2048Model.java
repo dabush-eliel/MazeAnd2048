@@ -23,7 +23,7 @@ public class Game2048Model extends Observable implements Model {
 	private boolean succeed				= false;
 	private boolean stuck 				= false;
 	private boolean check				= true;
-	
+	private int tempScore				= 0;
 	private String fileNameToSave;            						//holds path name to save
 	private String fileNameToLoad;									//holds path name to load
 	
@@ -117,7 +117,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 		
-		//old_score.push(score);
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
@@ -139,7 +139,7 @@ public class Game2048Model extends Observable implements Model {
 		// if board doesn't changed don't add new square
 		// also, if there is no more free spot & can't make any merge - we stuck ! 
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -164,7 +164,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
-		//old_score.push(score);
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -185,7 +185,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -209,6 +209,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = size-1 ; j >= 0 ; j--){
@@ -229,7 +230,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
 			setChanged();
@@ -253,6 +254,7 @@ public class Game2048Model extends Observable implements Model {
 			}	
 		}
 	
+		tempScore = score;
 		
 		for (int i = 0 ; i < size ; i++){
 			for (int j = 0 ; j < size ; j++){
@@ -273,7 +275,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
-			old_score.push(score);
+			old_score.push(tempScore);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
