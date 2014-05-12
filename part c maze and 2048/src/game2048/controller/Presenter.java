@@ -31,7 +31,7 @@ public class Presenter implements Observer{
 			view.displayScore(model.getScore());
 		}
 		if (o == view && arg1 == null){
-			model.doUserCommand(view.getUserCommand());		
+			model.doUserCommand(view.getUserCommand());	
 		}	
 		
 		if(o == view && arg1 == "save"){

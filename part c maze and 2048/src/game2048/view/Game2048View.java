@@ -40,6 +40,8 @@ public class Game2048View extends Observable implements View, Runnable{
 	private int [][] data;
 	private Buttons2048 buttons;
 	private boolean succeed = false;
+	private boolean gameOver = false;
+	public int scoreHolder;
 	
 	int mouseDownX = 0;		    //when mouse pressed, its X
 	int mouseDownY = 0; 	    //when mouse pressed, its Y
@@ -81,11 +83,11 @@ public class Game2048View extends Observable implements View, Runnable{
 		buttonsListenerstener();
 			
 		shell.open();
-		
 	}
 	
+	
 	@Override
-	public void displayBoard(int [][] d) {	
+	public void displayBoard(int [][] d) {
 		board.setBoardData(d);
 		display.syncExec(new Runnable() {		
 			@Override
@@ -102,6 +104,7 @@ public class Game2048View extends Observable implements View, Runnable{
 
 	@Override
 	public void displayScore(int score) {
+		scoreHolder = score;
 		scoreLabel.setText("Score: "+score);
 	}
 
@@ -589,5 +592,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	public int getMouseDownY(){
 		return mouseDownY;
 	}
+
+
 	
 }
