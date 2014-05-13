@@ -1,4 +1,4 @@
-package game2048.model;
+/*package game2048.model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -621,3 +621,5 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 }
+
+*/

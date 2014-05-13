@@ -1,9 +1,9 @@
-package presenter;
+	/*package presenter;
 
 import model.Game2048Model;
 
 public class RunForTest2048 {
-	/*
+
 	public static void main(String []args){
 		Game2048Model game = new Game2048Model();
 		int [][] board = game.getBoard();
@@ -38,6 +38,5 @@ public class RunForTest2048 {
 		System.out.println("Score: "+game.getScore());
 		
 	}
-	*/
-
 }
+*/

@@ -35,6 +35,7 @@ public class MazeView extends Observable implements View,Runnable {
 	private int userCommand = 0;
 	private int [][] data;
 	private ButtonsMaze buttons;
+	@SuppressWarnings("unused")
 	private boolean succeed 	= false;
 	private boolean twoMoves 	= false;
 	private boolean  up 	  	= false;
@@ -317,6 +318,7 @@ public class MazeView extends Observable implements View,Runnable {
 					
 					@Override
 					public void keyPressed(KeyEvent e) {
+						@SuppressWarnings("unused")
 						int pressed = 0;
 						switch(e.keyCode){
 						

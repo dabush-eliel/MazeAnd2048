@@ -2,11 +2,10 @@ package presenter;
 
 import java.util.Observable;
 
-import old_mvp.Model;
-import old_mvp.Presenter;
-import old_mvp.View;
-import view.game2048.Game2048View;
 import model.Game2048Model;
+import model.Model;
+import view.View;
+import view.game2048.Game2048View;
 
 public class Run2048 {
 
@@ -21,9 +20,7 @@ public class Run2048 {
 
 		Thread viewThread = new Thread((Game2048View) view2048);
 		viewThread.start();
-		System.out.println("Game 2048 started.");		
-		
-		
+		System.out.println("Game 2048 started.");				
 		
 	}
 }

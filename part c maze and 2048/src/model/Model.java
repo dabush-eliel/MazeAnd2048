@@ -2,7 +2,7 @@ package model;
 
 public interface Model {
 
-	public void moveUP();
+	public void moveUp();
 	public void moveDown();
 	public void moveRight();
 	public void moveLeft();

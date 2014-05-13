@@ -23,11 +23,15 @@ public class BoardMazeView extends Canvas {
 
 
 	//	final Image imgW = new Image(getDisplay(), "imagesMaze/brown_wall.jpg");
+	@SuppressWarnings("unused")
 	final private Image imgM = new Image(getDisplay(),"imagesMaze/white_mouse.png");
+	@SuppressWarnings("unused")
 	final private Image imgM2 = new Image(getDisplay(),"imagesMaze/cabel_mouse.jpg");
 	final private Image imgM3 = new Image(getDisplay(),"imagesMaze/red_mouse.jpg");
+	@SuppressWarnings("unused")
 	final private Image imgC = new Image(getDisplay(),"imagesMaze/usb.jpg");
 	final private Image imgC2 = new Image(getDisplay(),"imagesMaze/usb_symb.png");
+	@SuppressWarnings("unused")
 	final private Image imgG = new Image(getDisplay(),"imagesMaze/mouse_clipart.png");
 	final private Image imgG2 = new Image(getDisplay(),"imagesMaze/red_curser.png");
 	

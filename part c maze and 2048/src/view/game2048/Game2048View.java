@@ -1,8 +1,6 @@
 package view.game2048;
 import java.util.Observable;
 
-import old_mvp.View;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -23,6 +21,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+
+import view.View;
 
 
 public class Game2048View extends Observable implements View, Runnable{

@@ -2,17 +2,18 @@ package Network2048;
 
 import java.util.Observable;
 
-import old_mvp.Model;
-import old_mvp.Presenter;
-import old_mvp.View;
+import presenter.Presenter;
+import view.View;
 import view.game2048.Game2048View;
 import model.Game2048Model;
+import model.Model;
 import algorithms.MyAlgo;
 import algorithms.Solver;
 
 public class Server {
 
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void startGame(){
 		String gameType = "2048";
 		switch (gameType) {
@@ -35,6 +36,7 @@ public class Server {
 			case "MyAlgo":
 				solver = new MyAlgo();
 				solver.calculator(model2048);
+				System.out.println("solver calculator started.");
 				break;
 
 			default:

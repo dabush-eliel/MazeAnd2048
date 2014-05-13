@@ -1,4 +1,4 @@
-package game2048.view;
+/*package game2048.view;
 import java.util.Observable;
 
 import old_mvp.View;
@@ -616,3 +616,4 @@ public class Game2048View extends Observable implements View, Runnable{
 
 	
 }
+*/

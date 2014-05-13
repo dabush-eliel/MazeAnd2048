@@ -138,7 +138,7 @@ public class MazeModel extends Observable implements Model{
 	public void doUserCommand(int num) {
 		switch(num){
 		case 1:
-			moveUP();
+			moveUp();
 			setChanged();
 			notifyObservers();
 			break;
@@ -202,7 +202,7 @@ public class MazeModel extends Observable implements Model{
 	}
 
 	@Override
-	public void moveUP() {
+	public void moveUp() {
 		int s = maze[mouse[0]-1][mouse[1]];
 		if(s != -1 ){
 			
