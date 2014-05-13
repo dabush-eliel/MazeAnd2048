@@ -1,17 +1,13 @@
 package game2048.view;
-import game2048.view.components.Buttons2048;
-import game2048.view.components.Menu2048;
-import game2048.view.components.ScoreLabel;
-
-import java.sql.Time;
 import java.util.Observable;
+
+import old_mvp.View;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,6 +23,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+
+import view.game2048.BoardView;
+import view.game2048.Buttons2048;
+import view.game2048.Menu2048;
+import view.game2048.ScoreLabel;
 
 
 public class Game2048View extends Observable implements View, Runnable{
@@ -94,7 +95,6 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
-	@Override
 	public void displayBoard(int [][] d) {
 		board.setBoardData(d);
 		display.syncExec(new Runnable() {		
@@ -599,6 +599,18 @@ public class Game2048View extends Observable implements View, Runnable{
 	}
 	public int getMouseDownY(){
 		return mouseDownY;
+	}
+
+	@Override
+	public void displayData(int[][] data) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void initView() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

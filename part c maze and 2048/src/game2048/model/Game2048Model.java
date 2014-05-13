@@ -11,6 +11,8 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
+import old_mvp.Model;
+
 
 
 
@@ -334,7 +336,7 @@ public class Game2048Model extends Observable implements Model {
 		return this.score;
 	}
 	
-	@Override
+	
 	public int[][] getBoard() {
 		return getBoard2048();
 	}
@@ -556,24 +558,66 @@ public class Game2048Model extends Observable implements Model {
 		return true;
 	}
 
-	@Override
+	
 	public String getFileNameToSave() {
 		return fileNameToSave;
 	}
 
-	@Override
+	
 	public String getFileNameToLoad() {
 		return fileNameToLoad;
 	}
 
-	@Override
+	
 	public void setFileNameToSave(String save) {
 		fileNameToSave = save;
 	}
 
-	@Override
+	
 	public void setFileNameToLoad(String load) {
 		fileNameToLoad = load;
+	}
+
+	@Override
+	public void moveUpRight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveUpLeft() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveDownRight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveDownLeft() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int[][] getData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFileName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setFileName(String s) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
