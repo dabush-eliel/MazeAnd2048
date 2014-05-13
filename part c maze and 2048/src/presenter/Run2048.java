@@ -1,17 +1,18 @@
-package game2048.controller;
+package presenter;
 
 import java.util.Observable;
 
-import game2048.model.Game2048Model;
-import game2048.model.Model;
-import game2048.view.Game2048View;
-import game2048.view.View;
+import old_mvp.Model;
+import old_mvp.Presenter;
+import old_mvp.View;
+import view.game2048.Game2048View;
+import model.Game2048Model;
 
-public class Run {
+public class Run2048 {
 
 	public static void main(String[] args) {
 		Model model2048				= new Game2048Model();	
-		View view2048				= new Game2048View(model2048.getBoard());
+		View view2048				= new Game2048View(model2048.getData());
 		System.out.println("game2048 model&view initialized!");
 		Presenter presenter 		= new Presenter(model2048, view2048);		
 		((Observable) view2048).addObserver(presenter);

@@ -1,8 +1,4 @@
-package gameMaze.view;
-
-import gameMaze.view.components.ButtonsMaze;
-import gameMaze.view.components.MenuMaze;
-import gameMaze.view.components.ScoreLabel;
+package view.maze;
 
 import java.util.Observable;
 
@@ -25,8 +21,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+
+import view.View;
 
 public class MazeView extends Observable implements View,Runnable {
 	
@@ -737,6 +734,12 @@ public class MazeView extends Observable implements View,Runnable {
 	
 	public boolean getTwoMoves(){
 		return twoMoves;
+	}
+
+	@Override
+	public void setFileNamePath(String save) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

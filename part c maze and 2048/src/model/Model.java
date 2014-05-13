@@ -1,4 +1,4 @@
-package gameMaze.model;
+package model;
 
 public interface Model {
 
@@ -10,15 +10,16 @@ public interface Model {
 	public void moveUpLeft();
 	public void moveDownRight();
 	public void moveDownLeft();
-	public int[][] getMaze();
+	public int[][] getData();
 	public void restartGame();
 	public void undoMove();
 	public void initGame();
 	public void doUserCommand(int num);
 	public int getScore();
+	public boolean isStuck();
 	public boolean isSucceed();
 	public void save();
 	public void load();
 	public String getFileName();
-	public void setFileName(String save);
+	public void setFileName(String s);
 }

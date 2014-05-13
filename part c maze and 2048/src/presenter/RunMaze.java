@@ -1,17 +1,17 @@
-package gameMaze.controller;
+package presenter;
 
-import gameMaze.controller.Presenter;
-import gameMaze.model.MazeModel;
-import gameMaze.model.Model;
-import gameMaze.view.MazeView;
-import gameMaze.view.View;
 import java.util.Observable;
 
-public class RunForTest {
+import view.View;
+import view.maze.MazeView;
+import model.MazeModel;
+import model.Model;
+
+public class RunMaze {
 	
 	public static void main(String[] args) {
 		Model modelMaze				= new MazeModel();	
-		View viewMaze				= new MazeView(modelMaze.getMaze());
+		View viewMaze				= new MazeView(modelMaze.getData());
 		System.out.println("model and view initialized");
 		Presenter presenter 		= new Presenter(modelMaze, viewMaze);		
 		((Observable) modelMaze).addObserver(presenter);

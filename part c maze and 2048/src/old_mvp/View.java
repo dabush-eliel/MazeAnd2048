@@ -1,11 +1,11 @@
-package game2048.view;
+package old_mvp;
 
 public interface View {
 	
-	public void displayBoard(int [][] data);
+	public void displayData(int [][] data);
 	public int getUserCommand();
 	public void displayScore(int score);
-	public void initView(int [][] data);
+	public void initView();
 	public void gameOver(boolean succeed);
 	public String getFileNamePath();
 	public void setFileNamePath(String save);

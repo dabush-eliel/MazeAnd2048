@@ -1,4 +1,4 @@
-package game2048.view;
+package view.game2048;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;

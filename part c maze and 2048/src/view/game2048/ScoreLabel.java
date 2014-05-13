@@ -1,4 +1,4 @@
-package gameMaze.view.components;
+package view.game2048;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -20,4 +20,3 @@ public class ScoreLabel{
 	}
 	
 }
-

@@ -1,4 +1,4 @@
-package game2048.model;
+package old_mvp;
 
 public interface Model {
 
@@ -6,18 +6,20 @@ public interface Model {
 	public void moveDown();
 	public void moveRight();
 	public void moveLeft();
+	public void moveUpRight();
+	public void moveUpLeft();
+	public void moveDownRight();
+	public void moveDownLeft();
 	public int getScore();
+	public int[][] getData();
 	public void restartGame();
 	public void undoMove();
-	public int[][] getBoard();
 	public void initGame();
 	public void doUserCommand(int num);
 	public boolean isStuck();
 	public boolean isSucceed();
 	public void save();
 	public void load();
-	public String getFileNameToSave();
-	public void setFileNameToSave(String save);
-	public String getFileNameToLoad();
-	public void setFileNameToLoad(String load);
+	public String getFileName();
+	public void setFileName(String s);
 }

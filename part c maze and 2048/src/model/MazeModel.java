@@ -1,4 +1,4 @@
-package gameMaze.model;
+package model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,6 +54,7 @@ public class MazeModel extends Observable implements Model{
 	// we find some path from the start to the goal and we open the access to this path if there any walls - because we must a some path in the maze
 	
 	// find a random spot for the mouse & goal & walls 
+	@SuppressWarnings("unused")
 	private void setPositions() {
 		
 		int numOfWalls 	= ((rows*columns))*3/4;
@@ -536,7 +537,7 @@ public class MazeModel extends Observable implements Model{
 	
 
 	@Override
-	public int[][] getMaze() {
+	public int[][] getData() {
 		return maze;
 	}
 
@@ -919,6 +920,12 @@ public class MazeModel extends Observable implements Model{
 	@Override
 	public void setFileName(String name) {
 		fileName = name;
+	}
+
+	@Override
+	public boolean isStuck() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

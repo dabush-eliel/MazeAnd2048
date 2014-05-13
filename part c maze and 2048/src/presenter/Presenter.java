@@ -1,13 +1,10 @@
-package gameMaze.controller;
+package presenter;
 
-import gameMaze.model.Model;
-import gameMaze.view.View;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+
+import model.Model;
+import view.View;
 
 
 
@@ -24,7 +21,7 @@ public class Presenter implements Observer{
 	@Override
 	public void update(Observable o, Object arg1) {
 		if (o == model){
-			view.displayData(model.getMaze());
+			view.displayData(model.getData());
 			view.displayScore(model.getScore());
 			if(model.isSucceed()){
 				view.gameOver(true);

@@ -1,8 +1,8 @@
-package game2048.controller;
+package presenter;
 
-import game2048.model.Game2048Model;
+import model.Game2048Model;
 
-public class RunForTest {
+public class RunForTest2048 {
 	/*
 	public static void main(String []args){
 		Game2048Model game = new Game2048Model();
