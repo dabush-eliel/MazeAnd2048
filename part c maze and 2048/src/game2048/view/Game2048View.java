@@ -86,6 +86,14 @@ public class Game2048View extends Observable implements View, Runnable{
 	}
 	
 	
+	public void runalg(){
+		for(int i = 0 ; i < 10; i++){
+			userCommand = 1;
+			setChanged();
+			notifyObservers();
+		}
+	}
+	
 	@Override
 	public void displayBoard(int [][] d) {
 		board.setBoardData(d);

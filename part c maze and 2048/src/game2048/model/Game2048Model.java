@@ -140,7 +140,6 @@ public class Game2048Model extends Observable implements Model {
 		// also, if there is no more free spot & can't make any merge - we stuck ! 
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println("added score:" +score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -187,7 +186,6 @@ public class Game2048Model extends Observable implements Model {
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -233,7 +231,6 @@ public class Game2048Model extends Observable implements Model {
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
 			setChanged();
@@ -279,7 +276,6 @@ public class Game2048Model extends Observable implements Model {
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println(score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -365,7 +361,6 @@ public class Game2048Model extends Observable implements Model {
 					board2048[i][j] = last_board2048[i][j];
 				}	
 			}
-			System.out.println("previus score:" + score);
 			setChanged();
 			notifyObservers();
 		}		
@@ -385,17 +380,12 @@ public class Game2048Model extends Observable implements Model {
 				for(int i = 0; i < size ; i++ ){
 					for(int j = 0 ; j < size; j++){
 						out.write("" + gameArrayToWrite[i][j]);
-						System.out.print(gameArrayToWrite[i][j]);
 						out.write(",");
 					}
-					System.out.println();
 				}
 				if(k == old_moves.size() -1){
-					System.out.println(1);
 				}
 				out.write("#" + old_score.get(k));
-				System.out.println("score:" + old_score.get(k));
-				System.out.println("scoreLast" + old_score.get(old_moves.size() -1));
 				out.write("\n");
 			}
 			out.close();
@@ -435,7 +425,6 @@ public class Game2048Model extends Observable implements Model {
 				for(int k = 0; k < numLines; k++){
 					int[][] tempArrayToAdd = new int[size][size];
 					tempLine = in.readLine();
-					System.out.println(tempLine);
 					int i = 0;
 					int j = 0;
 					boolean flag;
