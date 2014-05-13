@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
+import algorithms.Solver;
+
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   	// NEED TO SET	height + 2
 	private int columns						= 20+2;		// NEED TO SET	width + 2
@@ -926,6 +928,12 @@ public class MazeModel extends Observable implements Model{
 	public boolean isStuck() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void getAI(Solver sol) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,11 +1,10 @@
 package algorithms;
+import model.Model;
 
-import model.Game2048Model;
-
-public class Minimax implements Solver<Game2048Model>{
+public class Minimax implements Solver{
 
 	@Override
-	public Game2048Model calculator(Game2048Model model) {
+	public int [] calculator(Model model) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class BoardView extends Canvas {
 
-	int [][] boardData = new int[4][4];
+	int [][] boardData;
 //	int command = 0;
 	int maxX;
 	int maxY;
@@ -48,8 +48,8 @@ public class BoardView extends Canvas {
 						maxX = board.getSize().x;
 						maxY = board.getSize().y;
 			
-						int sqrWidth 	= (maxX-25)/4;
-						int sqrHeight 	= (maxY-25)/4;
+						int sqrWidth 	= (maxX-25)/boardData.length;
+						int sqrHeight 	= (maxY-25)/boardData[0].length;
 						int min 		= Math.min(sqrWidth, sqrHeight);
 						//drawing the pictures
 						if(boardData != null){	
@@ -153,6 +153,8 @@ public class BoardView extends Canvas {
 	}
 	
 	public void setBoardData(int[][] data) {
+		boardData = new int[data.length][data[0].length];
+		
 		for(int i=0;i<data.length;i++){
 			for(int j=0;j<data[0].length;j++){
 				boardData[i][j] = data[i][j];

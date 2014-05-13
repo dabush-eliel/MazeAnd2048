@@ -1,6 +1,9 @@
 package algorithms;
 
+import model.Model;
 
-public interface Solver <T>{
-	public T calculator(T model);
+
+public interface Solver{
+	
+	public int[] calculator(Model model);
 }

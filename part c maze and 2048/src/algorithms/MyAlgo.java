@@ -1,12 +1,14 @@
 package algorithms;
+import java.io.Serializable;
 
-import model.Game2048Model;
+import model.Model;
 
-public class MyAlgo implements Solver <Game2048Model>{
+public class MyAlgo implements Solver, Serializable{
 
 	@Override
-	public Game2048Model calculator(Game2048Model model) {
-		// TODO Auto-generated method stub
+	public int [] calculator(Model model) {
+		
+		
 		return null;
 	}
 	

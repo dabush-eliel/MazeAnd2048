@@ -1,5 +1,7 @@
 package model;
 
+import algorithms.Solver;
+
 public interface Model {
 
 	public void moveUp();
@@ -22,4 +24,5 @@ public interface Model {
 	public void load();
 	public String getFileName();
 	public void setFileName(String s);
+	public void getAI(Solver sol);
 }

@@ -1,53 +1,62 @@
 package Network2048;
 
-import java.util.Observable;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-import presenter.Presenter;
-import view.View;
-import view.game2048.Game2048View;
-import model.Game2048Model;
 import model.Model;
-import algorithms.MyAlgo;
 import algorithms.Solver;
 
-public class Server {
-
+public class Server implements Runnable, Serializable {
+	Model model;
+	Solver solver;
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void startGame(){
-		String gameType = "2048";
-		switch (gameType) {
-		case "2048":
-			Model model2048	= new Game2048Model();	
-			View view2048 = new Game2048View(model2048.getData());
-			System.out.println("game2048 model&view initialized!");
-			Presenter presenter 		= new Presenter(model2048, view2048);		
-			((Observable) view2048).addObserver(presenter);
-			((Observable) model2048).addObserver(presenter);
-			System.out.println("observers initialized");
-			
-			Thread viewThread = new Thread((Game2048View) view2048);
-			viewThread.start();
-			System.out.println("Game 2048 started.");
-			
-			String solverStr = "MyAlgo";
-			Solver solver = null;
-			switch (solverStr) {
-			case "MyAlgo":
-				solver = new MyAlgo();
-				solver.calculator(model2048);
-				System.out.println("solver calculator started.");
-				break;
-
-			default:
-				break;
-			}
-			break;
-		case "maze":
-			
-			break;
-		default:
-			break;
-		}
+	public Server(){
+		
 	}
+	
+	public void connection(){
+		
+		int port = 2002;  
+		try {  
+		ServerSocket ss = new ServerSocket(port); 
+		ss.setSoTimeout(5000); // 5-sec just for test
+		Socket someClient = ss.accept();  
+		ObjectOutputStream output=new ObjectOutputStream(someClient.getOutputStream());
+		ObjectInputStream input=new ObjectInputStream(someClient.getInputStream());
+
+		model = (Model)input.readObject();  
+		System.out.println((String)input.readObject());  
+		solver = (Solver)input.readObject();
+		System.out.println((String)input.readObject());
+		
+		if (model != null && solver != null){
+			startSolv();
+			System.out.println("current model score is : "+model.getScore());
+		} 
+		
+		
+		output.close();
+		input.close();
+		someClient.close();  
+		ss.close();  
+		}catch(Exception e){System.out.println(e);}  
+	}    
+	
+
+	public String startSolv(){
+		
+		System.out.println("Solver in the server started.");
+		return "output from Start Method";
+	}
+
+	@Override
+	public void run() {
+		connection();
+		System.out.println("Connection with the server ended.");
+	}
+
 }

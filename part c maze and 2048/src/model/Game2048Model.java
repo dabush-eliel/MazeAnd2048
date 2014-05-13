@@ -7,15 +7,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
+import algorithms.Solver;
 
 
 
 
-public class Game2048Model extends Observable implements Model {
+
+public class Game2048Model extends Observable implements Model, Serializable {
 	private final int size 				= 4;				//	size of row / column (same size for us)
 	private int score					= 0;
 	private int [][] board2048 			= new int[size][size];
@@ -25,15 +31,32 @@ public class Game2048Model extends Observable implements Model {
 	private boolean stuck 				= false;
 	private boolean check				= true;
 	private int tempScore				= 0;
-	private String fileName; //ToSave;            						//holds path name to save
-	// private String fileNameToLoad;									//holds path name to load
-	
-	// one file name is enough
+	private String fileName; 			           		//holds path name to save
+
 	
 	
 	public Game2048Model() {
 		initGame();	
 	}
+	
+	public Game2048Model(Game2048Model gm) {
+		
+		this.score = gm.score;
+		this.old_score = gm.old_score;
+		this.old_moves = gm.old_moves;
+		this.succeed = gm.isSucceed();
+		this.stuck = gm.isStuck();
+		this.check = gm.isCheck();
+		this.tempScore = gm.tempScore;
+		this.fileName = gm.fileName;
+		
+		for(int i=0 ; i<size ; i++){
+			for(int j=0 ; j<size ; j++){
+				this.board2048[i][j] = gm.board2048[i][j];
+			}
+		}
+	}
+
 	
 	public void initGame(){
 		for(int i = 0 ; i < size ; i++){
@@ -41,8 +64,8 @@ public class Game2048Model extends Observable implements Model {
 				this.board2048[i][j]	= 	0;
 			}
 		}
-		board2048[1][2] = 1024;
-		board2048[2][3] = 1024;
+	//	board2048[1][2] = 1024;
+	//	board2048[2][3] = 1024;
 		
 		// initialize 2 random Squares with the value: 2 OR 4 --> 90% for 2 and 10% for 4
 		int sqr1val = squareVal();		
@@ -344,11 +367,27 @@ public class Game2048Model extends Observable implements Model {
 	
 	@Override
 	public int[][] getData() {
-		return getBoard2048();
-	}
-	
-	private int[][] getBoard2048() {
 		return board2048;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public Stack<Integer> getOld_score() {
+		return old_score;
+	}
+
+	public Stack<int[][]> getOld_moves() {
+		return old_moves;
+	}
+
+	public boolean isCheck() {
+		return check;
+	}
+
+	public int getTempScore() {
+		return tempScore;
 	}
 
 	@Override
@@ -606,4 +645,23 @@ public class Game2048Model extends Observable implements Model {
 		
 	}
 
+	@Override
+	public void getAI(Solver sol) {		
+		try{  
+			
+			Socket s = new Socket("localhost",2002);  
+			OutputStream os = s.getOutputStream();  
+			ObjectOutputStream oos = new ObjectOutputStream(os);  
+			
+			oos.writeObject(new Game2048Model(this));  
+			oos.writeObject(new String("Model - 2048 sent from the client"));  
+			oos.writeObject(sol);  
+			oos.writeObject(new String("Solver - MyAlgo sent from the client"));  
+			
+			
+			oos.close();  
+			os.close();  
+			s.close();  
+			}catch(Exception e){System.out.println(e);}
+		}  
 }
