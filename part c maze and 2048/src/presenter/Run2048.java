@@ -6,7 +6,6 @@ import model.Game2048Model;
 import model.Model;
 import view.View;
 import view.game2048.Game2048View;
-import algorithms.MyAlgo;
 
 public class Run2048 {
 
