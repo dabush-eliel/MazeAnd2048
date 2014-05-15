@@ -14,6 +14,12 @@ public class Buttons2048{
 	private Button load;
 	private Button exit;
 	
+	private Button minimax;
+	
+	
+	public Button getMinimax() {
+		return minimax;
+	}
 
 	public Button getSolve() {
 		return solve;
@@ -64,6 +70,12 @@ public class Buttons2048{
 		exit = new Button(parent, style);
 		exit.setText("Exit");
 		
+		
+		minimax = new Button(parent, style);
+		minimax.setText("Solve With Minimax");
+		
+		minimax.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
+		
 
 
 		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
@@ -81,4 +93,7 @@ public class Buttons2048{
 		exit.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 	}
+
+
+
 }

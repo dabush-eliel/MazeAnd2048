@@ -23,9 +23,13 @@ public class Presenter implements Observer{
 		if (o == model){
 			view.displayData(model.getData());
 			view.displayScore(model.getScore());
+			if(arg1 != null){
+				view.displayHint(Integer.parseInt(arg1.toString()));
+			}
 			if(model.isSucceed()){
 				view.gameOver(true);
 			}
+			
 		}
 		if (o == view){
 			if(arg1 == "save"){

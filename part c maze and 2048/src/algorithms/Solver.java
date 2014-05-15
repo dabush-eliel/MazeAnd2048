@@ -5,5 +5,5 @@ import model.Model;
 
 public interface Solver{
 	
-	public int[] calculator(Model model);
+	public int calculator(Model model);
 }

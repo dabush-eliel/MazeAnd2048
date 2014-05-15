@@ -70,8 +70,13 @@ public class Server implements Runnable, Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-	} 
+	}    
+	
 
+	public String startSolv(){
+		System.out.println("Solver in the server started.");
+		return "output from Start Method";
+	}
 
 	@Override
 	public void run() {
