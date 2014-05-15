@@ -24,5 +24,5 @@ public interface Model {
 	public void load();
 	public String getFileName();
 	public void setFileName(String s);
-	public void getAI(Solver sol);
+	public void getAI(String host, int port, Solver sol);
 }

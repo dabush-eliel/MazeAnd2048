@@ -326,7 +326,41 @@ public class Game2048View extends Observable implements View, Runnable{
 			
 			@Override
 			public void run() {
+
+				buttons.getSolve().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						//run solver
+						userCommand  = 12;
+						setChanged();
+						notifyObservers();
+						board.setFocus();
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						
+					}
+				});
 				
+				buttons.getHint().addSelectionListener(new SelectionListener() {
+						
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							//get hint
+							userCommand  = 13;
+							setChanged();
+							notifyObservers();
+							board.setFocus();
+						}
+						
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {
+							
+						}
+				});
+					
 				buttons.getRestart().addSelectionListener(new SelectionListener() {
 					
 					@Override

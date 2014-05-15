@@ -8,13 +8,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
+import algorithms.MyAlgo;
 import algorithms.Solver;
 
 
@@ -22,6 +22,10 @@ import algorithms.Solver;
 
 
 public class Game2048Model extends Observable implements Model, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8774547151582184720L;
 	private final int size 				= 4;				//	size of row / column (same size for us)
 	private int score					= 0;
 	private int [][] board2048 			= new int[size][size];
@@ -32,7 +36,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private boolean check				= true;
 	private int tempScore				= 0;
 	private String fileName; 			           		//holds path name to save
-
+	private String host					= "localhost";
+	private int port					= 2022;
+	private Solver sol					= new MyAlgo();
 	
 	
 	public Game2048Model() {
@@ -49,6 +55,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		this.check = gm.isCheck();
 		this.tempScore = gm.tempScore;
 		this.fileName = gm.fileName;
+		this.host = gm.host;			// host to connect to get AI / hint
+		this.port = gm.port;
+		this.sol = gm.sol;
 		
 		for(int i=0 ; i<size ; i++){
 			for(int j=0 ; j<size ; j++){
@@ -577,6 +586,12 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			succeed = false;
 			check 	= false;
 			break;
+		case 12:
+			getAI(host, port, sol);
+			break;
+		case 13:
+			// hint 
+			break;
 		default:
 			break;
 		}
@@ -644,24 +659,30 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	// this method connecting to a server a get the auto solution for this game
+	//method need to get which host to connect and what port to use and which solver will do that 
 
 	@Override
-	public void getAI(Solver sol) {		
+	public void getAI(String host, int port, Solver sol) {		
 		try{  
 			
-			Socket s = new Socket("localhost",2002);  
-			OutputStream os = s.getOutputStream();  
-			ObjectOutputStream oos = new ObjectOutputStream(os);  
+			Socket s = new Socket(host,port);  
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
 			
 			oos.writeObject(new Game2048Model(this));  
 			oos.writeObject(new String("Model - 2048 sent from the client"));  
 			oos.writeObject(sol);  
-			oos.writeObject(new String("Solver - MyAlgo sent from the client"));  
+			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+			oos.writeObject(new String("exit"));
 			
-			
-			oos.close();  
-			os.close();  
+			oos.close();    
 			s.close();  
+			
 			}catch(Exception e){System.out.println(e);}
-		}  
+		
+		setChanged();
+		notifyObservers();
+	}  
 }

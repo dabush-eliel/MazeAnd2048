@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 public class Buttons2048{
+	private Button solve;
+	private Button hint;
 	private Button restart;
 	private Button undo;
 	private Button save;
@@ -13,6 +15,13 @@ public class Buttons2048{
 	private Button exit;
 	
 
+	public Button getSolve() {
+		return solve;
+	}
+
+	public Button getHint() {
+		return hint;
+	}
 	public Button getRestart() {
 		return restart;
 	}
@@ -34,6 +43,12 @@ public class Buttons2048{
 	}
 	
 	public Buttons2048(Composite parent, int style) {
+		solve = new Button(parent,style);
+		solve.setText("Solve Game");
+		
+		hint = new Button(parent,style);
+		hint.setText("Hint");
+		
 		restart = new Button(parent,style);
 		restart.setText("Restart");
 		
@@ -50,8 +65,12 @@ public class Buttons2048{
 		exit.setText("Exit");
 		
 
-		restart.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 
+		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
+		
+		hint.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
+
+		restart.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 		undo.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		

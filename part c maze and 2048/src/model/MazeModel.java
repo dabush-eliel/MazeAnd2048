@@ -931,9 +931,10 @@ public class MazeModel extends Observable implements Model{
 	}
 
 	@Override
-	public void getAI(Solver sol) {
+	public void getAI(String host, int port, Solver sol) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
