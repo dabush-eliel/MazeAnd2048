@@ -575,6 +575,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			undoMove();
 			break;
 		case 11:
+			// continue the game after hit 2048.
 			succeed = false;
 			check 	= false;
 			break;

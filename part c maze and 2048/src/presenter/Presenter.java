@@ -29,6 +29,9 @@ public class Presenter implements Observer{
 			if(model.isSucceed()){
 				view.gameOver(true);
 			}
+			if(model.isStuck()){
+				view.gameOver(false);
+			}
 			
 		}
 		if (o == view){
