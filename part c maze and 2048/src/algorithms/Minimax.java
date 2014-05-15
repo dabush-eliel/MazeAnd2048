@@ -95,6 +95,7 @@ public class Minimax implements Solver{
                 }
 			}
 		}
+		System.out.println("Direction,Score" + "(" + bestDirection + "," +bestScore +")");
 		result.put("Score", bestScore);
 		result.put("Direction", bestDirection);
 	    
