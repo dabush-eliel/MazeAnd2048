@@ -2,6 +2,7 @@ package presenter;
 
 import java.util.Observable;
 
+import algorithms.Minimax;
 import algorithms.MyAlgo;
 import Network2048.Server;
 import model.Game2048Model;
@@ -27,7 +28,8 @@ public class SolverRun {
 		sThread.start();
 		System.out.println("server started.");	
 		
-		model2048.getAI(new MyAlgo());
+		
+		model2048.getAI(new Minimax());
 	}
 
 }

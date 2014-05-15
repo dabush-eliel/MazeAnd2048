@@ -34,7 +34,8 @@ public class Server implements Runnable, Serializable {
 		System.out.println((String)input.readObject());
 		
 		if (model != null && solver != null){
-			startSolv();
+			solver.calculator(model);
+			//startSolv();
 			System.out.println("current model score is : "+model.getScore());
 		} 
 		

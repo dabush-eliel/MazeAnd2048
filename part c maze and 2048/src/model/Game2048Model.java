@@ -15,6 +15,7 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
+import algorithms.Minimax;
 import algorithms.Solver;
 
 
@@ -167,7 +168,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		// also, if there is no more free spot & can't make any merge - we stuck ! 
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println("added score:" +score);
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -214,7 +214,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println(score);
+			
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -260,7 +260,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println(score);
+			
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
 			setChanged();
@@ -306,7 +306,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		// if board doesn't changed don't add new square
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
-			System.out.println(score);
+		
 			old_moves.push(last_board2048);
 			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
 			setChanged();
@@ -408,7 +408,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 					board2048[i][j] = last_board2048[i][j];
 				}	
 			}
-			System.out.println("previus score:" + score);
+			
 			setChanged();
 			notifyObservers();
 		}		
@@ -428,17 +428,17 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				for(int i = 0; i < size ; i++ ){
 					for(int j = 0 ; j < size; j++){
 						out.write("" + gameArrayToWrite[i][j]);
-						System.out.print(gameArrayToWrite[i][j]);
+					
 						out.write(",");
 					}
-					System.out.println();
+					
 				}
 				if(k == old_moves.size() -1){
-					System.out.println(1);
+					
 				}
 				out.write("#" + old_score.get(k));
-				System.out.println("score:" + old_score.get(k));
-				System.out.println("scoreLast" + old_score.get(old_moves.size() -1));
+				
+				
 				out.write("\n");
 			}
 			out.close();
@@ -478,7 +478,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				for(int k = 0; k < numLines; k++){
 					int[][] tempArrayToAdd = new int[size][size];
 					tempLine = in.readLine();
-					System.out.println(tempLine);
+				
 					int i = 0;
 					int j = 0;
 					boolean flag;
@@ -577,6 +577,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			succeed = false;
 			check 	= false;
 			break;
+		case 12:
+			getAI(new Minimax());
+			break;
 		default:
 			break;
 		}
@@ -647,21 +650,31 @@ public class Game2048Model extends Observable implements Model, Serializable {
 
 	@Override
 	public void getAI(Solver sol) {		
+		/*
 		try{  
 			
-			Socket s = new Socket("localhost",2002);  
+			Socket s = new Socket("localhost",2002);
+			s.setSoTimeout(5000);
+			
 			OutputStream os = s.getOutputStream();  
 			ObjectOutputStream oos = new ObjectOutputStream(os);  
 			
 			oos.writeObject(new Game2048Model(this));  
 			oos.writeObject(new String("Model - 2048 sent from the client"));  
 			oos.writeObject(sol);  
-			oos.writeObject(new String("Solver - MyAlgo sent from the client"));  
+			oos.writeObject(new String("Solver - Minimax sent from the client"));  
 			
 			
 			oos.close();  
 			os.close();  
 			s.close();  
 			}catch(Exception e){System.out.println(e);}
+			*/
+		
+		
+		int hint = sol.calculator(this);
+		setChanged();
+		notifyObservers(hint);
 		}  
+		
 }

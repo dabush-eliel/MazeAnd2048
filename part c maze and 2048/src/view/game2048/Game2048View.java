@@ -30,6 +30,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Display display;	// = new Display();
 	private Shell shell 	;	//= new Shell(display);
 	private ScoreLabel scoreLabel;
+	private HintLabel hintLabel;
 	private Menu2048 menu ;		//= new Menu2048(shell, SWT.BAR);
 	private BoardView board;
 	private int userCommand = 0;
@@ -66,6 +67,7 @@ public class Game2048View extends Observable implements View, Runnable{
 		
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
+		hintLabel = new HintLabel(shell,SWT.FILL);
 		
 		this.board = new BoardView(shell, SWT.BORDER);
 		board.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true,2,10));
@@ -102,6 +104,25 @@ public class Game2048View extends Observable implements View, Runnable{
 	public void displayScore(int score) {
 		scoreHolder = score;
 		scoreLabel.setText("Score: "+score);
+	}
+	public void displayHint(int hint){
+		switch (hint) {
+		case 1:
+			hintLabel.setText("the hint is: UP");
+			break;
+		case 2:
+			hintLabel.setText("the hint is: DOWN");
+			break;
+		case 3:
+			hintLabel.setText("the hint is: RIGHT");
+			break;
+		case 4:
+			hintLabel.setText("the hint is: LEFT");
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -326,6 +347,22 @@ public class Game2048View extends Observable implements View, Runnable{
 			
 			@Override
 			public void run() {
+				buttons.getMinimax().addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						userCommand = 12;
+						setChanged();
+						notifyObservers();
+						board.setFocus();
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				
 				buttons.getRestart().addSelectionListener(new SelectionListener() {
 					

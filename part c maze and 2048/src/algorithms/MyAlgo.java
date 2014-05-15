@@ -6,10 +6,10 @@ import model.Model;
 public class MyAlgo implements Solver, Serializable{
 
 	@Override
-	public int [] calculator(Model model) {
+	public int calculator(Model model) {
 		
 		
-		return null;
+		return (Integer) null;
 	}
 	
 }
