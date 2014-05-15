@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Label;
 
 public class HintLabel {
 	Label hint;
-	
+	//for hint
 	public HintLabel(Composite parent, int style) {
 		hint = new Label(parent,style);
 		hint.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
