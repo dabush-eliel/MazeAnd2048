@@ -744,4 +744,10 @@ public class MazeView extends Observable implements View,Runnable {
 		
 	}
 
+	@Override
+	public void displayHint(int hint) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

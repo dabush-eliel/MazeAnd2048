@@ -31,7 +31,7 @@ public class Server implements Runnable, Serializable {
 		try {  
 		
 			ss = new ServerSocket(port); 
-			ss.setSoTimeout(10000); 
+			ss.setSoTimeout(60000); 
 			
 			ExecutorService tp = Executors.newFixedThreadPool(noc);
 			
@@ -51,8 +51,6 @@ public class Server implements Runnable, Serializable {
 								input.close();
 								output.close();
 								someClient.close();
-								// need to find another place to set -stop = true- 
-								// 	--> because now its only for one client!
 					//			stop = true; 	 
 							}catch(Exception e){
 							}
@@ -71,12 +69,6 @@ public class Server implements Runnable, Serializable {
 			e.printStackTrace();
 		}	
 	}    
-	
-
-	public String startSolv(){
-		System.out.println("Solver in the server started.");
-		return "output from Start Method";
-	}
 
 	@Override
 	public void run() {

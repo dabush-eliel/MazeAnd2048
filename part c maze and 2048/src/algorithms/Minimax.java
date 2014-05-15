@@ -1,4 +1,5 @@
 package algorithms;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.Map;
 import model.Game2048Model;
 import model.Model;
 
-public class Minimax implements Solver{
+public class Minimax implements Solver,Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7715584375427671747L;
 	private Integer cache_emptyCells;
 	
 	@Override
