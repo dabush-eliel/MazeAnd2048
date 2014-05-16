@@ -11,7 +11,7 @@ public class ServerRun {
 		sThread.start();	
 		
 		try {
-			Thread.sleep(30000);
+			Thread.sleep(180000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

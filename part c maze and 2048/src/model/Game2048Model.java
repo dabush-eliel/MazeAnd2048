@@ -70,8 +70,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				this.board2048[i][j]	= 	0;
 			}
 		}
-	//	board2048[1][2] = 1024;
-	//	board2048[2][3] = 1024;
+		//board2048[1][2] = 1024;
+		//board2048[2][3] = 1024;
 		
 		// initialize 2 random Squares with the value: 2 OR 4 --> 90% for 2 and 10% for 4
 		int sqr1val = squareVal();		

@@ -15,18 +15,25 @@ public class Minimax implements Solver,Serializable{
 	 */
 	private static final long serialVersionUID = -7715584375427671747L;
 	private Integer cache_emptyCells;
+	private String user = "USER";
+	private String computer = "COMPUTER";
+	
+	public Minimax(){
+		
+	}
 	
 	@Override
 	public int calculator(Model model) {
+		
+		System.out.println("calc");
 		int depth = 7;
-		String user = "USER";
-		String computer = "COMPUTER";
+		
 		Map<String,Integer> result = minimax(model, depth, user);
 		
 		
-		
-		System.out.println(result.get("Direction"));
-		return result.get("Direction");
+		int x = result.get("Direction");
+		System.out.println(x);
+		return x;
 		
 	}
 	
@@ -43,14 +50,32 @@ public class Minimax implements Solver,Serializable{
 	
 	public Map<String,Integer> minimax(Model model, int depth, String player){
 		Map<String,Integer> result = new HashMap<>();
-		int bestDirection = 0;
+		int bestDirection = -1;
 		int bestScore = 0;
+		
+		
 		
 		if(depth == 0 || gameTerminated(model)){
 			bestScore = heuristicScore(model.getScore(),getNumberOfEmptyCells(model.getData()),calculateClusteringScore(model.getData()));
 		}
+		
+		
+		//try
+		/*
+		if(gameTerminated(model)) {
+            if(model.isSucceed()) {
+                bestScore=Integer.MAX_VALUE; //highest possible score
+            }
+            else {
+                bestScore=Math.min(model.getScore(), 1); //lowest possible score
+            }
+        }
+        else if(depth==0) {
+            bestScore=heuristicScore(model.getScore(),getNumberOfEmptyCells(model.getData()),calculateClusteringScore(model.getData()));
+        }
+        */
 		else{
-			if(player == "USER"){
+			if(player.equals("USER")){
 				bestScore = Integer.MIN_VALUE;
 				
 				for(int i = 1; i < 4 ; i++){
@@ -61,7 +86,7 @@ public class Minimax implements Solver,Serializable{
 						continue;
 					}
 					
-					Map<String, Integer> currentResult = minimax(modelCopy, depth - 1, "COMPUTER");
+					Map<String, Integer> currentResult = minimax(modelCopy, depth - 1, computer);
 					
 					int currentScore = currentResult.get("Score");
                     if(currentScore > bestScore) { //maximize score
@@ -70,7 +95,7 @@ public class Minimax implements Solver,Serializable{
                     }
 				}
 			}
-			else if(player == "COMPUTER"){
+			else if(player.equals("USER")){
 				bestScore = Integer.MAX_VALUE;
 				
 				List<Integer> moves = getEmptyCellIds(model.getData());
