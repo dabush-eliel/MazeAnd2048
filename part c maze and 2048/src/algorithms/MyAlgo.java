@@ -13,7 +13,11 @@ public class MyAlgo implements Solver, Serializable{
 	public int calculator(Model model) {
 		
 		
-		return (Integer) null;
+		
+		return 0;
 	}
+	
+	
+	
 	
 }
