@@ -29,7 +29,7 @@ public class MyAlgo implements Solver, Serializable{
 	}
 	
 	@Override
-	public int calculator(Model model) {
+	public List<Object> calculator(Model model) {
 		
 		System.out.println("MyAlgo Calculator");
 		int [][]data = copyArray(model.getData());
@@ -101,7 +101,7 @@ public class MyAlgo implements Solver, Serializable{
 		}
 		
 		
-		return 0;
+		return null;
 	}
 	
 	
