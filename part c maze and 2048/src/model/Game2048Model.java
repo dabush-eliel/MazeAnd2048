@@ -14,7 +14,9 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
+
 import algorithms.Minimax;
+import algorithms.MyAlgo;
 import algorithms.Solver;
 
 
@@ -666,7 +668,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 			
 			
-			oos.writeObject(new Game2048Model(this));  
+			oos.writeObject(new Game2048Model(this));
 			oos.writeObject(new String("Model - 2048 sent from the client"));  
 			oos.writeObject(sol);  
 			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
@@ -677,10 +679,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				if(obj instanceof Integer){
 					doUserCommand(((Integer) obj).intValue());
 					System.out.println("the hint: "+obj);
+					testM();	
 				}
 			}
-			
-			
 			
 			oos.close();    
 			ois.close();
@@ -690,5 +691,30 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 		setChanged();
 		notifyObservers();
-	}  
+	}
+	
+	
+	// for testing heuristics in MyAlgo 
+	private void testM(){
+		
+		int [][] last_board2048		= new int[size][size];
+		
+		int k  =0 ;
+		while(true){
+			
+			for (int i = 0 ; i < size ; i++){
+				for (int j = 0 ; j < size ; j++){
+					last_board2048[i][j] = board2048[i][j];
+				}	
+			}
+			doUserCommand(2);
+			doUserCommand(3);	
+			if(!boardChanged(board2048, last_board2048)){
+				break;
+			}
+			System.out.println(k++);
+		}
+
+	}
+
 }
