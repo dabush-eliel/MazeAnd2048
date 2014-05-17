@@ -1,5 +1,6 @@
 package algorithms;
 import java.io.Serializable;
+import java.util.List;
 
 import model.Game2048Model;
 import model.Model;
@@ -28,7 +29,7 @@ public class MyAlgo implements Solver, Serializable{
 	}
 	
 	@Override
-	public int calculator(Model model) {
+	public List<Object> calculator(Model model) {
 		
 		int [][]data = copyArray(model.getData());
 		int hTile = calcHighScore(data);
@@ -68,7 +69,7 @@ public class MyAlgo implements Solver, Serializable{
 		}
 		
 		
-		return 0;
+		return null;
 	}
 	
 	
