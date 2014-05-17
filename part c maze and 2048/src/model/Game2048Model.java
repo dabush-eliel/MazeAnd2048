@@ -18,7 +18,6 @@ import java.util.Random;
 import java.util.Stack;
 
 import algorithms.Minimax;
-import algorithms.MyAlgo;
 import algorithms.Solver;
 
 
@@ -679,19 +678,14 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			
 			//check for null resources
 			
-<<<<<<< HEAD
 			System.out.println("gangam style");
 			oos.writeObject(new Game2048Model(this));  
-=======
-			oos.writeObject(new Game2048Model(this));
->>>>>>> refs/heads/MyAlgo
 			oos.writeObject(new String("Model - 2048 sent from the client"));  
 			oos.writeObject(sol);  
 			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
 			oos.writeObject(new String("exit"));
 			Object obj = ois.readObject();
 			if(obj != null){
-<<<<<<< HEAD
 				if(obj instanceof List<?>){
 					List<Object> modelsAndHints = (List<Object>) obj;
 					Model[] models = (Model[]) modelsAndHints.get(0);
@@ -717,14 +711,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 							}
 						}
 					}
-=======
-				if(obj instanceof Integer){
-					doUserCommand(((Integer) obj).intValue());
-					System.out.println("the hint: "+obj);
-					testM();	
->>>>>>> refs/heads/MyAlgo
 				}
 			}
+			
+			
 			
 			oos.close();    
 			ois.close();
@@ -741,7 +731,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		setChanged();
 		notifyObservers();
 	}
-	
+		
 	
 	// for testing heuristics in MyAlgo 
 	private void testM(){
@@ -762,8 +752,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				break;
 			}
 			System.out.println(k++);
+		}  
 		}
-
-	}
-
 }
