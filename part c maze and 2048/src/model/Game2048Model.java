@@ -592,6 +592,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 
 	@Override
 	public boolean isStuck(){
+		if(getFreeSpotsNum() == 0 && mergeStuck()){
+			stuck = true;
+		}
 		return stuck;
 	}
 	
