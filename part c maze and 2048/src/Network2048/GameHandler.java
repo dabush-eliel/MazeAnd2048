@@ -3,6 +3,8 @@ package Network2048;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Model;
 import algorithms.Solver;
@@ -36,16 +38,18 @@ public class GameHandler implements ClientHandler {
 			
 			System.out.println(solver.getClass());
 			
-			if (model != null && solver != null){					
-				Integer hint = new Integer(solver.calculator(model));
-				System.out.println("hint:" + hint);
-				output.writeObject(hint);	
+			if (model != null && solver != null){	
+				List<Object> modelsAndHints = new ArrayList<>();
+				//for(int i = 0 ; i < 300; i++){
+				modelsAndHints = solver.calculator(model);
+				output.writeObject(modelsAndHints);	
 			}
 			
 			input.close();
 			output.close();
 			
 		}catch (ClassNotFoundException | IOException e) {
+			System.out.println("CLASS OR IO, Nevermore8");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

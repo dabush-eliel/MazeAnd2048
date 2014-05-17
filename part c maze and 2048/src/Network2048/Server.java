@@ -31,7 +31,7 @@ public class Server implements Runnable, Serializable {
 		try {  
 		
 			ss = new ServerSocket(port); 
-			ss.setSoTimeout(60000); 
+			ss.setSoTimeout(160000); 
 			
 			ExecutorService tp = Executors.newFixedThreadPool(noc);
 			
@@ -53,10 +53,12 @@ public class Server implements Runnable, Serializable {
 								someClient.close();
 					//			stop = true; 	 
 							}catch(Exception e){
+								System.out.println("EXCEPTION , Nevermore11");
 							}
 						}
 					});
 				}catch(SocketTimeoutException e){
+					System.out.println("SocketTimeOUT EXCEPTION, Nevermore9");
 					stop = true;	
 					System.out.println(e);						
 				}	
@@ -66,6 +68,7 @@ public class Server implements Runnable, Serializable {
 			System.out.println("serverSocket closed");
 			
 		} catch (IOException e) {
+			System.out.println("io exception occured, Nevermore10");
 			e.printStackTrace();
 		}	
 	}    
