@@ -10,10 +10,10 @@ public class MyAlgo implements Solver, Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 8168102632311639749L;
-	private int upVal			= 0;
-	private int downVal			= 0;
-	private int rightVal 		= 0;
-	private int leftVal			= 0;				
+	private int upVal;
+	private int downVal;
+	private int rightVal;
+	private int leftVal;				
 	private final int UP 		= 1;
 	private final int DOWN		= 2;
 	private final int RIGHT 	= 3;
@@ -29,15 +29,21 @@ public class MyAlgo implements Solver, Serializable{
 	}
 	
 	@Override
-	public List<Object> calculator(Model model) {
+	public int calculator(Model model) {
 		
+		System.out.println("MyAlgo Calculator");
 		int [][]data = copyArray(model.getData());
 		int hTile = calcHighScore(data);
 		
 		// we set goal value in the c'tor. usually 2048. 
 		while((hTile < Math.pow(2, GOAL)) && (!stop)){
+			System.out.println("in while");
+			downVal 	= 3;
+			rightVal 	= 2;
+			leftVal 	= 1;
 			
 			if(newBoard(data) && model.getScore() == 0){
+				int i = 0;
 				while(true){
 					data = copyArray(model.getData());
 					model.doUserCommand(DOWN);
@@ -45,9 +51,15 @@ public class MyAlgo implements Solver, Serializable{
 					if(!boardChanged(data, model.getData())){
 						break;
 					}
+					System.out.println(i++);
 				}
+				System.out.println("before break");
+				break;
 			}
+			stop = true;
 			
+			// Shouldn't been printed
+			System.out.println("after break");
 			if(model.isStuck()){
 				stop = true;
 				break;
@@ -58,18 +70,38 @@ public class MyAlgo implements Solver, Serializable{
 			for(int i=2 ; i<=4 ; i++){
 				Model modelCopy = new Game2048Model((Game2048Model)model);
 				modelCopy.doUserCommand(i);
-					
+				
+				if(!boardChanged(modelCopy.getData(), model.getData())){
+					continue;
+				}
+				
+				int score = (modelCopy.getScore() - model.getScore());
+				
 				if(avoidedMovePoss(modelCopy.getData())){
 					continue;
+				}else{
+					switch(i){
+					case 2:
+						downVal += 50;
+						break;
+					case 3:
+						rightVal += 50;
+						break;
+					case 4:
+						leftVal += 50;
+						break;
+					}
 				}
 				
 				
 			}
 			
+			int val = Math.max(downVal, Math.max(rightVal,leftVal));
+			model.doUserCommand(val);			
 		}
 		
 		
-		return null;
+		return 0;
 	}
 	
 	
