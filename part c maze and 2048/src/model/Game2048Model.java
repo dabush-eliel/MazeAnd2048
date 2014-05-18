@@ -39,7 +39,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private String fileName; 			           		//holds path name to save
 	private String host					= "localhost";
 	private int port					= 2022;
-	private Solver sol					= new Minimax();
+	private Solver sol;
 	private int command;
 	
 	
@@ -699,6 +699,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 	// minimax algo running
 	private void MinimaxRun(){
+		
+		sol = new Minimax();
+		
 		try{  
 			
 			Socket s = new Socket(host,port);  
@@ -758,7 +761,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	
 	
 	// for testing heuristics in MyAlgo 
-	private void MyAlgoRun(){	
+	private void MyAlgoRun(){
+		
+		sol = new MyAlgo(2048);
+		
 		try{  
 	
 			Socket s = new Socket(host,port);  
