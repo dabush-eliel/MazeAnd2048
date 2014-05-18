@@ -50,7 +50,10 @@ public class Buttons2048{
 	
 	public Buttons2048(Composite parent, int style) {
 		solve = new Button(parent,style);
-		solve.setText("Solve Game");
+		solve.setText("Solve Game with Algo");
+		
+		minimax = new Button(parent, style);
+		minimax.setText("Solve With Minimax");
 		
 		hint = new Button(parent,style);
 		hint.setText("Hint");
@@ -71,14 +74,12 @@ public class Buttons2048{
 		exit.setText("Exit");
 		
 		
-		minimax = new Button(parent, style);
-		minimax.setText("Solve With Minimax");
-		
-		minimax.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 
 
 		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
+		
+		minimax.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 		hint.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 

@@ -374,11 +374,11 @@ public class Game2048View extends Observable implements View, Runnable{
 					}
 				});
 				
-				buttons.getHint().addSelectionListener(new SelectionListener() {
+				buttons.getMinimax().addSelectionListener(new SelectionListener() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							//get hint
+							//get Minimax
 							userCommand  = 13;
 							setChanged();
 							notifyObservers();
