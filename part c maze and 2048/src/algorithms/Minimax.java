@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+
 
 import model.Game2048Model;
 import model.Model;
@@ -26,7 +29,7 @@ public class Minimax implements Solver,Serializable{
 	public List<Object> calculator(Model model) {
 		
 		System.out.println("calc");
-		int depth = 2;
+		int depth = 4;
 		
 		List<Object> modelsAndHints = new ArrayList<>();
 		
@@ -44,12 +47,14 @@ public class Minimax implements Solver,Serializable{
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		for(int i = 0 ; i < depth; i++){
 			if(currentPlayer.equals("USER")){
-				for(int j = 1 ; j < depth ; j++){
+				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel1 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr1 = new int[copyModel1.getData().length][copyModel1.getData()[0].length];
 					copyArr1 = copyModel1.getData();
 					String string1 = currentPlayer + "," + j + "," + (depth - i) + "," + "UP";
-					//System.out.println(string1 + ", " + result.containsKey(string1));
+					//printArray(copyArr1);
+					System.out.println(string1 + ", " + result.containsKey(string1));
+					
 					if(result.containsKey(string1)){
 						resultArray[i] = result.get(string1);
 						
@@ -57,62 +62,73 @@ public class Minimax implements Solver,Serializable{
 						
 						copyModel1.doUserCommand(1);
 						boolean bool = arrayEquals(copyModel1.getData(), copyArr1);
+						System.out.println(bool);
 						System.out.println("should be DOWN" + ",current Bool is:" + bool);
-						if(arrayEquals(copyModel1.getData(), copyArr1)){
+						if(bool){
+							//printArray(copyModel1.getData());
 							hints[i] = "DOWN";
 						}
 					}
 				}
-				for(int j = 1 ; j < depth ; j++){
+				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel2 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr2 = new int[copyModel2.getData().length][copyModel2.getData()[0].length];
 					copyArr2 = copyModel2.getData();
 					String string2 = currentPlayer + "," + j + "," + (depth - i) + "," + "DOWN";
 					//System.out.println(string2 + ", " + result.containsKey(string2));
+					//printArray(copyArr2);
 					if(result.containsKey(string2)){
 						resultArray[i] = result.get(string2);
 						
 						hints[i] = "DOWN";
 						copyModel2.doUserCommand(2);
 						boolean bool = arrayEquals(copyModel2.getData(), copyArr2);
+						//System.out.println(bool);
 						System.out.println("should be UP" + ",current Bool is:" + bool);
-						if(arrayEquals(copyModel2.getData(), copyArr2)){
+						if(bool){
+							//printArray(copyModel2.getData());
 							hints[i] = "UP";
 						}
 					}
 				}
-				for(int j = 1 ; j < depth ; j++){
+				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel3 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr3 = new int[copyModel3.getData().length][copyModel3.getData()[0].length];
 					copyArr3 = copyModel3.getData();
 					String string3 = currentPlayer + "," + j + "," + (depth - i) + "," + "RIGHT";
 					//System.out.println(string3 + ", " + result.containsKey(string3));
+					//printArray(copyArr3);
 					if(result.containsKey(string3)){
 						resultArray[i] = result.get(string3);
 						
 						hints[i] = "RIGHT";
 						copyModel3.doUserCommand(3);
 						boolean bool = arrayEquals(copyModel3.getData(), copyArr3);
+						//System.out.println(bool);
 						System.out.println("should be LEFT" + ",current Bool is:" + bool);
-						if(arrayEquals(copyModel3.getData(), copyArr3)){
+						if(bool){
+							//printArray(copyModel3.getData());
 							hints[i] = "LEFT";
 						}
 					}
 				}
-				for(int j = 1 ; j < depth ; j++){
+				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel4 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr4 = new int[copyModel4.getData().length][copyModel4.getData()[0].length];
 					copyArr4 = copyModel4.getData();
 					String string4 = currentPlayer + "," + j + "," + (depth - i) + "," + "LEFT";
 					//System.out.println(string4 + ", "+ result.containsKey(string4));
+					//printArray(copyModel4.getData());
 					if(result.containsKey(string4)){
 						resultArray[i] = result.get(string4);
 						
 						hints[i] = "LEFT";
 						copyModel4.doUserCommand(4);
 						boolean bool = arrayEquals(copyModel4.getData(), copyArr4);
+						//System.out.println(bool);
 						System.out.println("should be RIGHT" + ",current Bool is:" + bool);
-						if(arrayEquals(copyModel4.getData(), copyArr4)){
+						if(bool){
+							//printArray(copyModel4.getData());
 							hints[i] = "RIGHT";
 						}
 					}
@@ -130,8 +146,22 @@ public class Minimax implements Solver,Serializable{
 		
 		modelsAndHints.add(resultArray);
 		modelsAndHints.add(hints);
+		System.out.println("****");
 		return modelsAndHints;
 		
+	}
+	
+	
+	
+	public void printArray(int [][] arr){
+		for(int i = 0; i < arr.length ;i++){
+			for(int j = 0; j < arr[0].length ; j++){
+				System.out.print(arr[i][j]);
+				System.out.print("_");
+			}
+			System.out.println();
+		}
+		System.out.println("________");
 	}
 	
 	
@@ -155,9 +185,12 @@ public class Minimax implements Solver,Serializable{
 					Model modelCopy = new Game2048Model((Game2048Model)model);
 					String bestMoveIs = huristicksCalculator(modelCopy);
 					modelCopy.doUserCommand(i);
+					/*
 					if(arrayEquals(modelCopy.getData(), model.getData())){
+						System.out.println("equals");
 						continue;
 					}
+					*/
 					minimax(modelCopy, depth - 1, computer, result);
 					String string = "USER"+ "," + i + "," + depth + "," + bestMoveIs;
 				
@@ -198,6 +231,10 @@ public class Minimax implements Solver,Serializable{
 	 * 
 	 */
 	private String huristicksCalculator(Model model) {
+		/**
+		 * old huristicks
+		**/
+		
 		String theHint = "";
 		
 		Model modelCopy1 = new Game2048Model((Game2048Model)model);
@@ -243,6 +280,36 @@ public class Minimax implements Solver,Serializable{
 		
 		
 		return theHint;
+		
+		
+		/**
+		 * 
+		 * random huristicks
+		 */
+		/*
+		String[] theHints = {"UP","DOWN","RIGHT","LEFT"};
+		Random rand = new Random();
+		int index = rand.nextInt(4)+1;
+		switch (index) {
+		case 1:
+			return "UP";
+			
+		case 2:
+			return "DOWN";
+			
+		case 3:
+			return "RIGHT";
+			
+		case 4:
+			return "LEFT";
+			
+
+		default:
+			break;
+		}
+		return "";
+		*/
+		
 	}
 	
 	

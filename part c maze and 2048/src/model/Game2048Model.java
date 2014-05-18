@@ -673,37 +673,75 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
 			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 			
-			//check for null resources
+			System.out.println(1);
+	
 			
-			System.out.println("gangam style");
+			
+			
 			oos.writeObject(new Game2048Model(this));  
 			oos.writeObject(new String("Model - 2048 sent from the client"));  
 			oos.writeObject(sol);  
 			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
 			oos.writeObject(new String("exit"));
 			Object obj = ois.readObject();
+			
 			if(obj != null){
 				if(obj instanceof List<?>){
 					List<Object> modelsAndHints = (List<Object>) obj;
 					Model[] models = (Model[]) modelsAndHints.get(0);
 					String[] hints = (String[]) modelsAndHints.get(1);
-					System.out.println("length of hints" + "," + hints.length);
-					for(int i = 0 ; i < 2 ; i++){
+					System.out.println(hints.length);
+					for(int i = 0 ; i < hints.length ; i++){
 						if(hints[i] != null){
+							System.out.println(hints[i]);
+							
+							//try
+							Model modelCopy1 = new Game2048Model(this);
+							modelCopy1.doUserCommand(1);
+							Model modelCopy2 = new Game2048Model(this);
+							modelCopy1.doUserCommand(1);
+							Model modelCopy3 = new Game2048Model(this);
+							modelCopy1.doUserCommand(1);
+							Model modelCopy4 = new Game2048Model(this);
+							modelCopy1.doUserCommand(1);
+							
 							switch (hints[i]) {
 							case "UP":
-								doUserCommand(1);
+								if(boardChanged(modelCopy1.getData(), board2048)){
+									doUserCommand(1);
+								}
+								Random rand1 = new Random();
+								int x1 = rand1.nextInt(3)+1;
+								doUserCommand(x1);
 								break;
 							case "DOWN":
-								doUserCommand(2);
+								if(boardChanged(modelCopy2.getData(), board2048)){
+									doUserCommand(2);
+								}
+								Random rand2 = new Random();
+								int x2 = rand2.nextInt(3)+1;
+								doUserCommand(x2);
 								break;
 							case "RIGHT":
-								doUserCommand(3);
+								if(boardChanged(modelCopy3.getData(), board2048)){
+									doUserCommand(3);
+								}
+								Random rand3 = new Random();
+								int x3 = rand3.nextInt(3)+1;
+								doUserCommand(x3);
 								break;
 							case "LEFT":
-								doUserCommand(4);
+								if(boardChanged(modelCopy4.getData(), board2048)){
+									doUserCommand(4);
+								}
+								Random rand4 = new Random();
+								int x4 = rand4.nextInt(3)+1;
+								doUserCommand(x4);
 								break;
 							case "COMPUTER":
+								Random rand5 = new Random();
+								int x5 = rand5.nextInt(3)+1;
+								doUserCommand(x5);
 								break;
 							}
 						}
