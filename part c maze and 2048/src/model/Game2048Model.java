@@ -18,6 +18,7 @@ import java.util.Random;
 import java.util.Stack;
 
 import algorithms.Minimax;
+import algorithms.MyAlgo;
 import algorithms.Solver;
 
 
@@ -39,6 +40,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private String host					= "localhost";
 	private int port					= 2022;
 	private Solver sol					= new Minimax();
+	private int command;
 	
 	
 	public Game2048Model() {
@@ -553,6 +555,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 
 	@Override
 	public void doUserCommand(int num) {
+		command = num;
 		switch(num){
 		case 0:
 			initGame();
@@ -588,10 +591,15 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			check 	= false;
 			break;
 		case 12:
-			getAI(host, port, sol);
+			// MyAlgo run
+			getAI(host, port);
 			break;
 		case 13:
-			// hint 
+			// Minimax run
+			getAI(host, port); 
+			break;
+		case 14:
+			// hint
 			break;
 		default:
 			break;
@@ -669,7 +677,28 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	//method need to get which host to connect and what port to use and which solver will do that 
 
 	@Override
-	public void getAI(String host, int port, Solver sol) {		
+	public void getAI(String host, int port) {		
+		switch (command) {
+		case 12:
+			MyAlgoRun();			
+			break;
+		case 13:
+			MinimaxRun();
+			break;
+		case 14:
+			// Hint !!!
+			break;
+		default:
+			break;
+		}
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+		
+	// minimax algo running
+	private void MinimaxRun(){
 		try{  
 			
 			Socket s = new Socket(host,port);  
@@ -712,9 +741,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 						}
 					}
 				}
-			}
-			
-			
+			}			
 			
 			oos.close();    
 			ois.close();
@@ -727,14 +754,42 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			System.out.println("EXCEPTION, Nevermore4");
 			System.out.println(e);
 			}
-		
-		setChanged();
-		notifyObservers();
 	}
-		
+	
 	
 	// for testing heuristics in MyAlgo 
-	private void testM(){
+	private void MyAlgoRun(){	
+		try{  
+	
+			Socket s = new Socket(host,port);  
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+			
+			//check for null resources
+			
+			oos.writeObject(new Game2048Model(this));  
+			oos.writeObject(new String("Model - 2048 sent from the client"));  
+			oos.writeObject(sol);  
+			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+			oos.writeObject(new String("exit"));
+			Object obj = ois.readObject();
+			if(obj != null){
+				if(obj instanceof List<?>){
+					
+					}
+				}
+						
+			oos.close();    
+			ois.close();
+			s.close();  
+			
+			}
+		catch(Exception e){
+			
+			System.out.println(e.getCause());
+			System.out.println("EXCEPTION, Nevermore4");
+			System.out.println(e);
+			}
 		
 		int [][] last_board2048		= new int[size][size];
 		
