@@ -1,17 +1,14 @@
 package model;
-
-import algorithms.Solver;
-
 public interface Model {
 
-	public void moveUp();
-	public void moveDown();
-	public void moveRight();
-	public void moveLeft();
-	public void moveUpRight();
-	public void moveUpLeft();
-	public void moveDownRight();
-	public void moveDownLeft();
+	public boolean moveUp();
+	public boolean moveDown();
+	public boolean moveRight();
+	public boolean moveLeft();
+	public boolean moveUpRight();
+	public boolean moveUpLeft();
+	public boolean moveDownRight();
+	public boolean moveDownLeft();
 	public int[][] getData();
 	public void restartGame();
 	public void undoMove();

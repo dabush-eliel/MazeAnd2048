@@ -7,5 +7,5 @@ import model.Model;
 
 public interface Solver{
 	
-	public List<Object> calculator(Model model);
+	public int calculator(Model model);
 }

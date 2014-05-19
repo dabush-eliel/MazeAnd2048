@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Random;
@@ -35,6 +34,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private boolean succeed				= false;
 	private boolean stuck 				= false;
 	private boolean check				= true;
+	private boolean stop 				= false;
 	private int tempScore				= 0;
 	private String fileName; 			           		//holds path name to save
 	private String host					= "localhost";
@@ -144,7 +144,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	}
 	
 	@Override
-	public void moveUp() {
+	public boolean moveUp() {
 		int []vals = new int[size];
 		int [][] last_board2048		= new int[size][size];
 		
@@ -179,19 +179,20 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
 			old_moves.push(last_board2048);
-			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-			setChanged();
-			notifyObservers();
+			return true;
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
 			setChanged();
 			notifyObservers();
+			return false;
 		}
+		return false;
+		
 	}
 	
 
 	@Override
-	public void moveDown() {
+	public boolean moveDown() {
 		int []vals = new int[size];
 		int [][] last_board2048		= new int[size][size];
 		
@@ -225,18 +226,18 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
 			old_moves.push(last_board2048);
-			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-			setChanged();
-			notifyObservers();
+			return true;			
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
 			setChanged();
 			notifyObservers();
+			return false;
 		}
+		return false;
 	}
 
 	@Override
-	public void moveRight() {
+	public boolean moveRight() {
 		int []vals = new int[size];
 		int [][] last_board2048		= new int[size][size];
 		
@@ -270,18 +271,18 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
 			old_moves.push(last_board2048);
-			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
-			setChanged();
-			notifyObservers();
+			return true;
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
 			setChanged();
 			notifyObservers();
+			return false;
 		}
+		return false;
 	}
 
 	@Override
-	public void moveLeft() {
+	public boolean moveLeft() {
 		int []vals = new int[size];
 		int [][] last_board2048		= new int[size][size];
 		
@@ -315,14 +316,14 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		if(boardChanged(last_board2048, board2048)){
 			old_score.push(tempScore);
 			old_moves.push(last_board2048);
-			setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-			setChanged();
-			notifyObservers();
+			return true;
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
 			setChanged();
 			notifyObservers();
+			return false;
 		}
+		return false;
 	}
 	
 	private int[] moveZeros(int []vals){
@@ -364,6 +365,30 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				}
 			}
 		}	
+		return false;
+	}
+	
+	@Override
+	public boolean moveUpRight() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean moveUpLeft() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean moveDownRight() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean moveDownLeft() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 	
@@ -561,16 +586,32 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			initGame();
 			break;
 		case 1:
-			moveUp();
+			if(moveUp()){
+				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				setChanged();
+				notifyObservers();
+			}
 			break;
 		case 2:
-			moveDown();
+			if(moveDown()){
+				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				setChanged();
+				notifyObservers();
+			}
 			break;
 		case 3:
-			moveRight();
+			if(moveRight()){
+				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				setChanged();
+				notifyObservers();
+			}
 			break;
 		case 4:
-			moveLeft();
+			if(moveLeft()){
+				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				setChanged();
+				notifyObservers();
+			}
 			break;
 		case 5:
 			restartGame();
@@ -648,29 +689,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		fileName = s;
 	}
 
-	@Override
-	public void moveUpRight() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void moveUpLeft() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void moveDownRight() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void moveDownLeft() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	// this method connecting to a server a get the auto solution for this game
@@ -680,7 +699,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	public void getAI(String host, int port) {		
 		switch (command) {
 		case 12:
-			MyAlgoRun();			
+			MyAlgoRun(2048);			
 			break;
 		case 13:
 			MinimaxRun();
@@ -798,43 +817,66 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	
 	
 	// for testing heuristics in MyAlgo 
-	private void MyAlgoRun(){
+	private void MyAlgoRun(int goal){
 		
-		sol = new MyAlgo(2048);
+		int hTile = calcHighTile(board2048);
+		sol = new MyAlgo(goal);
 		
-		try{  
-	
-			Socket s = new Socket(host,port);  
-			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
-			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-			
-			//check for null resources
-			
-			oos.writeObject(new Game2048Model(this));  
-			oos.writeObject(new String("Model - 2048 sent from the client"));  
-			oos.writeObject(sol);  
-			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
-			oos.writeObject(new String("exit"));
-			Object obj = ois.readObject();
-			if(obj != null){
-				if(obj instanceof List<?>){
-					
+		while((hTile < goal && (!stop))){		
+			try{  
+		
+				Socket s = new Socket(host,port);  
+				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+				
+				oos.writeObject(new Game2048Model(this));  
+				oos.writeObject(new String("Model - 2048 sent from the client"));  
+				oos.writeObject(sol);  
+				oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+				oos.writeObject(new String("exit"));
+				Object obj = ois.readObject();
+				if(obj != null){
+					if(obj instanceof Integer){
+						Integer x = (Integer) obj;
+						System.out.println(x);
+						doUserCommand(x.intValue());						
 					}
+				}	
+				
+				oos.close();    
+				ois.close();
+				s.close(); 
+				
+				if(stuck){
+					stop = true;
+					break;
+				}		
+			}
+			catch(Exception e){
+				
+				System.out.println(e.getCause());
+				System.out.println("EXCEPTION, Nevermore4");
+				System.out.println(e);
+				}  
+		}
+		}
+	
+	
+	private int calcHighTile(int[][] data) {
+		int hscore = 2;
+		for(int i = 0 ; i < data.length; i++){
+			for(int j = 0 ; j < data[0].length; j++){
+				if(hscore < data[i][j]){
+					hscore = data[i][j];
 				}
-						
-			oos.close();    
-			ois.close();
-			s.close();  
-			
 			}
-		catch(Exception e){
-			
-			System.out.println(e.getCause());
-			System.out.println("EXCEPTION, Nevermore4");
-			System.out.println(e);
-			}
-		
-		int [][] last_board2048		= new int[size][size];
+		}
+		return hscore;
+	}
+	
+	
+	/*
+	 * 		int [][] last_board2048		= new int[size][size];
 		
 		int k  =0 ;
 		while(true){
@@ -850,6 +892,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				break;
 			}
 			System.out.println(k++);
-		}  
-		}
+		}*/
+	 
 }

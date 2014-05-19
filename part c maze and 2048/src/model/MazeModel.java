@@ -13,8 +13,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
-import algorithms.Solver;
-
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   	// NEED TO SET	height + 2
 	private int columns						= 20+2;		// NEED TO SET	width + 2
@@ -204,7 +202,7 @@ public class MazeModel extends Observable implements Model{
 	}
 
 	@Override
-	public void moveUp() {
+	public boolean moveUp() {
 		int s = maze[mouse[0]-1][mouse[1]];
 		if(s != -1 ){
 			
@@ -241,10 +239,11 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedUP");
 		}
+		return false;
 	}
 
 	@Override
-	public void moveDown() {
+	public boolean moveDown() {
 		int s = maze[mouse[0]+1][mouse[1]];
 		if(s != -1 ){
 			
@@ -280,11 +279,12 @@ public class MazeModel extends Observable implements Model{
 				score += 10;
 			}
 			
-		}		
+		}
+		return false;		
 	}
 
 	@Override
-	public void moveRight() {
+	public boolean moveRight() {
 		int s = maze[mouse[0]][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -321,11 +321,12 @@ public class MazeModel extends Observable implements Model{
 				score += 10;
 			}
 
-		}		
+		}
+		return false;		
 	}
 
 	@Override
-	public void moveLeft() {
+	public boolean moveLeft() {
 		int s = maze[mouse[0]][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -362,11 +363,12 @@ public class MazeModel extends Observable implements Model{
 				score += 10;
 			}
 
-		}		
+		}
+		return false;		
 	}
 
 	@Override
-	public void moveUpRight() {
+	public boolean moveUpRight() {
 		int s = maze[mouse[0]-1][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -405,11 +407,12 @@ public class MazeModel extends Observable implements Model{
 				score += 15;
 			}
 			System.out.println("movedUpRight");
-		}		
+		}
+		return false;		
 	}
 
 	@Override
-	public void moveUpLeft() {
+	public boolean moveUpLeft() {
 		int s = maze[mouse[0]-1][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -448,11 +451,12 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedUpLeft");
 		}
+		return false;
 		
 	}
 
 	@Override
-	public void moveDownRight() {
+	public boolean moveDownRight() {
 		int s = maze[mouse[0]+1][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -491,11 +495,12 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedDownRight");
 		}
+		return false;
 		
 	}
 
 	@Override
-	public void moveDownLeft() {
+	public boolean moveDownLeft() {
 		int s = maze[mouse[0]+1][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -534,6 +539,7 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedDownLeft");
 		}
+		return succeed;
 		
 	}
 	

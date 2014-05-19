@@ -1,6 +1,8 @@
 package algorithms;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.Game2048Model;
 import model.Model;
@@ -13,14 +15,20 @@ public class MyAlgo implements Solver, Serializable{
 	private int upVal;
 	private int downVal;
 	private int rightVal;
-	private int leftVal;				
+	private int leftVal;	
+
+	private int [][] cellsVals;
 	private final int UP 		= 1;
 	private final int DOWN		= 2;
 	private final int RIGHT 	= 3;
 	private final int LEFT 		= 4;
 	private int bestMove 		= 0;
+	private int depth 			= 8;
+	private String player		= "USER";
 	private final int GOAL;
 	boolean stop = false;
+	
+	Map<String,String> checkedMoves = new HashMap<>();
 	
 	// this algo avoid  moving up
 	// get the goal value 
@@ -29,79 +37,98 @@ public class MyAlgo implements Solver, Serializable{
 	}
 	
 	@Override
-	public List<Object> calculator(Model model) {
+	public int calculator(Model model) {
 		
 		System.out.println("MyAlgo Calculator");
-		int [][]data = copyArray(model.getData());
-		int hTile = calcHighScore(data);
 		
-		// we set goal value in the c'tor. usually 2048. 
-		while((hTile < Math.pow(2, GOAL)) && (!stop)){
-			System.out.println("in while");
-			downVal 	= 3;
-			rightVal 	= 2;
-			leftVal 	= 1;
-			
-			if(newBoard(data) && model.getScore() == 0){
-				int i = 0;
-				while(true){
-					data = copyArray(model.getData());
-					model.doUserCommand(DOWN);
-					model.doUserCommand(RIGHT);	
-					if(!boardChanged(data, model.getData())){
-						break;
-					}
-					System.out.println(i++);
-				}
-				System.out.println("before break");
-				break;
-			}
-			stop = true;
-			
-			// Shouldn't been printed
-			System.out.println("after break");
-			if(model.isStuck()){
-				stop = true;
-				break;
-			}
-
-			
-			// do it for 3 possible moves : down - right - left --> (at this order) - we avoid move up
-			for(int i=2 ; i<=4 ; i++){
-				Model modelCopy = new Game2048Model((Game2048Model)model);
-				modelCopy.doUserCommand(i);
-				
-				if(!boardChanged(modelCopy.getData(), model.getData())){
-					continue;
-				}
-				
-				int score = (modelCopy.getScore() - model.getScore());
-				
-				if(avoidedMovePoss(modelCopy.getData())){
-					continue;
+		int [][]data = copyArray(model.getData());
+		int hTile = calcHighTile(data);		
+		
+		for(int i = 1 ; i < 5 ; i++){
+			Model modelCopy = new Game2048Model( (Game2048Model) model);
+			if(i == 1){
+				if(modelCopy.moveUp()){
+					upVal = heuristicCalc(modelCopy);
 				}else{
-					switch(i){
-					case 2:
-						downVal += 50;
-						break;
-					case 3:
-						rightVal += 50;
-						break;
-					case 4:
-						leftVal += 50;
-						break;
-					}
+					upVal = Integer.MAX_VALUE;
 				}
 				
+			}else if (i == 2){
+				if(modelCopy.moveDown()){
+					downVal = heuristicCalc(modelCopy);
+				}else{
+					downVal = Integer.MAX_VALUE;
+				}
 				
+			}else if(i == 3){
+				if(modelCopy.moveRight()){
+					rightVal = heuristicCalc(modelCopy);
+				}else{
+					rightVal = Integer.MAX_VALUE;
+				}
+			}else if(i == 4){
+				if(modelCopy.moveLeft()){
+					leftVal = heuristicCalc(modelCopy);
+				}else{
+					leftVal = Integer.MAX_VALUE;
+				}
 			}
+		}
+	
+		int min = upVal;
+		int command = UP;
+		
+		if(min > rightVal){
+			min = rightVal;
+			command = RIGHT;
+		}
+		if(min > downVal){
+			min = downVal;
+			command = DOWN;
+		}
+		if(min > leftVal){
+			min = leftVal;
+			command = LEFT;
+		}
 			
-			int val = Math.max(downVal, Math.max(rightVal,leftVal));
-			model.doUserCommand(val);			
+		
+		//Math.min(upVal, Math.min(downVal, Math.min(rightVal, leftVal)));
+		return command; 
+	}
+
+	
+	private int heuristicCalc(Model m) {
+		int val = 0;
+		
+		val += cellsWeightHeuristic(m);
+		
+		
+		return val;
+	}
+	
+	
+	
+	private int cellsWeightHeuristic(Model m) {
+		
+		int weight = 0;
+		int val = 1000;
+		int [][]data = copyArray(m.getData());
+		
+		cellsVals = new int[m.getData().length][(m.getData())[0].length];
+		for(int i = 0; i<cellsVals.length; i++){
+			for(int j = 0; j<cellsVals[0].length; j++){
+				cellsVals[j][i] = val*(j+1);  
+			}
+			val = val/10;
 		}
 		
-		
-		return null;
+		for(int i = 0; i<cellsVals.length; i++){
+			for(int j = 0; j<cellsVals[0].length; j++){
+				weight += cellsVals[i][j] * data[i][j];  
+			}
+		}
+
+		return weight;
 	}
 	
 	
@@ -129,7 +156,7 @@ public class MyAlgo implements Solver, Serializable{
 		return true;
 	}
 
-	private int calcHighScore(int[][] data) {
+	private int calcHighTile(int[][] data) {
 		int hscore = 2;
 		for(int i = 0 ; i < data.length; i++){
 			for(int j = 0 ; j < data[0].length; j++){

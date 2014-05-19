@@ -39,10 +39,8 @@ public class GameHandler implements ClientHandler {
 			System.out.println(solver.getClass());
 			
 			if (model != null && solver != null){	
-				List<Object> modelsAndHints = new ArrayList<>();
-				//for(int i = 0 ; i < 300; i++){
-				modelsAndHints = solver.calculator(model);
-				output.writeObject(modelsAndHints);	
+				Integer val	= new Integer(solver.calculator(model));
+				output.writeObject(val);	
 			}
 			
 			input.close();

@@ -26,7 +26,7 @@ public class Minimax implements Solver,Serializable{
 	}
 	
 	@Override
-	public List<Object> calculator(Model model) {
+	public int calculator(Model model) {
 		
 		System.out.println("calc");
 		int depth = 8;
@@ -208,7 +208,7 @@ public class Minimax implements Solver,Serializable{
 		hints = movesCounter.split(",");
 		modelsAndHints.add(hints);
 		System.out.println("****");
-		return modelsAndHints;
+		return 0;
 		
 	}
 	
