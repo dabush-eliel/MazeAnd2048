@@ -31,7 +31,7 @@ public class Server implements Runnable, Serializable {
 		try {  
 		
 			ss = new ServerSocket(port); 
-			ss.setSoTimeout(160000); 
+			ss.setSoTimeout(360000); 
 			
 			ExecutorService tp = Executors.newFixedThreadPool(noc);
 			

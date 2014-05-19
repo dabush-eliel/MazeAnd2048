@@ -29,28 +29,81 @@ public class Minimax implements Solver,Serializable{
 	public List<Object> calculator(Model model) {
 		
 		System.out.println("calc");
-		int depth = 4;
+		int depth = 8;
 		
 		List<Object> modelsAndHints = new ArrayList<>();
 		
-		Model[] resultArray = new Model[depth];
-		String[] hints = new String[depth];
-		Map<String,Model> result = new HashMap<>();
+		String[] hints = new String[depth/2];
+		Map<String,Integer> result = new HashMap<>();
 		result = minimax(model, depth, user, result);
 		String currentPlayer = "USER";
+		String movesCounter = "";
+		for(int d = 0 ; d < depth; d++){
+			if(currentPlayer.equals("USER")){
+				for(int j = 1 ; j < 5 ; j++){
+					int cell1 = 0;
+					int cell2 = 0;
+					int cell3 = 0;
+					int cell4 = 0;
+					
+					String theHint = "";
+
+					String string1 = currentPlayer + "," + j + "," + (depth - d) + "," + "UP";
+					String string2 = currentPlayer + "," + j + "," + (depth - d) + "," + "DOWN";
+					String string3 = currentPlayer + "," + j + "," + (depth - d) + "," + "RIGHT";
+					String string4 = currentPlayer + "," + j + "," + (depth - d) + "," + "LEFT";
+					
+					if(result.containsKey(string1)){
+						cell1 = result.get(string1);
+					}
+					if(result.containsKey(string2)){
+						cell2 = result.get(string2);
+					}
+					if(result.containsKey(string3)){
+						cell3 = result.get(string3);
+					}
+					if(result.containsKey(string4)){
+						cell4 = result.get(string4);
+					}
+					
+					int max = 0;
+					
+					if(cell1 >= max){
+						max = cell1;
+						theHint = "UP";
+					}
+					if(cell2 >= max){
+						max = cell2;
+						theHint = "DOWN";
+					}
+					if(cell3 >= max){
+						max = cell3;
+						theHint = "RIGHT";
+					}
+					if(cell4 >= max){
+						max = cell4;
+						theHint = "LEFT";
+					}
+					
+					movesCounter += "," + theHint;
+					currentPlayer = "COMPUTER";
+				}
+			}
+			else{
+				currentPlayer = "USER";
+			}
+		}
 		
 		
 		
-		
-		
-		
+		/*
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		for(int i = 0 ; i < depth; i++){
 			if(currentPlayer.equals("USER")){
 				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel1 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr1 = new int[copyModel1.getData().length][copyModel1.getData()[0].length];
-					copyArr1 = copyModel1.getData();
+					copyArr1 = copyArray(copyModel1.getData());
 					String string1 = currentPlayer + "," + j + "," + (depth - i) + "," + "UP";
 					//printArray(copyArr1);
 					System.out.println(string1 + ", " + result.containsKey(string1));
@@ -73,7 +126,7 @@ public class Minimax implements Solver,Serializable{
 				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel2 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr2 = new int[copyModel2.getData().length][copyModel2.getData()[0].length];
-					copyArr2 = copyModel2.getData();
+					copyArr2 = copyArray(copyModel2.getData());
 					String string2 = currentPlayer + "," + j + "," + (depth - i) + "," + "DOWN";
 					//System.out.println(string2 + ", " + result.containsKey(string2));
 					//printArray(copyArr2);
@@ -94,7 +147,7 @@ public class Minimax implements Solver,Serializable{
 				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel3 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr3 = new int[copyModel3.getData().length][copyModel3.getData()[0].length];
-					copyArr3 = copyModel3.getData();
+					copyArr3 = copyArray(copyModel3.getData());
 					String string3 = currentPlayer + "," + j + "," + (depth - i) + "," + "RIGHT";
 					//System.out.println(string3 + ", " + result.containsKey(string3));
 					//printArray(copyArr3);
@@ -115,7 +168,7 @@ public class Minimax implements Solver,Serializable{
 				for(int j = 1 ; j < 5 ; j++){
 					Model copyModel4 = new Game2048Model((Game2048Model)model);
 					int[][] copyArr4 = new int[copyModel4.getData().length][copyModel4.getData()[0].length];
-					copyArr4 = copyModel4.getData();
+					copyArr4 = copyArray(copyModel4.getData());
 					String string4 = currentPlayer + "," + j + "," + (depth - i) + "," + "LEFT";
 					//System.out.println(string4 + ", "+ result.containsKey(string4));
 					//printArray(copyModel4.getData());
@@ -136,15 +189,23 @@ public class Minimax implements Solver,Serializable{
 				currentPlayer = "COMPUTER";
 			}
 			else if(currentPlayer.equals("COMPUTER")){
-				resultArray[i] = result.get(currentPlayer + "," + i + "," + (depth - i));
-				hints[i] = "COMPUTER";
-				currentPlayer = "USER";
+				List<Integer> moves = getEmptyCellIds(model.getData());
+                int[] possibleValues = {2, 4};
+                int k,j;
+                for(Integer cellId : moves) {
+                    k = cellId/model.getData().length;
+                    j = cellId%model.getData()[0].length;
+                    for(int value : possibleValues) {
+                    	resultArray[i] = result.get(currentPlayer + "," + k + "," + j + "," + value + (depth - i));
+                    	hints[i] = "COMPUTER";
+                    	currentPlayer = "USER";
+                    }
+			}
 			}
 			
-		}
+		}*/
 		
-		
-		modelsAndHints.add(resultArray);
+		hints = movesCounter.split(",");
 		modelsAndHints.add(hints);
 		System.out.println("****");
 		return modelsAndHints;
@@ -175,31 +236,30 @@ public class Minimax implements Solver,Serializable{
 		return copiedArr;
 	}
 	
-	public Map<String,Model> minimax(Model model, int depth, String player, Map<String,Model> result){
+	public Map<String,Integer> minimax(Model model, int depth, String player, Map<String,Integer> result){
+		System.out.println(depth);
 		if(depth == 0 || gameTerminated(model)){
 			return result;
 		}
 		else{
 			if(player.equals("USER")){
+				Model modelCopy = new Game2048Model((Game2048Model)model);
 				for(int i = 1; i < 4 ; i++){
-					Model modelCopy = new Game2048Model((Game2048Model)model);
-					String bestMoveIs = huristicksCalculator(modelCopy);
+					//Model modelCopy = new Game2048Model((Game2048Model)model);
+					String theHintAndNumOfEmptyCellsThatWillBe = huristicksCalculator(modelCopy);
+					String[] toSplit = theHintAndNumOfEmptyCellsThatWillBe.split(",");
+					String bestMoveIs = toSplit[0];
+					int willBeEmptyCells = Integer.parseInt(toSplit[1]);
 					modelCopy.doUserCommand(i);
-					/*
-					if(arrayEquals(modelCopy.getData(), model.getData())){
-						System.out.println("equals");
-						continue;
-					}
-					*/
-					minimax(modelCopy, depth - 1, computer, result);
+					//minimax(modelCopy, depth - 1, computer, result);
 					String string = "USER"+ "," + i + "," + depth + "," + bestMoveIs;
-				
-                    result.put(string, modelCopy);
-                   // System.out.println("added:" + string + "," + result.containsKey(string));
-                   
+					//System.out.println("bestMoveIs:" + bestMoveIs + "," + "willBeEmptyCells:" + willBeEmptyCells);
+                    result.put(string, willBeEmptyCells);
 				}
+				minimax(modelCopy, depth - 1, computer, result);
 			}
 			else if(player.equals("COMPUTER")){
+				Model modelCopy = new Game2048Model((Game2048Model)model);
 				List<Integer> moves = getEmptyCellIds(model.getData());
                 int[] possibleValues = {2, 4};
                 int i,j;
@@ -207,16 +267,17 @@ public class Minimax implements Solver,Serializable{
                     i = cellId/model.getData().length;
                     j = cellId%model.getData()[0].length;
                     for(int value : possibleValues) {
-                        Model modelCopy = new Game2048Model((Game2048Model)model);
+                        //Model modelCopy = new Game2048Model((Game2048Model)model);
                         setEmptyCell(modelCopy, i, j, value);
-                        minimax(modelCopy, depth - 1, "USER", result);
-                        String string = "COMPUTER" + "," + i + "," + depth;
+                       // minimax(modelCopy, depth - 1, user, result);
+                        String string = "COMPUTER" + "," + i + "," + j + "," + depth;
                         
-                        result.put(string, modelCopy);
-                       // System.out.println("added:" + string + "," + result.containsKey(string));
+                        result.put(string, value);
+                        //System.out.println("added:" + string + "," + "value:" + value);
                         
                     }
                 }
+                minimax(modelCopy, depth - 1, user, result);
 			}
 		}
 	    
@@ -231,18 +292,17 @@ public class Minimax implements Solver,Serializable{
 	 * 
 	 */
 	private String huristicksCalculator(Model model) {
-		/**
-		 * old huristicks
-		**/
+	
+	
 		
-		String theHint = "";
+		
+		String theHintAndNumOfEmptyCellsThatWillBe = "";
 		
 		Model modelCopy1 = new Game2048Model((Game2048Model)model);
 		Model modelCopy2 = new Game2048Model((Game2048Model)model);
 		Model modelCopy3 = new Game2048Model((Game2048Model)model);
 		Model modelCopy4 = new Game2048Model((Game2048Model)model);
 		
-		int max = 0;
 		
 		//4 directions
 		
@@ -257,29 +317,34 @@ public class Minimax implements Solver,Serializable{
 		
 		
 		//get the best move
-		int numOfEmptyCells = numOfemptyCellsFoo(modelCopy1);
-		if(numOfEmptyCells > max){
-			max = numOfEmptyCells;
-			theHint = "UP";
-		}
-		numOfEmptyCells = numOfemptyCellsFoo(modelCopy2);
-		if(numOfEmptyCells > max){
-			max = numOfEmptyCells;
-			theHint = "DOWN";
-		}
-		numOfEmptyCells = numOfemptyCellsFoo(modelCopy3);
-		if(numOfEmptyCells > max){
-			max = numOfEmptyCells;
-			theHint = "RIGHT";
-		}
-		numOfEmptyCells = numOfemptyCellsFoo(modelCopy4);
-		if(numOfEmptyCells > max){
-			max = numOfEmptyCells;
-			theHint = "LEFT";
-		}
+		int max = numOfemptyCellsFoo(model);
 		
 		
-		return theHint;
+		int numOfEmptyCells1 = numOfemptyCellsFoo(modelCopy1);
+		int numOfEmptyCells2 = numOfemptyCellsFoo(modelCopy2);
+		int numOfEmptyCells3 = numOfemptyCellsFoo(modelCopy3);
+		int numOfEmptyCells4 = numOfemptyCellsFoo(modelCopy4);
+		
+		if(numOfEmptyCells1 >= max){
+			max = numOfEmptyCells1;
+			theHintAndNumOfEmptyCellsThatWillBe = "UP" + "," + max;
+		}
+		if(numOfEmptyCells2 >= numOfEmptyCells1){
+			max = numOfEmptyCells2;
+			theHintAndNumOfEmptyCellsThatWillBe = "DOWN" + "," + max;
+		}
+		if(numOfEmptyCells3 >= numOfEmptyCells2){
+			max = numOfEmptyCells3;
+			theHintAndNumOfEmptyCellsThatWillBe = "RIGHT" + "," + max;
+		}
+		if(numOfEmptyCells4 >= numOfEmptyCells3){
+			max = numOfEmptyCells4;
+			theHintAndNumOfEmptyCellsThatWillBe = "LEFT" + "," + max;
+		}
+	
+		
+		return theHintAndNumOfEmptyCellsThatWillBe;
+	
 		
 		
 		/**

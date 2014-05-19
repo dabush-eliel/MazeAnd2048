@@ -723,8 +723,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			if(obj != null){
 				if(obj instanceof List<?>){
 					List<Object> modelsAndHints = (List<Object>) obj;
-					Model[] models = (Model[]) modelsAndHints.get(0);
-					String[] hints = (String[]) modelsAndHints.get(1);
+					String[] hints = (String[]) modelsAndHints.get(0);
 					System.out.println(hints.length);
 					for(int i = 0 ; i < hints.length ; i++){
 						if(hints[i] != null){

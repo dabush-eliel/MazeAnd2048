@@ -11,7 +11,7 @@ public class ServerRun {
 		sThread.start();	
 		
 		try {
-			Thread.sleep(380000);
+			Thread.sleep(480000);
 		} catch (InterruptedException e) {
 			System.out.println("INTERUPTED EXCEPTION, Nevermore13");
 			// TODO Auto-generated catch block
