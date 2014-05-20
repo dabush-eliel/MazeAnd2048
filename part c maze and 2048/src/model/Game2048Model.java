@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
@@ -719,7 +720,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	// minimax algo running
 	private void MinimaxRun(){
 		
-		sol = new Minimax();
+		sol = new Minimax(this,"USER",4);
 		
 		try{  
 			
@@ -740,67 +741,20 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			Object obj = ois.readObject();
 			
 			if(obj != null){
-				if(obj instanceof List<?>){
-					List<Object> modelsAndHints = (List<Object>) obj;
-					String[] hints = (String[]) modelsAndHints.get(0);
-					System.out.println(hints.length);
-					for(int i = 0 ; i < hints.length ; i++){
-						if(hints[i] != null){
-							System.out.println(hints[i]);
-							
-							//try
-							Model modelCopy1 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							Model modelCopy2 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							Model modelCopy3 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							Model modelCopy4 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							
-							switch (hints[i]) {
-							case "UP":
-								if(boardChanged(modelCopy1.getData(), board2048)){
-									doUserCommand(1);
-								}
-								Random rand1 = new Random();
-								int x1 = rand1.nextInt(3)+1;
-								doUserCommand(x1);
-								break;
-							case "DOWN":
-								if(boardChanged(modelCopy2.getData(), board2048)){
-									doUserCommand(2);
-								}
-								Random rand2 = new Random();
-								int x2 = rand2.nextInt(3)+1;
-								doUserCommand(x2);
-								break;
-							case "RIGHT":
-								if(boardChanged(modelCopy3.getData(), board2048)){
-									doUserCommand(3);
-								}
-								Random rand3 = new Random();
-								int x3 = rand3.nextInt(3)+1;
-								doUserCommand(x3);
-								break;
-							case "LEFT":
-								if(boardChanged(modelCopy4.getData(), board2048)){
-									doUserCommand(4);
-								}
-								Random rand4 = new Random();
-								int x4 = rand4.nextInt(3)+1;
-								doUserCommand(x4);
-								break;
-							case "COMPUTER":
-								Random rand5 = new Random();
-								int x5 = rand5.nextInt(3)+1;
-								doUserCommand(x5);
-								break;
-							}
-						}
-					}
+				if(obj instanceof Integer){
+					//Integer x = 
+					System.out.println("bla");
 				}
 			}			
+			/*
+			Object obj2 = ois.readObject();
+			if(obj2 != null){
+				if(obj2 instanceof Map<?,?>){
+					Map<String,Integer> result = (Map<String, Integer>) obj2;
+					System.out.println("i am here");
+				}
+			}
+			*/
 			
 			oos.close();    
 			ois.close();
@@ -838,10 +792,11 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				if(obj != null){
 					if(obj instanceof Integer){
 						Integer x = (Integer) obj;
-						System.out.println(x);
-						doUserCommand(x.intValue());						
+						doUserCommand(x);
+						System.out.println(x);						
 					}
-				}	
+				}
+				
 				
 				oos.close();    
 				ois.close();

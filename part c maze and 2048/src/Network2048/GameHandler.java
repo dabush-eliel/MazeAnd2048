@@ -3,8 +3,7 @@ package Network2048;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import model.Model;
 import algorithms.Solver;
@@ -38,9 +37,12 @@ public class GameHandler implements ClientHandler {
 			
 			System.out.println(solver.getClass());
 			
-			if (model != null && solver != null){	
+			if (model != null && solver != null){
+	
 				Integer val	= new Integer(solver.calculator(model));
-				output.writeObject(val);	
+				output.writeObject(val);
+
+				
 			}
 			
 			input.close();
