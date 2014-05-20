@@ -10,6 +10,7 @@ public interface Model {
 	public boolean moveDownRight();
 	public boolean moveDownLeft();
 	public int[][] getData();
+	public void setData(int [][] data);
 	public void restartGame();
 	public void undoMove();
 	public void initGame();

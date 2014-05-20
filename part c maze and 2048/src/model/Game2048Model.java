@@ -395,7 +395,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
 	public int getScore(){
 		return this.score;
@@ -405,7 +405,16 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	public int[][] getData() {
 		return board2048;
 	}
-
+	
+	@Override
+	public void setData(int[][] data) {
+		for (int i = 0 ; i < size ; i++){
+			for (int j = 0 ; j < size ; j++){
+				board2048[i][j] = data[i][j]; 
+			}	
+		}
+	}
+	
 	public int getSize() {
 		return size;
 	}
@@ -735,8 +744,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			
 			System.out.println(1);
 	
-			oos.writeObject(new Game2048Model(this));  
-			oos.writeObject(new String("Model - 2048 sent from the client"));  
+			oos.writeObject(board2048);  
+			oos.writeObject(new String("Model - data - 2048 sent from the client"));  
 			oos.writeObject(sol);  
 			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
 			oos.writeObject(new String("exit"));
@@ -832,8 +841,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
 				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 				
-				oos.writeObject(new Game2048Model(this));  
-				oos.writeObject(new String("Model - 2048 sent from the client"));  
+				oos.writeObject(board2048);  
+				oos.writeObject(new String("Model - data - 2048 sent from the client"));  
 				oos.writeObject(sol);  
 				oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
 				oos.writeObject(new String("exit"));

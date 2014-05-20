@@ -942,5 +942,11 @@ public class MazeModel extends Observable implements Model{
 		
 	}
 
+	@Override
+	public void setData(int[][] data) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

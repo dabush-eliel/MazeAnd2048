@@ -3,9 +3,7 @@ package Network2048;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
+import model.Game2048Model;
 import model.Model;
 import algorithms.Solver;
 
@@ -29,8 +27,10 @@ public class GameHandler implements ClientHandler {
 			        	System.out.println("Current obj: "+(String)obj);
 			        }
 			        
-			    }else if (obj instanceof Model){
-			    	model = (Model) obj;
+			    }else if (obj instanceof int[][]){
+			    	model = new Game2048Model();
+			    	model.setData((int [][])obj);
+			    	
 			    }else if(obj instanceof Solver){
 			    	solver = (Solver) obj;
 			    }							    
