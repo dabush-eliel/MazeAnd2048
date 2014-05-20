@@ -101,30 +101,97 @@ public class MyAlgo implements Solver, Serializable{
 		int val = 0;
 		
 		val += cellsWeightHeuristic(m);
-		
+		val += neighborsVal(m); 
 		
 		return val;
 	}
 	
 	
 	
+	private int neighborsVal(Model m) {
+		int val = 0;
+		int [][]data = copyArray(m.getData());
+		int size = data.length;
+		int x = 0;
+		
+		for(int i=0 ; i<size-1 ; i++){
+			for(int j=0 ; j<size-1 ; j++){				
+				x = data[i][j] - data[i][j+1];
+				if(x < 0){
+					x = -x;
+				}
+				val += x;
+				
+				x = data[i][j] - data[i+1][j];
+				if(x < 0){
+					x = -x;
+				}
+				val += x;
+			}
+		}
+		for(int j=0 ; j < 3 ; j++){
+			x = data[3][j] - data[3][j+1];
+			if(x < 0){
+				x = -x;
+			}
+			val += x;
+			
+			x = data[j][3] - data[j+1][3];
+			if(x < 0){
+				x = -x;
+			}
+			val += x;		
+		}
+		
+		return val;
+		
+	}
+
 	private int cellsWeightHeuristic(Model m) {
 		
 		int weight = 0;
-		int val = 1000;
+		int val = 100;
 		int [][]data = copyArray(m.getData());
 		
 		cellsVals = new int[m.getData().length][(m.getData())[0].length];
-		for(int i = 0; i<cellsVals.length; i++){
-			for(int j = 0; j<cellsVals[0].length; j++){
-				cellsVals[j][i] = val*(j+1);  
+		
+		/*for(int i = 0; i<cellsVals.length; i++){
+			
+			if((i>1)){
+				for(int j = 0; j<cellsVals[0].length; j++){
+					cellsVals[j][i] = val*(j+1);  
+				}
+			}else{
+				for(int j = 3; j <= 0 ; j++){
+					cellsVals[j][i] = val*(j+1);  
+				}
 			}
-			val = val/10;
-		}
+			val = val/2;
+		}*/
+		
+		cellsVals[0][3] = 1;
+		cellsVals[0][2] = 2;
+		cellsVals[0][1] = 3;
+		cellsVals[0][0] = 4;
+		
+		cellsVals[1][3] = 2;
+		cellsVals[2][3] = 3;
+		cellsVals[3][3] = 4;
+		
+		cellsVals[1][0] = 5;
+		cellsVals[1][1] = 4;
+		cellsVals[1][2] = 3;
+		cellsVals[2][0] = 6;
+		cellsVals[2][1] = 5;
+		cellsVals[2][2] = 4;
+		cellsVals[3][0] = 7;
+		cellsVals[3][1] = 6;
+		cellsVals[3][2] = 5;
+		
 		
 		for(int i = 0; i<cellsVals.length; i++){
 			for(int j = 0; j<cellsVals[0].length; j++){
-				weight += cellsVals[i][j] * data[i][j];  
+				weight += (cellsVals[i][j] * data[i][j]);  
 			}
 		}
 

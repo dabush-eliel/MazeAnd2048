@@ -182,6 +182,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			return true;
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
+			stop = true;
 			setChanged();
 			notifyObservers();
 			return false;
@@ -229,6 +230,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			return true;			
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
+			stop = true;
 			setChanged();
 			notifyObservers();
 			return false;
@@ -274,6 +276,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			return true;
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
+			stop = true;
 			setChanged();
 			notifyObservers();
 			return false;
@@ -319,6 +322,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			return true;
 		}else if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
+			stop = true;
 			setChanged();
 			notifyObservers();
 			return false;
@@ -651,6 +655,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	public boolean isStuck(){
 		if(getFreeSpotsNum() == 0 && mergeStuck()){
 			stuck = true;
+			stop = true;
 		}
 		return stuck;
 	}
@@ -696,7 +701,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	//method need to get which host to connect and what port to use and which solver will do that 
 
 	@Override
-	public void getAI(String host, int port) {		
+	public void getAI(String host, int port) {
+		stop = false;
 		switch (command) {
 		case 12:
 			MyAlgoRun(2048);			
@@ -729,9 +735,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			
 			System.out.println(1);
 	
-			
-			
-			
 			oos.writeObject(new Game2048Model(this));  
 			oos.writeObject(new String("Model - 2048 sent from the client"));  
 			oos.writeObject(sol);  
@@ -845,12 +848,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				
 				oos.close();    
 				ois.close();
-				s.close(); 
-				
-				if(stuck){
-					stop = true;
-					break;
-				}		
+				s.close(); 		
 			}
 			catch(Exception e){
 				
