@@ -38,9 +38,12 @@ public class GameHandler implements ClientHandler {
 			
 			System.out.println(solver.getClass());
 			
-			if (model != null && solver != null){	
+			if (model != null && solver != null){
+	
 				Integer val	= new Integer(solver.calculator(model));
-				output.writeObject(val);	
+				output.writeObject(val);
+
+				
 			}
 			
 			input.close();

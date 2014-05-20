@@ -28,7 +28,6 @@ public class MyAlgo implements Solver, Serializable{
 	private final int GOAL;
 	boolean stop = false;
 	
-	Map<String,String> checkedMoves = new HashMap<>();
 	
 	// this algo avoid  moving up
 	// get the goal value 
@@ -256,5 +255,7 @@ public class MyAlgo implements Solver, Serializable{
 		}	
 		return false;
 	}
+
+
 	
 }
