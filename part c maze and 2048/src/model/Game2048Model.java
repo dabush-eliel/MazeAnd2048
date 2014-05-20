@@ -374,27 +374,23 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	}
 	
 	@Override
-	public boolean moveUpRight() {
-		// TODO Auto-generated method stub
-		return false;
+	public void moveUpRight() {
+		
 	}
 
 	@Override
-	public boolean moveUpLeft() {
-		// TODO Auto-generated method stub
-		return false;
+	public void moveUpLeft() {
+		
 	}
 
 	@Override
-	public boolean moveDownRight() {
-		// TODO Auto-generated method stub
-		return false;
+	public void moveDownRight() {
+		
 	}
 
 	@Override
-	public boolean moveDownLeft() {
-		// TODO Auto-generated method stub
-		return false;
+	public void moveDownLeft() {
+		
 	}
 
 	@Override
@@ -734,52 +730,49 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 	// minimax algo running
 	private void MinimaxRun(){
-		int dep = 8;
-		sol = new Minimax(dep);
-		
-		try{  
+		int goal = 2048;
+		int hTile = calcHighTile(board2048);
+		sol = new Minimax();
+		while((hTile < goal && (!stop))){		
+			try{  
+					
+				Socket s = new Socket(host,port);  
+				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+					
+				System.out.println(1);
 			
-			Socket s = new Socket(host,port);  
-			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
-			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-			
-			System.out.println(1);
-	
-			oos.writeObject(board2048);  
-			oos.writeObject(new String("Model - data - 2048 sent from the client"));  
-			oos.writeObject(sol);  
-			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
-			oos.writeObject(new String("exit"));
-			Object obj = ois.readObject();
-			
-			if(obj != null){
-				if(obj instanceof Integer){
-					//Integer x = 
-					System.out.println("bla");
+				oos.writeObject(board2048);  
+				oos.writeObject(new String("Model - data - 2048 sent from the client"));  
+				oos.writeObject(sol);  
+				oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+				oos.writeObject(new String("exit"));
+				Object obj = ois.readObject();
+					
+				if(obj != null){
+					if(obj instanceof Integer){
+						Integer x = (Integer) obj;
+						doUserCommand(x);
+						System.out.println(x);
+					}
+				}			
+					
+					
+				oos.close();    
+				ois.close();
+				s.close();  
+					
 				}
-			}			
-			/*
-			Object obj2 = ois.readObject();
-			if(obj2 != null){
-				if(obj2 instanceof Map<?,?>){
-					Map<String,Integer> result = (Map<String, Integer>) obj2;
-					System.out.println("i am here");
+			catch(Exception e){
+					
+				System.out.println(e.getCause());
+				System.out.println("EXCEPTION, Nevermore4");
+				System.out.println(e);
 				}
-			}
-			*/
-			
-			oos.close();    
-			ois.close();
-			s.close();  
-			
-			}
-		catch(Exception e){
-			
-			System.out.println(e.getCause());
-			System.out.println("EXCEPTION, Nevermore4");
-			System.out.println(e);
 			}
 	}
+	
+	
 	
 
 	private void MyAlgoRun(int goal){

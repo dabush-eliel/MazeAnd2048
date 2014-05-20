@@ -9,6 +9,11 @@ import java.util.Map;
 
 
 
+
+
+
+
+
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import model.Game2048Model;
@@ -16,38 +21,139 @@ import model.Model;
 
 public class Minimax implements Solver,Serializable{
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -7715584375427671747L;
+	
 	private String user = "USER";
 	private String computer = "COMPUTER";
-	int numOfSolutionsLeft = 0;
-	Node node;
-	int depth;
 	
-	public Minimax(int depth){
-		this.depth = depth;
+	private Integer cache_emptyCells = null;
+	
+	
+	public Minimax(){
+		
 	}
 	
 	@Override
 	public int calculator(Model model) {
 		
-		node = new Node(model,user,4);
 		System.out.println("Minimax calculator started.");
+		int depth = 7;
 		
+		Map<String, Integer> result = new HashMap<>();
 		
+		result = alphabeta(model, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, user);
 		
-		
-		
-		int x = minimax(depth, user, node);
-
+		Integer x = (Integer) result.get("Direction");
+		System.out.println("get from minimax x:" + x);
 		System.out.println("**FINISHED CALCULATOR.**");
-		return numOfSolutionsLeft;
+		return x;
 		
 	}
-
 	
+	
+	public Map<String, Integer> alphabeta(Model model, int depth, int alpha, int beta, String player){
+        Map<String, Integer> result = new HashMap<>();
+        
+        int bestDirection = -1;
+        int bestScore = -1;
+        
+        if(gameTerminated(model)) {
+            if(model.isSucceed()) {
+                bestScore=Integer.MAX_VALUE; //highest possible score
+            }
+            else {
+                bestScore=Math.min(model.getScore(), 1); //lowest possible score
+            }
+        }
+        else if(depth == 0) {
+            bestScore = heuristicScore(model.getScore(), numOfemptyCellsFoo(model), calculateClusteringScore(model.getData()));
+        }
+        else {
+            if(player.equals(user)) {
+                for(int i = 1; i < 5; i++) {
+                    Model copyModel = new Game2048Model((Game2048Model)model);
+                    int pointsBeforeMove = model.getScore();
+                    int points = -1;
+                    
+                    if(i == 1){
+                    	copyModel.moveUp();
+                    	int pointsAfterMove = copyModel.getScore();
+                    	points = pointsAfterMove - pointsBeforeMove;
+                    }
+                    else if(i == 2){
+                    	copyModel.moveDown();
+                    	int pointsAfterMove = copyModel.getScore();
+                    	points = pointsAfterMove - pointsBeforeMove;
+                    }
+                    else if(i == 3){
+                    	copyModel.moveRight();
+                    	int pointsAfterMove = copyModel.getScore();
+                    	points = pointsAfterMove - pointsBeforeMove;
+                    }
+                    else if(i == 4){
+                    	copyModel.moveLeft();
+                    	int pointsAfterMove = copyModel.getScore();
+                    	points = pointsAfterMove - pointsBeforeMove;
+                    }
+                    
+                    if(points == 0 && arrayEquals(model.getData(), copyModel.getData())) {
+                    	continue;
+                    }
+                    
+                    Map<String, Integer> currentResult = alphabeta(copyModel, depth - 1, alpha, beta, computer);
+                    int currentScore = ((Number)currentResult.get("Score")).intValue();
+                                        
+                    if(currentScore > alpha) { //maximize score
+                        alpha = currentScore;
+                        bestDirection = i;
+                    }
+                    
+                    if(beta <= alpha) {
+                        break; //beta cutoff
+                    }
+                }
+                
+                bestScore = alpha;
+            }
+            else {
+                List<Integer> moves = getEmptyCellIds(model.getData());
+                int[] possibleValues = {2, 4};
+
+                int i,j;
+                abloop: for(Integer cellId : moves) {
+                    i = cellId/(model.getData().length);
+                    j = cellId%((model.getData())[0]).length;
+
+                    for(int value : possibleValues) {
+                        Model copyModel = new Game2048Model((Game2048Model)model);
+                     	setEmptyCell(copyModel, i, j, value);
+
+                        Map<String, Integer> currentResult = alphabeta(copyModel, depth - 1, alpha, beta, user);
+                        int currentScore = ((Number)currentResult.get("Score")).intValue();
+                        if(currentScore < beta) { //minimize best score
+                            beta = currentScore;
+                        }
+                        
+                        if(beta <= alpha) {
+                            break abloop; //alpha cutoff
+                        }
+                    }
+                }
+                
+                bestScore = beta;
+                
+                if(moves.isEmpty()) {
+                    bestScore = 0;
+                }
+            }
+        }
+        
+        result.put("Score", bestScore);
+        result.put("Direction", bestDirection);
+        
+        return result;
+    }
 	
 	
 	public void printArray(int [][] arr){
@@ -72,104 +178,7 @@ public class Minimax implements Solver,Serializable{
 		return copiedArr;
 	}
 	
-	public int minimax(int depth, String player, Node node){
-		if(depth == 0 || gameTerminated(node.getGameModel())){
-			
-		}
-		
-		if(player.equals(user)){
-			node.setChildren(new Node[node.getNumOfChildren()]);
-			for(int i = 1 ; i < 5 ; i++){
-				Model copyModel = new Game2048Model((Game2048Model)node.getGameModel());
-				if(i == 1){
-					copyModel.moveUp();
-				}
-				else if(i == 2){
-					copyModel.moveDown();
-				}
-				else if(i == 3){
-					copyModel.moveRight();
-				}
-				else if(i == 4){
-					copyModel.moveLeft();
-				}
-				node.getChildren()[i - 1] = new Node(copyModel,computer, getEmptyCellIds(copyModel.getData()).size());
-				minimax(depth - 1, computer, node.getChildren()[i - 1]);
-			}
-		}
-		else if(player.equals(computer)){
-			Model modelCopy = new Game2048Model((Game2048Model)node.getGameModel());
-			List<Integer> moves = getEmptyCellIds(modelCopy.getData());
-            int[] possibleValues = {2, 4};
-            int i,j;
-            for(Integer cellId : moves) {
-                i = cellId/modelCopy.getData().length;
-                j = cellId%modelCopy.getData()[0].length;
-                for(int value : possibleValues) {
-                    setEmptyCell(modelCopy, i, j, value);
-                }
-            }
-		}
-		
-		
-		return 0;
-	}
 	
-	
-	
-	
-	
-	// old minimax (not working)
-	/*
-	public Map<String,Integer> minimax(Model model, int depth, String player, Map<String,Integer> result){
-		System.out.println(depth);
-		if(depth == 0 || gameTerminated(model)){
-			return result;
-		}
-		else{
-			if(player.equals("USER")){
-				Model modelCopy = new Game2048Model((Game2048Model)model);
-				for(int i = 1; i < 4 ; i++){
-					String theHintAndNumOfEmptyCellsThatWillBe = huristicksCalculator(modelCopy);
-					String[] toSplit = theHintAndNumOfEmptyCellsThatWillBe.split(",");
-					String bestMoveIs = toSplit[0];
-					int willBeEmptyCells = Integer.parseInt(toSplit[1]);
-					modelCopy.doUserCommand(i);
-					String string = "USER"+ "," + i + "," + depth + "," + bestMoveIs;
-                    result.put(string, willBeEmptyCells);
-				}
-				minimax(modelCopy, depth - 1, computer, result);
-			}
-			else if(player.equals("COMPUTER")){
-				Model modelCopy = new Game2048Model((Game2048Model)model);
-				List<Integer> moves = getEmptyCellIds(model.getData());
-                int[] possibleValues = {2, 4};
-                int i,j;
-                for(Integer cellId : moves) {
-                    i = cellId/model.getData().length;
-                    j = cellId%model.getData()[0].length;
-                    for(int value : possibleValues) {
-                        setEmptyCell(modelCopy, i, j, value);
-                        String string = "COMPUTER" + "," + i + "," + j + "," + depth;   
-                        result.put(string, value);                        
-                    }
-                }
-                minimax(modelCopy, depth - 1, user, result);
-			}
-		}
-	    
-	    return result;
-		
-	}
-	
-	*/
-	
-	/**
-	 * 
-	 * 
-	 * for received board check where to move for get more empty cells
-	 * 
-	 */
 	private String huristicksCalculator(Model model) {
 	
 	
@@ -262,18 +271,14 @@ public class Minimax implements Solver,Serializable{
 	
 	
 	private int numOfemptyCellsFoo(Model model){
-		int numOfEmptyCells = 0;
-		for(int i = 0; i < model.getData().length ; i++){
-			for(int j = 0; j < model.getData().length;j++){
-				if(model.getData()[i][j] == 0){
-					++numOfEmptyCells;
-				}
-			}
-		}
-		return numOfEmptyCells;
+		
+		if(cache_emptyCells==null) {
+	          cache_emptyCells = (getEmptyCellIds(model.getData())).size();
+	      }
+	    return cache_emptyCells;
 	}
 
-	private int[][] copyTheBoard(int[][] data) {
+	public int[][] copyTheBoard(int[][] data) {
 		int[][] copyBoard = new int[data.length][data[0].length];
 		for(int i = 0; i < data.length ; i++){
 			for(int j = 0; j < data[0].length;j++){
@@ -284,51 +289,51 @@ public class Minimax implements Solver,Serializable{
 	}
 
 	public int heuristicScore(int actualScore, int numberOfEmptyCells, int clusteringScore) {
-        int score = (int) (actualScore + Math.log(actualScore)*numberOfEmptyCells - clusteringScore);
-        return Math.max(score, Math.min(actualScore, 1));
+		int score = (int) (actualScore+Math.log(actualScore)*numberOfEmptyCells - clusteringScore);
+	    return Math.max(score, Math.min(actualScore, 1));
     }
 
 
-	private int calculateClusteringScore(int[][] data) {
-		int clusteringScore = 0;
-        
-        int[] neighbors = {-1,0,1};
-        
-        for(int i=0; i < data.length; ++i) {
-            for(int j=0; j < data.length; ++j) {
-                if(data[i][j] == 0) {
-                    continue; //ignore empty cells
-                }
-                
-                //clusteringScore-=boardArray[i][j];
-                
-                //for every pixel find the distance from each neightbors
-                int numOfNeighbors = 0;
-                int sum = 0;
-                for(int k : neighbors) {
-                    int x = i + k;
-                    if(x < 0 || x >= data.length) {
-                        continue;
-                    }
-                    for(int l : neighbors) {
-                        int y = j + l;
-                        if(y < 0 || y >= data.length) {
-                            continue;
-                        }
-                        
-                        if(data[x][y] > 0) {
-                            ++numOfNeighbors;
-                            sum += Math.abs(data[i][j] - data[x][y]);
-                        }
-                        
-                    }
-                }
-                
-                clusteringScore+=sum/numOfNeighbors;
-            }
-        }
-        
-        return clusteringScore;
+	public int calculateClusteringScore(int[][] boardArray) {
+		 int clusteringScore=0;
+	        
+	        int[] neighbors = {-1,0,1};
+	        
+	        for(int i=0;i<boardArray.length;++i) {
+	            for(int j=0;j<boardArray.length;++j) {
+	                if(boardArray[i][j]==0) {
+	                    continue; //ignore empty cells
+	                }
+	                
+	                //clusteringScore-=boardArray[i][j];
+	                
+	                //for every pixel find the distance from each neightbors
+	                int numOfNeighbors=0;
+	                int sum=0;
+	                for(int k : neighbors) {
+	                    int x=i+k;
+	                    if(x<0 || x>=boardArray.length) {
+	                        continue;
+	                    }
+	                    for(int l : neighbors) {
+	                        int y = j+l;
+	                        if(y<0 || y>=boardArray.length) {
+	                            continue;
+	                        }
+	                        
+	                        if(boardArray[x][y]>0) {
+	                            ++numOfNeighbors;
+	                            sum+=Math.abs(boardArray[i][j]-boardArray[x][y]);
+	                        }
+	                        
+	                    }
+	                }
+	                
+	                clusteringScore+=sum/numOfNeighbors;
+	            }
+	        }
+	        
+	        return clusteringScore;
 	}
 
 
@@ -336,10 +341,10 @@ public class Minimax implements Solver,Serializable{
 		
 		
 	public void setEmptyCell(Model model, int i, int j, int value) {
-	       if(model.getData()[i][j] == 0) {
-	    	   model.getData()[i][j] = value;
-	           
-	       }
+		if(model.getData()[i][j] == 0) {
+			model.getData()[i][j] = value;
+            cache_emptyCells = null;
+        }
 	}
 
 	private List<Integer> getEmptyCellIds(int[][] data) {
@@ -411,7 +416,7 @@ public class Minimax implements Solver,Serializable{
 		for(int i = 0 ; i < arr1.length; i++){
 			for(int j = 0; j < arr1[0].length; j++){
 				if(arr1[i][j] != arr2[i][j]){
-					System.out.println("its arr1 value:" + arr1[i][j] + "," + "its arr2 value:" + arr2[i][j]);
+					
 					return false;
 				}
 			}

@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
+import algorithms.Solver;
+
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   	// NEED TO SET	height + 2
 	private int columns						= 20+2;		// NEED TO SET	width + 2
@@ -239,7 +241,7 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedUP");
 		}
-		return false;
+		return succeed;
 	}
 
 	@Override
@@ -280,7 +282,7 @@ public class MazeModel extends Observable implements Model{
 			}
 			
 		}
-		return false;		
+		return succeed;		
 	}
 
 	@Override
@@ -322,7 +324,7 @@ public class MazeModel extends Observable implements Model{
 			}
 
 		}
-		return false;		
+		return succeed;		
 	}
 
 	@Override
@@ -364,11 +366,11 @@ public class MazeModel extends Observable implements Model{
 			}
 
 		}
-		return false;		
+		return succeed;		
 	}
 
 	@Override
-	public boolean moveUpRight() {
+	public void moveUpRight() {
 		int s = maze[mouse[0]-1][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -407,12 +409,11 @@ public class MazeModel extends Observable implements Model{
 				score += 15;
 			}
 			System.out.println("movedUpRight");
-		}
-		return false;		
+		}		
 	}
 
 	@Override
-	public boolean moveUpLeft() {
+	public void moveUpLeft() {
 		int s = maze[mouse[0]-1][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -451,12 +452,11 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedUpLeft");
 		}
-		return false;
 		
 	}
 
 	@Override
-	public boolean moveDownRight() {
+	public void moveDownRight() {
 		int s = maze[mouse[0]+1][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -495,12 +495,11 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedDownRight");
 		}
-		return false;
 		
 	}
 
 	@Override
-	public boolean moveDownLeft() {
+	public void moveDownLeft() {
 		int s = maze[mouse[0]+1][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -539,7 +538,6 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedDownLeft");
 		}
-		return succeed;
 		
 	}
 	
@@ -934,6 +932,11 @@ public class MazeModel extends Observable implements Model{
 	public boolean isStuck() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void getAI(String host, int port, Solver sol) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
