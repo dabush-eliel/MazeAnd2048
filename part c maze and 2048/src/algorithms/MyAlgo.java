@@ -168,6 +168,7 @@ public class MyAlgo implements Solver, Serializable{
 			val = val/2;
 		}*/
 		
+		/*
 		cellsVals[0][3] = 1;
 		cellsVals[0][2] = 2;
 		cellsVals[0][1] = 3;
@@ -193,7 +194,35 @@ public class MyAlgo implements Solver, Serializable{
 				weight += (cellsVals[i][j] * data[i][j]);  
 			}
 		}
-
+		*/
+		
+		
+		cellsVals[0][0] = 2;
+		cellsVals[0][1] = 1;
+		cellsVals[0][2] = 1;
+		cellsVals[0][3] = 1;
+		
+		cellsVals[1][0] = 3;
+		cellsVals[1][1] = 1;
+		cellsVals[1][2] = 2;
+		cellsVals[1][3] = 1;
+		
+		cellsVals[2][0] = 3;
+		cellsVals[2][1] = 2;
+		cellsVals[2][2] = 1;
+		cellsVals[2][3] = 1;
+		
+		cellsVals[3][0] = 5;
+		cellsVals[3][1] = 3;
+		cellsVals[3][2] = 3;
+		cellsVals[3][3] = 2;
+		
+		for(int i = 0; i<cellsVals.length; i++){
+			for(int j = 0; j<cellsVals[0].length; j++){
+				weight += (cellsVals[i][j] * data[i][j]);  
+			}
+		}
+		
 		return weight;
 	}
 	
