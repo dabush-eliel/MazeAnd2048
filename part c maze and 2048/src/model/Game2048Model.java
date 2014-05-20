@@ -827,8 +827,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			}
 	}
 	
-	
-	// for testing heuristics in MyAlgo 
+
 	private void MyAlgoRun(int goal){
 		
 		int hTile = calcHighTile(board2048);
