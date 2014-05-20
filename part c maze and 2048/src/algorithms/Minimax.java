@@ -24,16 +24,19 @@ public class Minimax implements Solver,Serializable{
 	private String computer = "COMPUTER";
 	int numOfSolutionsLeft = 0;
 	Node node;
+	int depth;
 	
-	public Minimax(Model m, String player, int numOfChildren){
-		node = new Node(m,player,numOfChildren);
+	public Minimax(int depth){
+		this.depth = depth;
 	}
 	
 	@Override
 	public int calculator(Model model) {
 		
+		node = new Node(model,user,4);
 		System.out.println("Minimax calculator started.");
-		int depth = 8;
+		
+		
 		
 		
 		

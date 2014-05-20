@@ -734,8 +734,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 	// minimax algo running
 	private void MinimaxRun(){
-		
-		sol = new Minimax(this,"USER",4);
+		int dep = 8;
+		sol = new Minimax(dep);
 		
 		try{  
 			
