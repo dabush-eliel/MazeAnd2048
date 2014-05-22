@@ -7,6 +7,12 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * This class is a Canvas on the gui, which shows a tiles with pictures above.
+ * @author Eliel Dabush and Oleg Glizerin
+ * 
+ *
+ */
 public class BoardView extends Canvas {
 
 	int [][] boardData;
@@ -31,7 +37,12 @@ public class BoardView extends Canvas {
 	
 	
 	
-	
+	/**
+	 * 
+	 * @param parent its a shell
+	 * @param style int the represent a style of shell, we using SWT library to be accurate so it get SWT.BORDER .
+	 * 
+	 */
 
 	public BoardView(Composite parent, int style) {
 		super(parent, style);

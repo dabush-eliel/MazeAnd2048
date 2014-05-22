@@ -7,6 +7,15 @@ import model.Game2048Model;
 import model.Model;
 import algorithms.Solver;
 
+/**
+ * Handles the client connected.
+ * @author Eliel Dabush and Oleg Glizerin.
+ * @param model init the model to work on when client connected.
+ * @param solver init solver with obj that received from client.
+ * 
+ * @return send an action to the client.
+ */
+
 public class GameHandler implements ClientHandler {
 
 	Model model 			= null;

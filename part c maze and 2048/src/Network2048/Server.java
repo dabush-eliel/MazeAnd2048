@@ -9,11 +9,13 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * A server that handle the clients with thread pool.
+ * @author Eliel Dabush and Oleg Glizerin
+ * 
+ */
 
 public class Server implements Runnable, Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5251997575233371250L;
 	ServerSocket ss 		= null;
 	ClientHandler handler 	= null;

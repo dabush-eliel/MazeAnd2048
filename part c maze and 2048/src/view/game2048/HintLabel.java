@@ -5,6 +5,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+/**
+ * Hint Label that shows the hint.
+ * @author Eliel Dabush and Oleg Glizerin.
+ *
+ */
 public class HintLabel {
 	Label hint;
 	//for hint

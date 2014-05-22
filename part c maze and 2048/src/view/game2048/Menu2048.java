@@ -5,7 +5,15 @@ import org.eclipse.swt.widgets.Decorations;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+/**
+ * The menu of 2048 Game.
+ * @author Eliel Dabush and Oleg Glizerin.
+ *
+ */
 public class Menu2048 {
+	/**
+	 * Menu buttons.
+	 */
 	Menu menuBar;
 	MenuItem fileMenuHeader;
 	MenuItem editMenuHeader;
@@ -17,6 +25,11 @@ public class Menu2048 {
 	MenuItem editUndoItem;
 	MenuItem editRestartItem;	
 	
+	/**
+	 * 
+	 * @param parent shell.
+	 * @param style SWT style.
+	 */
 	public Menu2048(Decorations parent, int style) {
 		//super(parent, style);
 		menuBar = new Menu(parent, style);
@@ -48,31 +61,50 @@ public class Menu2048 {
 	    editRestartItem.setText("Restart");
 	}
 	
-	
+	/**
+	 * 
+	 * @return menuBar.
+	 */
 	public Menu getMenuBar() {
 		return menuBar;
 	}
+	/**
+	 * 
+	 * @return fileSaveItem.
+	 */
 	
 	public MenuItem getFileSaveItem() {
 		return fileSaveItem;
 	}
 
-
+	/**
+	 * 
+	 * @return fileLoadItem.
+	 */
 	public MenuItem getFileLoadItem() {
 		return fileLoadItem;
 	}
 
-
+	/**
+	 * 
+	 * @return fileExitItem.
+	 */
 	public MenuItem getFileExitItem() {
 		return fileExitItem;
 	}
 
-
+	/**
+	 * 
+	 * @return editUndoItem.
+	 */
 	public MenuItem getEditUndoItem() {
 		return editUndoItem;
 	}
 
-
+	/**
+	 * 
+	 * @return ditRestartItem.
+	 */
 	public MenuItem getEditRestartItem() {
 		return editRestartItem;
 	}	

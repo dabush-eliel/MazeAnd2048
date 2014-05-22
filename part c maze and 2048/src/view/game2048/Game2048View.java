@@ -10,8 +10,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -19,18 +17,36 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+
 
 import view.View;
 
-
+/**
+ * An Obserable class that conatins the view of the game, it notify the presenter when view changed.
+ * @author Eliel Dabush and Oleg Glizerin.
+ *
+ */
 public class Game2048View extends Observable implements View, Runnable{
-	
+	/**
+	 * @param display display.
+	 * @param shell shell.
+	 * @param scoreLabel shows the score in a label.
+	 * @param hintLabel shows the hint in a label.
+	 * @param menu shows a menu above the labels.
+	 * @param board style of board.
+	 * @param userCommand (commands that changes the view of the game) zero at start.
+	 * @param data its a state of game.
+	 * @param buttons buttons.
+	 * @param succeed true if win otherwise false.
+	 * @param scoreHolder score holder.
+	 * @param mouseDownX the x when mouse pressed.
+	 * @param mouseDownY the y when mouse pressed.
+	 * @param fileName string of path.
+	 */
 	private Display display;	// = new Display();
 	private Shell shell 	;	//= new Shell(display);
 	private ScoreLabel scoreLabel;
@@ -43,12 +59,14 @@ public class Game2048View extends Observable implements View, Runnable{
 	private boolean succeed = false;
 //	private boolean gameOver = false;
 	public int scoreHolder;
-	
 	int mouseDownX = 0;		    //when mouse pressed, its X
 	int mouseDownY = 0; 	    //when mouse pressed, its Y
-	
 	private String fileName = "";
 	
+	/**
+	 * Constructor
+	 * @param init the board with received data[][]
+	 */
 	public Game2048View(int [][] data) {
 		this.data = new int[data.length][data[0].length];
 		for(int i=0;i<data.length;i++){
@@ -58,6 +76,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+	/**
+	 * Initialize the view of the game with GUI.
+	 * Button lister the style of GUI and the Mouse listener.
+	 */
 	public void initView(){		
 		display = new Display();
 		shell 	= new Shell(display);
@@ -89,7 +111,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		shell.open();
 	}
 	
-	
+	/**
+	 * Synchronize thread that redraw the board.
+	 */
 	@Override
 	public void displayData(int [][] d) {
 		board.setBoardData(d);
@@ -100,18 +124,26 @@ public class Game2048View extends Observable implements View, Runnable{
 			}
 		});
 	}
-
+	
+	/**
+	 * 1 up, 2 down, 3 right, 4 left, 7 save , 8 load, 5 restart, 6 undo, 12 algo , 13 minimax.
+	 * @return the command that has to be redrawed or did.
+	 */
 	@Override
 	public int getUserCommand() {
 		return userCommand;
 	}
-
+	/**
+	 * Shows score Label.
+	 */
 	@Override
 	public void displayScore(int score) {
 		scoreHolder = score;
 		scoreLabel.setText("Score: "+score);
 	}
-
+	/**
+	 * the hint is..
+	 */
 	public void displayHint(int hint){
 		switch (hint) {
 		case 1:
@@ -131,13 +163,18 @@ public class Game2048View extends Observable implements View, Runnable{
 			break;
 		}
 	}
-	
+	/**
+	 * Game Over.
+	 */
 	@Override
 	public void gameOver(boolean succeed) {
 		this.succeed = succeed;		
 		gameOverAction();
 	}
 	
+	/**
+	 * init the view.
+	 */
 	@Override
 	public void run() {	
 		initView();
@@ -152,6 +189,9 @@ public class Game2048View extends Observable implements View, Runnable{
 	
 	// ----------			LISTENERS          ----------
 	
+	/**
+	 * Listeners that listen to action of a user.
+	 */
 	// menu buttons listener
 	public void menuListeners(){
 		display.asyncExec(new Runnable() {
@@ -256,6 +296,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	
+	/**
+	 * the movement listener.
+	 */
 	// game movement listener
 	public void movementListener(){
 		display.syncExec(new Runnable() {	
@@ -348,6 +392,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	/**
+	 * buttons listener.
+	 */
 	// buttons listener
 	public void buttonsListenerstener(){
 		display.asyncExec(new Runnable() {
@@ -489,6 +536,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	
+	/**
+	 * The Game Over Action with Message box.
+	 */
 	public void gameOverAction(){
 		if(!succeed){
 			MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
@@ -594,6 +645,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+	/**
+	 * 
+	 * @return path where it should be saved.
+	 */
 	public String saveAction(){
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setText("save");
@@ -611,6 +666,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return the path from where it should be loaded.
+	 */
 	public String loadAction(){
 		FileDialog fd = new FileDialog(shell, SWT.OPEN);
 		fd.setText("open");
@@ -630,25 +689,45 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+	/**
+	 * @return path.
+	 */
 	@Override
 	public String getFileNamePath(){
 		return this.fileName;
 	}
-
+	/**
+	 * sets the path to save.
+	 */
 	@Override
 	public void setFileNamePath(String save) {
 		this.fileName = save;
 	}
-	
+	/**
+	 * 
+	 * @param x from mouse pressed.
+	 */
 	public void setMouseDownX(int x){
 		mouseDownX = x;
 	}
+	/**
+	 * 
+	 * @return the x of mouse pressed.
+	 */
 	public int getMouseDownX(){
 		return mouseDownX;
 	}
+	/**
+	 * 
+	 * @param y from mouse pressed.
+	 */
 	public void setMouseDownY(int y){
 		mouseDownY = y;
 	}
+	/**
+	 * 
+	 * @return the y of mouse pressed.
+	 */
 	public int getMouseDownY(){
 		return mouseDownY;
 	}

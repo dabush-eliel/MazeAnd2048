@@ -1,8 +1,6 @@
 package algorithms;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 import model.Game2048Model;
 import model.Model;
@@ -25,6 +23,7 @@ public class MyAlgo implements Solver, Serializable{
 	private int bestMove 		= 0;
 	private int depth 			= 8;
 	private String player		= "USER";
+
 	private final int GOAL;
 	boolean stop = false;
 	
@@ -41,13 +40,19 @@ public class MyAlgo implements Solver, Serializable{
 		System.out.println("MyAlgo Calculator");
 		
 		int [][]data = copyArray(model.getData());
-		int hTile = calcHighTile(data);		
+		int hTile = calcHighTile(data);	
+		
+		
+		
+		
 		
 		for(int i = 1 ; i < 5 ; i++){
 			Model modelCopy = new Game2048Model( (Game2048Model) model);
 			if(i == 1){
 				if(modelCopy.moveUp()){
 					upVal = heuristicCalc(modelCopy);
+					
+					
 				}else{
 					upVal = Integer.MAX_VALUE;
 				}
@@ -55,6 +60,8 @@ public class MyAlgo implements Solver, Serializable{
 			}else if (i == 2){
 				if(modelCopy.moveDown()){
 					downVal = heuristicCalc(modelCopy);
+				
+					
 				}else{
 					downVal = Integer.MAX_VALUE;
 				}
@@ -62,12 +69,16 @@ public class MyAlgo implements Solver, Serializable{
 			}else if(i == 3){
 				if(modelCopy.moveRight()){
 					rightVal = heuristicCalc(modelCopy);
+					
+					
 				}else{
 					rightVal = Integer.MAX_VALUE;
 				}
 			}else if(i == 4){
 				if(modelCopy.moveLeft()){
 					leftVal = heuristicCalc(modelCopy);
+					
+					
 				}else{
 					leftVal = Integer.MAX_VALUE;
 				}
@@ -77,15 +88,15 @@ public class MyAlgo implements Solver, Serializable{
 		int min = upVal;
 		int command = UP;
 		
-		if(min > rightVal){
+		if(min >= rightVal){
 			min = rightVal;
 			command = RIGHT;
 		}
-		if(min > downVal){
+		if(min >= downVal){
 			min = downVal;
 			command = DOWN;
 		}
-		if(min > leftVal){
+		if(min >= leftVal){
 			min = leftVal;
 			command = LEFT;
 		}
@@ -98,9 +109,15 @@ public class MyAlgo implements Solver, Serializable{
 	
 	private int heuristicCalc(Model m) {
 		int val = 0;
-		
+		int numOfEmptyCell  = numOfemptyCellsFoo(m);
+				
 		val += cellsWeightHeuristic(m);
-		val += neighborsVal(m); 
+		val += numOfEmptyCell;
+		//val += neighborsVal(m); 
+		
+		
+		System.out.println("upVal=" + upVal + "," + "numOfEmptyCell=" + numOfEmptyCell);
+		
 		
 		return val;
 	}
@@ -197,29 +214,32 @@ public class MyAlgo implements Solver, Serializable{
 		*/
 		
 		
-		cellsVals[0][0] = 2;
-		cellsVals[0][1] = 1;
-		cellsVals[0][2] = 1;
 		cellsVals[0][3] = 1;
+		cellsVals[1][3] = 2;
+		cellsVals[2][3] = 3;
+		cellsVals[3][3] = 4;
 		
-		cellsVals[1][0] = 3;
-		cellsVals[1][1] = 1;
+		cellsVals[0][2] = 2;
 		cellsVals[1][2] = 2;
-		cellsVals[1][3] = 1;
+		cellsVals[2][2] = 3;
+		cellsVals[3][2] = 4;
 		
-		cellsVals[2][0] = 3;
-		cellsVals[2][1] = 2;
-		cellsVals[2][2] = 1;
-		cellsVals[2][3] = 1;
+		cellsVals[0][1] = 3;
+		cellsVals[1][1] = 3;
+		cellsVals[2][1] = 3;
+		cellsVals[3][1] = 4;
 		
-		cellsVals[3][0] = 5;
-		cellsVals[3][1] = 3;
-		cellsVals[3][2] = 3;
-		cellsVals[3][3] = 2;
+		cellsVals[0][0] = 4;
+		cellsVals[1][0] = 4;
+		cellsVals[2][0] = 4;
+		cellsVals[3][0] = 4;
+		
+		
 		
 		for(int i = 0; i<cellsVals.length; i++){
 			for(int j = 0; j<cellsVals[0].length; j++){
-				weight += (cellsVals[i][j] * data[i][j]);  
+				//weight += (cellsVals[i][j] * data[i][j]);  
+				weight += (data[i][j] * cellsVals[i][j]);
 			}
 		}
 		
@@ -227,10 +247,93 @@ public class MyAlgo implements Solver, Serializable{
 	}
 	
 	
+	
+	
+	
 	// check if new tile can block our move - block means we can move only UP - our avoided move
 	private boolean avoidedMovePoss(int [][]data) {
 		
 		return false;
+	}
+	
+	public int huristicksCellsCalculator(Model model, String direction) {
+	
+	
+		
+		
+		int numOfEmptyCellsThatWillBe = 0;
+		
+		Model modelCopy = new Game2048Model((Game2048Model)model);
+	
+		
+		//4 directions
+		
+		//UP
+		if(direction.equals("UP")){
+			modelCopy.moveUp();
+		}
+		//DOWN
+		else if(direction.equals("DOWN")){
+			modelCopy.moveDown();
+		}
+		//RIGHT
+		else if(direction.equals("RIGHT")){
+			modelCopy.moveRight();
+		}
+		//LEFT
+		else if(direction.equals("LEFT")){
+			modelCopy.moveLeft();
+		}
+		
+		
+		
+		
+		
+		numOfEmptyCellsThatWillBe = numOfemptyCellsFoo(modelCopy);
+		
+		return numOfEmptyCellsThatWillBe;
+	
+		
+		
+		/**
+		 * 
+		 * random huristicks
+		 */
+		/*
+		String[] theHints = {"UP","DOWN","RIGHT","LEFT"};
+		Random rand = new Random();
+		int index = rand.nextInt(4)+1;
+		switch (index) {
+		case 1:
+			return "UP";
+			
+		case 2:
+			return "DOWN";
+			
+		case 3:
+			return "RIGHT";
+			
+		case 4:
+			return "LEFT";
+			
+
+		default:
+			break;
+		}
+		return "";
+		*/
+		
+	}
+	private int numOfemptyCellsFoo(Model model) {
+		int counter = 0;
+		for(int i = 0; i <model.getData().length; i++){
+			for(int j = 0; j < model.getData()[0].length; j++){
+				if(model.getData()[i][j] == 0){
+					counter++;
+				}
+			}
+		}
+		return counter;
 	}
 
 	// there are only 2 tiles with the 2or4 value on them 
@@ -285,6 +388,45 @@ public class MyAlgo implements Solver, Serializable{
 		return false;
 	}
 
-
-	
+	private int calculateClusteringScore(int[][] boardArray) {
+        int clusteringScore=0;
+        
+        int[] neighbors = {-1,0,1};
+        
+        for(int i=0;i<boardArray.length;++i) {
+            for(int j=0;j<boardArray.length;++j) {
+                if(boardArray[i][j]==0) {
+                    continue; //ignore empty cells
+                }
+                
+                //clusteringScore-=boardArray[i][j];
+                
+                //for every pixel find the distance from each neightbors
+                int numOfNeighbors=0;
+                int sum=0;
+                for(int k : neighbors) {
+                    int x=i+k;
+                    if(x<0 || x>=boardArray.length) {
+                        continue;
+                    }
+                    for(int l : neighbors) {
+                        int y = j+l;
+                        if(y<0 || y>=boardArray.length) {
+                            continue;
+                        }
+                        
+                        if(boardArray[x][y]>0) {
+                            ++numOfNeighbors;
+                            sum+=Math.abs(boardArray[i][j]-boardArray[x][y]);
+                        }
+                        
+                    }
+                }
+                
+                clusteringScore+=sum/numOfNeighbors;
+            }
+        }
+        
+        return clusteringScore;
+    }
 }
