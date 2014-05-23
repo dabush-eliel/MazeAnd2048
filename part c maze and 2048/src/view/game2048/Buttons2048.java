@@ -16,34 +16,55 @@ public class Buttons2048{
 	private Button minimax;
 	
 	
+	/**
+	 * @return minimax button.
+	 */
 	public Button getMinimax() {
 		return minimax;
 	}
-
+	/**
+	 * @return solve button.
+	 */
 	public Button getSolve() {
 		return solve;
 	}
 
+		/**
+	 * @return restart button.
+	 */
 	public Button getRestart() {
 		return restart;
 	}
-
+	/**
+	 * @return undo button.
+	 */
 	public Button getUndo() {
 		return undo;
 	}
-	
+	/**
+	 * @return save button.
+	 */
 	public Button getSave() {
 		return save;
 	}
-
+	/**
+	 * @return load button.
+	 */
 	public Button getLoad() {
 		return load;
 	}
-	
+	/**
+	 * @return exit button.
+	 */
 	public Button getExit(){
 		return exit;
 	}
 	
+	/**
+ 	 * Init the buttons with Grid style
+	 * @param parent shell.
+	 * @param style style.
+	 */
 	public Buttons2048(Composite parent, int style) {
 //		solve = new Button(parent,style);
 //		solve.setText("Solve Game with Algo");

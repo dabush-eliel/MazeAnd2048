@@ -1,6 +1,5 @@
 package view.game2048;
 import java.util.Observable;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -28,9 +27,28 @@ import org.eclipse.swt.widgets.Text;
 
 import view.View;
 
-
+/**
+ * An Obserable class that conatins the view of the game, it notify the presenter when view changed.
+ * @author Eliel Dabush and Oleg Glizerin.
+ *
+ */
 public class Game2048View extends Observable implements View, Runnable{
-	
+	/**
+	 * @param display display.
+	 * @param shell shell.
+	 * @param scoreLabel shows the score in a label.
+	 * @param hintLabel shows the hint in a label.
+	 * @param menu shows a menu above the labels.
+	 * @param board style of board.
+	 * @param userCommand (commands that changes the view of the game) zero at start.
+	 * @param data its a state of game.
+	 * @param buttons buttons.
+	 * @param succeed true if win otherwise false.
+	 * @param scoreHolder score holder.
+	 * @param mouseDownX the x when mouse pressed.
+	 * @param mouseDownY the y when mouse pressed.
+	 * @param fileName string of path.
+	 */
 	private Display display;	// = new Display();
 	private Shell shell 	;	//= new Shell(display);
 	private ScoreLabel scoreLabel;
@@ -45,13 +63,14 @@ public class Game2048View extends Observable implements View, Runnable{
 	private int scoreHolder;
 	private int depth;
 	private int hintsNum;
-	
-	
-	int mouseDownX = 0;		    //when mouse pressed, its X
-	int mouseDownY = 0; 	    //when mouse pressed, its Y
-	
+	private int mouseDownX = 0;		    //when mouse pressed, its X
+	private int mouseDownY = 0; 	    //when mouse pressed, its Y
 	private String fileName = "";
 	
+	/**
+	 * Constructor
+	 * @param init the board with received data[][]
+	 */
 	public Game2048View(int [][] data) {
 		this.data = new int[data.length][data[0].length];
 		for(int i=0;i<data.length;i++){
@@ -61,11 +80,16 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+		
+	/**
+	 * Initialize the GUI of the game.
+	 * Button lister the style of GUI and the Mouse listener.
+	 */
 	public void initView(){		
 		display = new Display();
 		shell 	= new Shell(display);
 		
-		shell.setText("2048 Eliel's edition");
+		shell.setText("2048 Eliel's & Oleg's edition");
 		shell.setLayout(new GridLayout(3,true));
 		shell.setSize(650 , 500);
 		
@@ -91,7 +115,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		shell.open();
 	}
 	
-	
+	/**
+	 * Synchronize thread that redraw the board - display the data.
+	 */
 	@Override
 	public void displayData(int [][] d) {
 		board.setBoardData(d);
@@ -103,11 +129,19 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 
+	/**
+	 * Presenter take the userCommand from here to give it to the model
+	 * 1 up, 2 down, 3 right, 4 left, 7 save , 8 load, 5 restart, 6 undo, 12 algo , 13 minimax.
+	 * @return the command that has to be redrawed or did.
+	 */
 	@Override
 	public int getUserCommand() {
 		return userCommand;
 	}
 
+	/**
+	 * displayc score Label.
+	 */
 	@Override
 	public void displayScore(final int score) {
 		display.syncExec(new Runnable() {
@@ -121,6 +155,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 
+	/**
+	 * the hint is..
+	 */
 	public void displayHint(final int num){
 		display.syncExec(new Runnable() {
 			
@@ -147,6 +184,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	/**
+	 * open a game over window - if we won we can continue, restart or leave the game
+	 * if we lost we can start a new game or exit.
+	 */
 	@Override
 	public void gameOver(boolean succeed) {
 		this.succeed = succeed;		
@@ -159,6 +200,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	/**
+	* Run of Runnable Implements
+	*/
 	@Override
 	public void run() {	
 		initView();
@@ -172,7 +216,15 @@ public class Game2048View extends Observable implements View, Runnable{
 	
 	
 	// ----------			LISTENERS          ----------
-	
+	/**
+	 * Listeners that listen to actions of the user.
+	 * 
+	 */
+	 
+	 
+	/**
+	* drop down menu bar listeners
+	*/
 	// menu buttons listener
 	public void menuListeners(){
 		display.asyncExec(new Runnable() {
@@ -277,6 +329,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	/**
+	 * the movement listener.
+	 */
 	// game movement listener
 	public void movementListener(){
 		display.syncExec(new Runnable() {	
@@ -369,6 +424,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	/**
+	 * buttons listener.
+	 */	
 	// buttons listener
 	public void buttonsListenerstener(){
 		display.asyncExec(new Runnable() {
@@ -533,6 +591,9 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
+	/**
+	 * Game is over. who won?
+	 */
 	public void gameOverAction(){
 		if(buttons.getMinimax().getText().contains("Stop Minimax")){
 			buttons.getMinimax().setText("Run Minimax");
@@ -641,6 +702,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+	/**
+	 * 
+	 * @return path where it should be saved.
+	 */	
 	public String saveAction(){
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setText("save");
@@ -658,6 +723,10 @@ public class Game2048View extends Observable implements View, Runnable{
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return the path from where it should be loaded.
+	 */
 	public String loadAction(){
 		FileDialog fd = new FileDialog(shell, SWT.OPEN);
 		fd.setText("open");
@@ -677,21 +746,32 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+	/**
+	 * @return path.
+	 */
 	@Override
 	public String getFileNamePath(){
 		return this.fileName;
 	}
-
+	/**
+	 * sets the path to save.
+	 */
 	@Override
 	public void setFileNamePath(String save) {
 		this.fileName = save;
 	}
 	
+	/**
+	 * get how deep the user wants the algorithm to run
+	 */
 	@Override
 	public int getDepth() {
 		return depth;
 	}
 
+	/**
+	 * get how many hints the user wants
+	 */
 	@Override
 	public int getHintNum() {
 		return hintsNum;

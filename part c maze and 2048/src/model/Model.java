@@ -1,7 +1,16 @@
 package model;
 
+<<<<<<< HEAD
 import minimax.Board;
+=======
+>>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
 
+
+/**
+ *Inteface Model, which holds the logic of the game.
+ * @author Eliel Dabush and Oleg Glizerin.
+ *
+ */
 public interface Model {
 
 	public boolean moveUp();

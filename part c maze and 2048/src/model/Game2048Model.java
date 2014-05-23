@@ -19,12 +19,37 @@ import minimax.Board;
 import algorithms.AlphaBeta;
 import algorithms.Solver;
 
-
+/**
+ * This Class, is a Model of the Game 2048.
+ * @author Eliel Dabush and Oleg Glizerin 
+ *
+ */
+ 
 public class Game2048Model extends Observable implements Model, Serializable {
 	/**
-	 * 
+	 * Serial number
 	 */
 	private static final long serialVersionUID = 8774547151582184720L;
+	
+	/**
+	 * @param size The Size of the Board.
+	 * @param score Holds The current score.
+	 * @param board2048 Holds the current board.
+	 * @param old_score A stack, that holds the old scores for the method undo.
+	 * @param old_moves A stack, that holds the old boards for the method undo.
+	 * @param succeed A boolean, if you get the tile 2048 will be true, otherwise false.
+	 * @param stuck A boolean, if you get stuck, will be true, otherwise false.
+	 * @param check A boolean, for coninue the game after get tile 2048.
+	 * @param stop A boolean, the game should stop , will be true , otherwise false.
+	 * @param tempScore A score before the moving up,down,right or left, also used for copy constructor.
+	 * @param fileName A string that holds the path for load/save.
+	 * @param host The ip of the server.
+	 * @param port The port of the server.
+	 * @param sol Holds a solver Minimax or MyAlgo that implements the Solver interface.
+	 * @param command Used for the method getAi for switch the solvers.
+	 * @return The constructor initilaize the game with 2 tiles.
+	 */
+	 
 	private final int size 				= 4;				//	size of row / column (same size for us)
 	private int score					= 0;
 	private int [][] board2048 			= new int[size][size];
@@ -73,6 +98,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		this.algoGame = gm.algoGame;
 	}
 
+	/**
+	 *  Initilaize the game with 2 random tiles.
+	 */
 	
 	public void initGame(){
 		for(int i = 0 ; i < size ; i++){
@@ -101,7 +129,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 
 	}
 
-	// get random value - 2 or 4
+	/**
+	 * 
+	 * @return 2 with 90% of success and 4 with 10% of success.
+	 */
 	private int squareVal(){
 		Random rand = new Random();
 		int x = rand.nextInt(10);
@@ -110,9 +141,13 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		}else{
 			return 4;
 		}
-	//	return probs[rand.nextInt(10)];
 	}
-	// get where to put the new square 
+	
+	/**
+	 * 
+	 * @param Number of free possible squares.
+	 * @return Where to put the new square.
+	 */
 	private int squarePlace(int num){		// get number of free possible squares
 		if(num == 0){
 			return 0;
@@ -121,6 +156,12 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return (rand.nextInt(num)+1);
 	}
 
+
+	/**
+	 * Sets new tile in the board 
+	 * @param sqrVal - value to use (2or4)
+	 * @param sqrPlc - on which cell 
+	 */
 	private void setSquare(int sqrVal, int sqrPlc) {
 		if(sqrPlc == 0){
 			return;
@@ -139,6 +180,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		}		
 	}
 	
+	/** 
+	 * @return Number of free cells.
+	 */
 	private int getFreeSpotsNum(){
 		int counter = 0;
 		for(int i=0 ; i<size ; i++){
@@ -151,6 +195,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return counter;
 	}
 	
+	/**
+	 * Perform a move Up for the board, if movement succeed - it returns true 
+	 * @return Move Up.
+	 */
 	@Override
 	public boolean moveUp() {
 		int []vals = new int[size];
@@ -199,7 +247,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 	}
 	
-
+	/**
+	 * Perform a move Down for the board, if movement succeed - it returns true 
+	 * @return Move down.
+	 */
 	@Override
 	public boolean moveDown() {
 		int []vals = new int[size];
@@ -246,6 +297,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return false;
 	}
 
+	/**
+	 * Perform a move Right for the board, if movement succeed - it returns true 
+	 * @return Move Right.
+	 */
 	@Override
 	public boolean moveRight() {
 		int []vals = new int[size];
@@ -292,6 +347,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return false;
 	}
 
+	/**
+	 * Perform a move Left for the board, if movement succeed - it returns true 
+	 * @return Move Left.
+	 */
 	@Override
 	public boolean moveLeft() {
 		int []vals = new int[size];
@@ -338,6 +397,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return false;
 	}
 	
+	/**
+	* Method to skip the '0' when we perform a board movement.
+	**/
 	private int[] moveZeros(int []vals){
 		for (int j = 0 ; j < size ; j++){
 			if (vals[j] == 0){
@@ -354,6 +416,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return vals;
 	}
 	
+	/**
+	* Method to merge val when we perform a board movement.
+	**/
 	private int[] mergeVals(int []vals){
 		for (int j = 0 ; j < size-1 ; j++){
 			if(vals[j] == 0){
@@ -380,6 +445,11 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return false;
 	}
 	
+	/**
+	*
+	*	Methods we need to override because implements the Model interface
+	*
+	**/
 	@Override
 	public boolean moveUpRight() {
 		// TODO Auto-generated method stub
@@ -404,28 +474,48 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return false;
 	}
 	
+	/**
+	 * @return game score
+	 */
 	@Override
 	public int getScore(){
 		return this.score;
 	}
 	
+	/**
+	 * @return game board data
+	*/
 	@Override
 	public int[][] getData() {
 		return board2048;
 	}
 
+	/**
+	 * @return size of the board
+	 */
+
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * @return stack with all of our scores.
+	 */
 	public Stack<Integer> getOld_score() {
 		return old_score;
 	}
 
+	/**
+	 * @return stack with all of our old moves (board states).
+	 */
 	public Stack<int[][]> getOld_moves() {
 		return old_moves;
 	}
 
+	/**
+	* 'check', for keep playing normal after won (without a popup window after every move)
+	* @return true if user continue after receive tile 2048.
+	*/
 	public boolean isCheck() {
 		return check;
 	}
@@ -434,6 +524,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return tempScore;
 	}
 
+	/**
+	* @return a number that represent a movement
+	*/
 	public int getHint() {
 		return hint;
 	}
@@ -443,6 +536,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return algoGame;
 	}
 	
+	/**
+	 * initialize a new game from begining and notify the presenter.
+	 */	
 	@Override
 	public void restartGame() {
 		initGame();
@@ -450,6 +546,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		notifyObservers();
 	}
 
+	/**
+	 * @return make undo to the last move the user did (by using the stacks) - unlimited function
+	 */
 	@Override
 	public void undoMove() {
 		if(!(old_moves.empty()) && !(old_score.empty())){		// we can check just one of the Stacks but i prefer to check both
@@ -468,6 +567,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		}		
 	}
 	
+	/**
+	 * save the current state of the game to text file.
+	 */
 	@Override
 	public void save(){
 		old_moves.push(board2048);
@@ -503,6 +605,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		}
 	}
 	
+	/**
+	 *  loading a saved game state from a text file.
+	 */
 	@Override
 	public void load() {
 		File file = new File(fileName);
@@ -601,6 +706,12 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 	}
 
+	/**
+	 * We recive a integer that represent a command from the 'Presenter' after the user did an action.
+	 * @param num is get {0 for init game, 1 for up,2 for down,3 for right,4 for left, 5 for retart game, 6 for undo move, 
+	 * 7 for save game, 8 for load game, 11 for continue the game after tile 2048, 12 for getAi for MyAlgo, 
+	 * 13 for getAi for Minimax, 14 for hint}.
+	 */
 	@Override
 	public void doUserCommand(int num) {
 		command = num;
@@ -673,6 +784,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		}
 	}
 
+	/**
+	 * @return true if we stuck (we lost) otherwise false.
+	 */
 	@Override
 	public boolean isStuck(){
 		if(getFreeSpotsNum() == 0 && mergeStuck()){
@@ -682,11 +796,21 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return stuck;
 	}
 	
+	/**
+	*	@return true if we reach to 2048, otherwise return false.
+	*/
 	@Override
 	public boolean isSucceed() {
 		return succeed;
 	}
 
+	/**
+	*	
+	* check if there is any possible merge
+	* getFreeSpotsNum supplement this method so we able to check if we stuck
+	* @return true if we can't perform any merge on the board.
+	*/
+	
 	// check if there is any possible merge
 	// getFreeSpotsNum supplement this method so we able to check if we stuck
 	public boolean mergeStuck() {
@@ -706,20 +830,28 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return true;
 	}
 
+	/**
+	 * @return file name.
+	 */
 	@Override
 	public String getFileName() {
 		return fileName;
 	}
 
+	/**
+	 * set file name.
+	 */
 	@Override
 	public void setFileName(String s) {
 		fileName = s;
 	}
 
-
-	// this method connecting to a server a get the auto solution for this game
-	//method need to get which host to connect and what port to use and which solver will do that 
-
+	/**
+	 * this method connecting to a server a get the auto solution for this game
+	 * method need to get which host to connect and what port to use and which solver will do that 
+	 * @param host the ip of the server we connecting to.
+	 * @param port the port we connecting on.
+	 */
 	@Override
 	public void getAI(final String host, final int port) {
 		stop = false;
@@ -738,12 +870,18 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		notifyObservers();
 	}
 	
-
+	
+	/**
+	* set how many hints the user wants
+	*/
 	@Override
 	public void setHintsNum(int num) {
 		this.hintsNum = num;
 	}
 
+	/**
+	* set how deep the user wants the hints to be
+	*/
 	@Override
 	public void setDepth(int num) {
 		this.depth = num;
@@ -761,12 +899,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 */
 	private void AlphaBetaRun(String host, int port) {
 		
-	//	while((!isSucceed()) && (!stop)){
-	//	int i =0;
-		
 		sol = new AlphaBeta();
-		
-	//	int hTile = calcHighTile(board2048);
+
 	//	while(!isSucceed() && (!stop) && hintsNum>0) {
 			try{
 				Socket s = new Socket(host,port);  
