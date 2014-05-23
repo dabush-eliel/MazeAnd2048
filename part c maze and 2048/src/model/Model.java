@@ -2,7 +2,7 @@ package model;
 
 
 /**
- *Inteface Model, which holds the logic of the game.
+ * Interface Model, which holds the logic of the game.
  * @author Eliel Dabush and Oleg Glizerin.
  *
  */

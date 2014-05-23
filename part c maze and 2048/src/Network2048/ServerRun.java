@@ -1,6 +1,15 @@
 package Network2048;
 
 
+/**
+ * The server main.
+ * That wait to client to connect.
+ * We use Thread pool for some client could connect in same time.
+ * 
+ * @author Eliel Dabush and Oleg Glizerin.
+ *
+ */
+
 public class ServerRun {
 
 	public static void main(String[] args) {

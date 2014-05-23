@@ -89,7 +89,7 @@ public class Game2048View extends Observable implements View, Runnable{
 		
 		shell.setText("2048 Eliel's & Oleg's edition");
 		shell.setLayout(new GridLayout(3,true));
-		shell.setSize(650 , 500);
+		shell.setSize(450 , 480);
 		
 		menu = new Menu2048(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
