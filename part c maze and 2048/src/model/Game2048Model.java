@@ -14,8 +14,6 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
-
-import minimax.Board;
 import algorithms.AlphaBeta;
 import algorithms.Solver;
 
@@ -64,18 +62,25 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private String host					= "localhost";
 	private int port					= 2032;
 	private Solver sol; //					= new AlphaBeta();
+	@SuppressWarnings("unused")
 	private int command;
-	private Board algoGame				= new Board();
+//	private Board algoGame				= new Board();
 	private int hint					= 0;
 	private int hintsNum				= Integer.MAX_VALUE;
 	private int depth					= 7; 
 	
 	
-	
+	/**
+	 * default c'tor
+	 */
 	public Game2048Model() {
 		initGame();	
 	}
 	
+	/**
+	 * copy c'tor
+	 * @param gm
+	 */
 	public Game2048Model(Game2048Model gm) {
 		
 		this.score = gm.score;
@@ -95,13 +100,12 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				this.board2048[i][j] = gm.board2048[i][j];
 			}
 		}
-		this.algoGame = gm.algoGame;
+	//	this.algoGame = gm.algoGame;
 	}
 
 	/**
-	 *  Initilaize the game with 2 random tiles.
+	 *  Initialize a new game with 2 random tiles.
 	 */
-	
 	public void initGame(){
 		for(int i = 0 ; i < size ; i++){
 			for(int j = 0 ; j < size ; j++){
@@ -125,7 +129,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		stuck 		= false;
 		check 		= true;
 		
-		algoGame = new Board(board2048, score);
+		// algoGame = new Board(board2048, score);
 
 	}
 
@@ -532,9 +536,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	}
 
 
-	public Board getAlgoGame() {
-		return algoGame;
-	}
+//	public Board getAlgoGame() {
+//		return algoGame;
+//	}
 	
 	/**
 	 * initialize a new game from begining and notify the presenter.
@@ -561,7 +565,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				}	
 			}
 			
-			algoGame.setBoardArr(board2048);
+//			algoGame.setBoardArr(board2048);
 			setChanged();
 			notifyObservers();
 		}		
@@ -722,7 +726,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 1:
 			if(moveUp()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
-				algoGame.setBoardArr(board2048);
+				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -730,7 +734,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 2:
 			if(moveDown()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-				algoGame.setBoardArr(board2048);
+				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -738,7 +742,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 3:
 			if(moveRight()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-				algoGame.setBoardArr(board2048);
+				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -746,7 +750,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 4:
 			if(moveLeft()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
-				algoGame.setBoardArr(board2048);
+				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}

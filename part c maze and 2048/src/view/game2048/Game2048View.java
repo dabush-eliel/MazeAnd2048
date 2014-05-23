@@ -1,5 +1,6 @@
 package view.game2048;
 import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -9,8 +10,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -18,17 +17,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import view.View;
 
 /**
- * An Obserable class that conatins the view of the game, it notify the presenter when view changed.
+ * An Observable class that contains the view of the game, it notify the presenter when view changed.
  * @author Eliel Dabush and Oleg Glizerin.
  *
  */
@@ -60,6 +57,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Buttons2048 buttons;
 	private boolean succeed = false;
 //	private boolean gameOver = false;
+	@SuppressWarnings("unused")
 	private int scoreHolder;
 	private int depth;
 	private int hintsNum;
@@ -776,16 +774,32 @@ public class Game2048View extends Observable implements View, Runnable{
 	public int getHintNum() {
 		return hintsNum;
 	}
-
+	
+	/**
+	 * set mouse (x,  )
+	 * @param x
+	 */
 	public void setMouseDownX(int x){
 		mouseDownX = x;
 	}
+	/**
+	 * get mouse (x, )
+	 * @return
+	 */
 	public int getMouseDownX(){
 		return mouseDownX;
 	}
+	/**
+	 * set mouse( ,y)
+	 * @param y
+	 */
 	public void setMouseDownY(int y){
 		mouseDownY = y;
 	}
+	/**
+	 * get mouse ( ,y)
+	 * @return
+	 */
 	public int getMouseDownY(){
 		return mouseDownY;
 	}

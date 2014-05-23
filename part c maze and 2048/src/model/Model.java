@@ -1,10 +1,5 @@
 package model;
 
-<<<<<<< HEAD
-import minimax.Board;
-=======
->>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
-
 
 /**
  *Inteface Model, which holds the logic of the game.
@@ -34,7 +29,6 @@ public interface Model {
 	public String getFileName();
 	public void setFileName(String s);
 	public void getAI(String host, int port);
-	public Board getAlgoGame();
 	public int getHint();
 	public void setHintsNum(int num);
 	public void setDepth(int num);

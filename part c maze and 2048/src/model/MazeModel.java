@@ -945,12 +945,6 @@ public class MazeModel extends Observable implements Model{
 	}
 
 	@Override
-	public Board getAlgoGame() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public int getHint() {
 		// TODO Auto-generated method stub
 		return 0;
