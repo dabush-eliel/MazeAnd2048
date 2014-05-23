@@ -23,9 +23,8 @@ public class Presenter implements Observer{
 		if (o == model){
 			view.displayData(model.getData());
 			view.displayScore(model.getScore());
-			if(arg1 != null){
-				view.displayHint(Integer.parseInt(arg1.toString()));
-			}
+			view.displayHint(model.getHint());
+			
 			if(model.isSucceed()){
 				view.gameOver(true);
 			}
@@ -40,6 +39,10 @@ public class Presenter implements Observer{
 			}
 			if(arg1 == "load"){
 				model.setFileName(view.getFileNamePath());
+			}
+			if(arg1 == "solve"){
+				model.setDepth(view.getDepth());
+				model.setHintsNum(view.getHintNum());
 			}
 			
 			model.doUserCommand(view.getUserCommand());		

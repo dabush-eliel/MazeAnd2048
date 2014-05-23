@@ -34,7 +34,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Display display;	// = new Display();
 	private Shell shell 	;	//= new Shell(display);
 	private ScoreLabel scoreLabel;
-	private HintLabel hintLabel;
+	private Hint hint;
 	private Menu2048 menu ;		//= new Menu2048(shell, SWT.BAR);
 	private BoardView board;
 	private int userCommand = 0;
@@ -42,7 +42,10 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Buttons2048 buttons;
 	private boolean succeed = false;
 //	private boolean gameOver = false;
-	public int scoreHolder;
+	private int scoreHolder;
+	private int depth;
+	private int hintsNum;
+	
 	
 	int mouseDownX = 0;		    //when mouse pressed, its X
 	int mouseDownY = 0; 	    //when mouse pressed, its Y
@@ -71,8 +74,7 @@ public class Game2048View extends Observable implements View, Runnable{
 		
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
-		hintLabel = new HintLabel(shell,SWT.FILL);
-		
+		hint = new Hint(shell,SWT.FILL);		
 		
 		
 		this.board = new BoardView(shell, SWT.BORDER);
@@ -107,35 +109,54 @@ public class Game2048View extends Observable implements View, Runnable{
 	}
 
 	@Override
-	public void displayScore(int score) {
-		scoreHolder = score;
-		scoreLabel.setText("Score: "+score);
+	public void displayScore(final int score) {
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				scoreHolder = score;
+				scoreLabel.setText("Score: "+score);
+				
+			}
+		});
 	}
 
-	public void displayHint(int hint){
-		switch (hint) {
-		case 1:
-			hintLabel.setText("the hint is: UP");
-			break;
-		case 2:
-			hintLabel.setText("the hint is: DOWN");
-			break;
-		case 3:
-			hintLabel.setText("the hint is: RIGHT");
-			break;
-		case 4:
-			hintLabel.setText("the hint is: LEFT");
-			break;
+	public void displayHint(final int num){
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				switch (num) {
+				case 1:
+					hint.setText("Hint: UP");
+					break;
+				case 2:
+					hint.setText("Hint: DOWN");
+					break;
+				case 3:
+					hint.setText("Hint: RIGHT");
+					break;
+				case 4:
+					hint.setText("Hint: LEFT");
+					break;
 
-		default:
-			break;
-		}
+				default:
+					break;
+				}
+			}
+		});
 	}
 	
 	@Override
 	public void gameOver(boolean succeed) {
 		this.succeed = succeed;		
-		gameOverAction();
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				gameOverAction();				
+			}
+		});
 	}
 	
 	@Override
@@ -355,34 +376,37 @@ public class Game2048View extends Observable implements View, Runnable{
 			@Override
 			public void run() {
 				
-				
-				buttons.getSolve().addSelectionListener(new SelectionListener() {
-					
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						//run solver
-						userCommand  = 12;
-						setChanged();
-						notifyObservers();
-						board.setFocus();
-					
-					}
-					
-					@Override
-					public void widgetDefaultSelected(SelectionEvent arg0) {
-						
-					}
-				});
-				
 				buttons.getMinimax().addSelectionListener(new SelectionListener() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
 							//get Minimax
-							userCommand  = 13;
-							setChanged();
-							notifyObservers();
-							board.setFocus();
+							if(buttons.getMinimax().getText().contains("Run Minimax")){
+								if(hint.getCombo1().getText().toString().contains("7")){
+									depth = 7;
+								}else{
+									depth = Integer.parseInt(hint.getCombo1().getText());
+								}
+								if(hint.getCombo2().getText().toString().contains("F")){
+									hintsNum = Integer.MAX_VALUE;
+									buttons.getMinimax().setText("Stop Minimax");
+								}else{
+									hintsNum = Integer.parseInt(hint.getCombo2().getText());
+								}
+								
+								userCommand  = 13;
+								setChanged();
+								notifyObservers("solve");
+								board.setFocus();
+								
+							}else{
+								buttons.getMinimax().setText("Run Minimax/Get Hints");
+								userCommand  = 12;
+								setChanged();
+								notifyObservers();
+								board.setFocus();
+							}
+		
 						}
 						
 						@Override
@@ -485,11 +509,34 @@ public class Game2048View extends Observable implements View, Runnable{
 						
 					}
 				});
-			}
+				
+		/*		hint.getHintText().addVerifyListener(new VerifyListener() {
+					
+					@Override
+					public void verifyText(VerifyEvent e) {
+						e.doit = false;
+						
+						char ch = e.character;
+						String text = ((Text) e.widget).getText();
+						
+						// allow only 0-9
+						if (Character.isDigit(ch)){
+							e.doit = true;
+						}
+						
+						if(ch == '\b'){
+							e.doit = true;							
+						}
+					}
+				});
+		*/	}
 		});
 	}
 	
 	public void gameOverAction(){
+		if(buttons.getMinimax().getText().contains("Stop Minimax")){
+			buttons.getMinimax().setText("Run Minimax");
+		}
 		if(!succeed){
 			MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 			gameOverBox.setText("Game Over");
@@ -640,6 +687,16 @@ public class Game2048View extends Observable implements View, Runnable{
 		this.fileName = save;
 	}
 	
+	@Override
+	public int getDepth() {
+		return depth;
+	}
+
+	@Override
+	public int getHintNum() {
+		return hintsNum;
+	}
+
 	public void setMouseDownX(int x){
 		mouseDownX = x;
 	}
@@ -652,6 +709,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	public int getMouseDownY(){
 		return mouseDownY;
 	}
+
 
 
 	

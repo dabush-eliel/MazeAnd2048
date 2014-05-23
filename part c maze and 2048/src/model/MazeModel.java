@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
-import algorithms.Solver;
+import minimax.Board;
 
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   	// NEED TO SET	height + 2
@@ -241,7 +241,7 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedUP");
 		}
-		return succeed;
+		return false;
 	}
 
 	@Override
@@ -282,7 +282,7 @@ public class MazeModel extends Observable implements Model{
 			}
 			
 		}
-		return succeed;		
+		return false;		
 	}
 
 	@Override
@@ -324,7 +324,7 @@ public class MazeModel extends Observable implements Model{
 			}
 
 		}
-		return succeed;		
+		return false;		
 	}
 
 	@Override
@@ -366,11 +366,11 @@ public class MazeModel extends Observable implements Model{
 			}
 
 		}
-		return succeed;		
+		return false;		
 	}
 
 	@Override
-	public void moveUpRight() {
+	public boolean moveUpRight() {
 		int s = maze[mouse[0]-1][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -409,11 +409,12 @@ public class MazeModel extends Observable implements Model{
 				score += 15;
 			}
 			System.out.println("movedUpRight");
-		}		
+		}
+		return false;		
 	}
 
 	@Override
-	public void moveUpLeft() {
+	public boolean moveUpLeft() {
 		int s = maze[mouse[0]-1][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -452,11 +453,12 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedUpLeft");
 		}
+		return false;
 		
 	}
 
 	@Override
-	public void moveDownRight() {
+	public boolean moveDownRight() {
 		int s = maze[mouse[0]+1][mouse[1]+1];
 		if(s != -1 ){
 			
@@ -495,11 +497,12 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedDownRight");
 		}
+		return false;
 		
 	}
 
 	@Override
-	public void moveDownLeft() {
+	public boolean moveDownLeft() {
 		int s = maze[mouse[0]+1][mouse[1]-1];
 		if(s != -1 ){
 			
@@ -538,6 +541,7 @@ public class MazeModel extends Observable implements Model{
 			}
 			System.out.println("movedDownLeft");
 		}
+		return succeed;
 		
 	}
 	
@@ -934,11 +938,6 @@ public class MazeModel extends Observable implements Model{
 		return false;
 	}
 
-	public void getAI(String host, int port, Solver sol) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void getAI(String host, int port) {
 		// TODO Auto-generated method stub
@@ -946,9 +945,33 @@ public class MazeModel extends Observable implements Model{
 	}
 
 	@Override
-	public void setData(int[][] data) {
+	public Board getAlgoGame() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getHint() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setHintsNum(int num) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setDepth(int num) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
