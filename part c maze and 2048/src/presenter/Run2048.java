@@ -2,6 +2,7 @@ package presenter;
 
 import java.util.Observable;
 
+import minimax.Board;
 import model.Game2048Model;
 import model.Model;
 import view.View;
@@ -20,7 +21,7 @@ public class Run2048 {
 
 		Thread viewThread = new Thread((Game2048View) view2048);
 		viewThread.start();
-		System.out.println("Game 2048 started.");				
-		
+		System.out.println("Game 2048 started.");		
+			
 	}
 }

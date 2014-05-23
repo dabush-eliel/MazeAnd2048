@@ -11,13 +11,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
-import algorithms.Minimax;
-import algorithms.MyAlgo;
+import minimax.Board;
+import algorithms.AlphaBeta;
 import algorithms.Solver;
 
 
@@ -38,9 +37,14 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private int tempScore				= 0;
 	private String fileName; 			           		//holds path name to save
 	private String host					= "localhost";
-	private int port					= 2022;
-	private Solver sol;
+	private int port					= 2032;
+	private Solver sol; //					= new AlphaBeta();
 	private int command;
+	private Board algoGame				= new Board();
+	private int hint					= 0;
+	private int hintsNum				= Integer.MAX_VALUE;
+	private int depth					= 7; 
+	
 	
 	
 	public Game2048Model() {
@@ -66,6 +70,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				this.board2048[i][j] = gm.board2048[i][j];
 			}
 		}
+		this.algoGame = gm.algoGame;
 	}
 
 	
@@ -91,6 +96,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		succeed 	= false;
 		stuck 		= false;
 		check 		= true;
+		
+		algoGame = new Board(board2048, score);
+
 	}
 
 	// get random value - 2 or 4
@@ -426,6 +434,15 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return tempScore;
 	}
 
+	public int getHint() {
+		return hint;
+	}
+
+
+	public Board getAlgoGame() {
+		return algoGame;
+	}
+	
 	@Override
 	public void restartGame() {
 		initGame();
@@ -444,6 +461,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 					board2048[i][j] = last_board2048[i][j];
 				}	
 			}
+			
+			algoGame.setBoardArr(board2048);
 			setChanged();
 			notifyObservers();
 		}		
@@ -591,7 +610,8 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			break;
 		case 1:
 			if(moveUp()){
-				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
+				algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -599,6 +619,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 2:
 			if(moveDown()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -606,13 +627,15 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 3:
 			if(moveRight()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
 			break;
 		case 4:
 			if(moveLeft()){
-				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
+				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
+				algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -636,11 +659,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			check 	= false;
 			break;
 		case 12:
-			// MyAlgo run
-			getAI(host, port);
+			stop = true;
 			break;
 		case 13:
-			// Minimax run
+			// minimax - alpha beta -  run
 			getAI(host, port); 
 			break;
 		case 14:
@@ -695,184 +717,255 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	}
 
 
-	
-	
 	// this method connecting to a server a get the auto solution for this game
 	//method need to get which host to connect and what port to use and which solver will do that 
 
 	@Override
-	public void getAI(String host, int port) {
+	public void getAI(final String host, final int port) {
 		stop = false;
-		switch (command) {
-		case 12:
-			MyAlgoRun(2048);			
-			break;
-		case 13:
-			MinimaxRun();
-			break;
-		case 14:
-			// Hint !!!
-			break;
-		default:
-			break;
-		}
-		
+
+		Thread solverT = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				AlphaBetaRun(host,port);
+				//MinimaxRun();
+			}
+		});
+		solverT.start();
+			
 		setChanged();
 		notifyObservers();
 	}
 	
-		
-	// minimax algo running
-	private void MinimaxRun(){
-		
-		sol = new Minimax();
-		
-		try{  
-			
-			Socket s = new Socket(host,port);  
-			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
-			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-			
-			System.out.println(1);
-	
-			oos.writeObject(new Game2048Model(this));  
-			oos.writeObject(new String("Model - 2048 sent from the client"));  
-			oos.writeObject(sol);  
-			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
-			oos.writeObject(new String("exit"));
-			Object obj = ois.readObject();
-			
-			if(obj != null){
-				if(obj instanceof List<?>){
-					List<Object> modelsAndHints = (List<Object>) obj;
-					String[] hints = (String[]) modelsAndHints.get(0);
-					System.out.println(hints.length);
-					for(int i = 0 ; i < hints.length ; i++){
-						if(hints[i] != null){
-							System.out.println(hints[i]);
-							
-							//try
-							Model modelCopy1 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							Model modelCopy2 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							Model modelCopy3 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							Model modelCopy4 = new Game2048Model(this);
-							modelCopy1.doUserCommand(1);
-							
-							switch (hints[i]) {
-							case "UP":
-								if(boardChanged(modelCopy1.getData(), board2048)){
-									doUserCommand(1);
-								}
-								Random rand1 = new Random();
-								int x1 = rand1.nextInt(3)+1;
-								doUserCommand(x1);
-								break;
-							case "DOWN":
-								if(boardChanged(modelCopy2.getData(), board2048)){
-									doUserCommand(2);
-								}
-								Random rand2 = new Random();
-								int x2 = rand2.nextInt(3)+1;
-								doUserCommand(x2);
-								break;
-							case "RIGHT":
-								if(boardChanged(modelCopy3.getData(), board2048)){
-									doUserCommand(3);
-								}
-								Random rand3 = new Random();
-								int x3 = rand3.nextInt(3)+1;
-								doUserCommand(x3);
-								break;
-							case "LEFT":
-								if(boardChanged(modelCopy4.getData(), board2048)){
-									doUserCommand(4);
-								}
-								Random rand4 = new Random();
-								int x4 = rand4.nextInt(3)+1;
-								doUserCommand(x4);
-								break;
-							case "COMPUTER":
-								Random rand5 = new Random();
-								int x5 = rand5.nextInt(3)+1;
-								doUserCommand(x5);
-								break;
-							}
-						}
-					}
-				}
-			}			
-			
-			oos.close();    
-			ois.close();
-			s.close();  
-			
-			}
-		catch(Exception e){
-			
-			System.out.println(e.getCause());
-			System.out.println("EXCEPTION, Nevermore4");
-			System.out.println(e);
-			}
+
+	@Override
+	public void setHintsNum(int num) {
+		this.hintsNum = num;
+	}
+
+	@Override
+	public void setDepth(int num) {
+		this.depth = num;
 	}
 	
-	
-	// for testing heuristics in MyAlgo 
-	private void MyAlgoRun(int goal){
+	@Override
+	public int getDepth() {
+		return depth;
+	}
+
+
+
+	/**
+	 *  Create connection with a remote server and asks for a solution for the 2048 game by AlphaBeta pruning algorithm.
+	 */
+	private void AlphaBetaRun(String host, int port) {
 		
-		int hTile = calcHighTile(board2048);
-		sol = new MyAlgo(goal);
+	//	while((!isSucceed()) && (!stop)){
+	//	int i =0;
 		
-		while((hTile < goal && (!stop))){		
-			try{  
+		sol = new AlphaBeta();
 		
+	//	int hTile = calcHighTile(board2048);
+	//	while(!isSucceed() && (!stop) && hintsNum>0) {
+			try{
 				Socket s = new Socket(host,port);  
 				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
 				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+				oos.writeObject(new String("Solver-Alpha-Beta "+sol.getClass().toString()+" sent from the client"));
+				oos.writeObject(sol); 
+			
+			while(!isSucceed() && (!stop) && hintsNum>0) {
+			
+				oos.writeObject(new String("Model-2048 sent from the client"));
+				oos.writeObject(new Game2048Model(this));
+				//	oos.writeObject(new String("exit"));
 				
-				oos.writeObject(new Game2048Model(this));  
-				oos.writeObject(new String("Model - 2048 sent from the client"));  
-				oos.writeObject(sol);  
-				oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
-				oos.writeObject(new String("exit"));
 				Object obj = ois.readObject();
+				
 				if(obj != null){
 					if(obj instanceof Integer){
-						Integer x = (Integer) obj;
-						System.out.println(x);
-						doUserCommand(x.intValue());						
-					}
-				}	
-				
+						Integer x  = (Integer) obj;
+						hint = x.intValue();
+						System.out.println("Hint: "+hint);
+						doUserCommand(hint);
+					}	
+				}
+				--hintsNum;
+			}
+			
+			oos.writeObject(new String("exit"));
+			
 				oos.close();    
 				ois.close();
-				s.close(); 		
-			}
-			catch(Exception e){
+				s.close(); 
 				
-				System.out.println(e.getCause());
-				System.out.println("EXCEPTION, Nevermore4");
-				System.out.println(e);
-				}  
-		}
-		}
-	
-	
-	private int calcHighTile(int[][] data) {
-		int hscore = 2;
-		for(int i = 0 ; i < data.length; i++){
-			for(int j = 0 ; j < data[0].length; j++){
-				if(hscore < data[i][j]){
-					hscore = data[i][j];
-				}
+			}catch (Exception e) {
+				System.out.println("AB "+ e.getMessage());
 			}
-		}
-		return hscore;
+//			--hintsNum;
+//		}
+		hintsNum 	= Integer.MAX_VALUE;
+		depth 		= 7;
+		System.out.println("done AlphaBeta.");
 	}
+		
+
+// 		fminimax algo running
+//	private void MinimaxRun(){
+//		
+//		sol = new Minimax();
+//		
+//		try{  
+//			
+//			Socket s = new Socket(host,port);  
+//			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+//			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+//			
+//			System.out.println(1);
+//	
+//			oos.writeObject(new Game2048Model(this));  
+//			oos.writeObject(new String("Model - 2048 sent from the client"));  
+//			oos.writeObject(sol);  
+//			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+//			oos.writeObject(new String("exit"));
+//			Object obj = ois.readObject();
+//			
+//			if(obj != null){
+//				if(obj instanceof List<?>){
+//					List<Object> modelsAndHints = (List<Object>) obj;
+//					String[] hints = (String[]) modelsAndHints.get(0);
+//					System.out.println(hints.length);
+//					for(int i = 0 ; i < hints.length ; i++){
+//						if(hints[i] != null){
+//							System.out.println(hints[i]);
+//							
+//							//try
+//							Model modelCopy1 = new Game2048Model(this);
+//							modelCopy1.doUserCommand(1);
+//							Model modelCopy2 = new Game2048Model(this);
+//							modelCopy1.doUserCommand(1);
+//							Model modelCopy3 = new Game2048Model(this);
+//							modelCopy1.doUserCommand(1);
+//							Model modelCopy4 = new Game2048Model(this);
+//							modelCopy1.doUserCommand(1);
+//							
+//							switch (hints[i]) {
+//							case "UP":
+//								if(boardChanged(modelCopy1.getData(), board2048)){
+//									doUserCommand(1);
+//								}
+//								Random rand1 = new Random();
+//								int x1 = rand1.nextInt(3)+1;
+//								doUserCommand(x1);
+//								break;
+//							case "DOWN":
+//								if(boardChanged(modelCopy2.getData(), board2048)){
+//									doUserCommand(2);
+//								}
+//								Random rand2 = new Random();
+//								int x2 = rand2.nextInt(3)+1;
+//								doUserCommand(x2);
+//								break;
+//							case "RIGHT":
+//								if(boardChanged(modelCopy3.getData(), board2048)){
+//									doUserCommand(3);
+//								}
+//								Random rand3 = new Random();
+//								int x3 = rand3.nextInt(3)+1;
+//								doUserCommand(x3);
+//								break;
+//							case "LEFT":
+//								if(boardChanged(modelCopy4.getData(), board2048)){
+//									doUserCommand(4);
+//								}
+//								Random rand4 = new Random();
+//								int x4 = rand4.nextInt(3)+1;
+//								doUserCommand(x4);
+//								break;
+//							case "COMPUTER":
+//								Random rand5 = new Random();
+//								int x5 = rand5.nextInt(3)+1;
+//								doUserCommand(x5);
+//								break;
+//							}
+//						}
+//					}
+//				}
+//			}			
+//			
+//			oos.close();    
+//			ois.close();
+//			s.close();  
+//			
+//			}
+//		catch(Exception e){
+//			
+//			System.out.println(e.getCause());
+//			System.out.println("EXCEPTION, Nevermore4");
+//			System.out.println(e);
+//			}
+//	}
 	
 	
+	// for testing heuristics in MyAlgo 
+//	private void MyAlgoRun(int goal){
+//		
+//		int hTile = calcHighTile(board2048);
+//		sol = new MyAlgo(goal);
+//		
+//		while((hTile < goal) && (!stop) && (hintsNum > 0)){		
+//			try{  		
+//				Socket s = new Socket(host,port);  
+//				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+//				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+//				
+//				oos.writeObject(new Game2048Model(this));  
+//				oos.writeObject(new String("Model - 2048 sent from the client"));  
+//				oos.writeObject(sol);  
+//				oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+//				oos.writeObject(new String("exit"));
+//				Object obj = ois.readObject();
+//				if(obj != null){
+//					if(obj instanceof Integer){
+//						Integer x = (Integer) obj;
+//						System.out.println(x);
+//						doUserCommand(x.intValue());						
+//					}
+//				}	
+//				
+//				hTile = calcHighTile(board2048);
+//				
+//				oos.close();    
+//				ois.close();
+//				s.close(); 		
+//			}
+//			catch(Exception e){
+//				
+//				System.out.println(e.getCause());
+//				System.out.println("EXCEPTION, Nevermore4");
+//				System.out.println(e);
+//				}  
+//			--hintsNum;
+//		}
+//		depth = 7;
+//		hintsNum = Integer.MAX_VALUE;
+//	}
+//	
+//	
+//	private int calcHighTile(int[][] data) {
+//		int hscore = 2;
+//		for(int i = 0 ; i < data.length; i++){
+//			for(int j = 0 ; j < data[0].length; j++){
+//				if(hscore < data[i][j]){
+//					hscore = data[i][j];
+//				}
+//			}
+//		}
+//		return hscore;
+//	}
+//
+		
 	/*
 	 * 		int [][] last_board2048		= new int[size][size];
 		

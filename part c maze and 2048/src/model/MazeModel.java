@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
+import minimax.Board;
+
 public class MazeModel extends Observable implements Model{
 	private int rows						= 20+2;   	// NEED TO SET	height + 2
 	private int columns						= 20+2;		// NEED TO SET	width + 2
@@ -940,6 +942,36 @@ public class MazeModel extends Observable implements Model{
 	public void getAI(String host, int port) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Board getAlgoGame() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getHint() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setHintsNum(int num) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDepth(int num) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

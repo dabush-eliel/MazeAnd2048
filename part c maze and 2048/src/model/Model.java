@@ -1,4 +1,7 @@
 package model;
+
+import minimax.Board;
+
 public interface Model {
 
 	public boolean moveUp();
@@ -22,4 +25,9 @@ public interface Model {
 	public String getFileName();
 	public void setFileName(String s);
 	public void getAI(String host, int port);
+	public Board getAlgoGame();
+	public int getHint();
+	public void setHintsNum(int num);
+	public void setDepth(int num);
+	public int getDepth();
 }

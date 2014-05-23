@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.Composite;
 
 public class Buttons2048{
 	private Button solve;
-	private Button hint;
 	private Button restart;
 	private Button undo;
 	private Button save;
@@ -25,9 +24,6 @@ public class Buttons2048{
 		return solve;
 	}
 
-	public Button getHint() {
-		return hint;
-	}
 	public Button getRestart() {
 		return restart;
 	}
@@ -49,14 +45,11 @@ public class Buttons2048{
 	}
 	
 	public Buttons2048(Composite parent, int style) {
-		solve = new Button(parent,style);
-		solve.setText("Solve Game with Algo");
+//		solve = new Button(parent,style);
+//		solve.setText("Solve Game with Algo");
 		
 		minimax = new Button(parent, style);
-		minimax.setText("Solve With Minimax");
-		
-		hint = new Button(parent,style);
-		hint.setText("Hint");
+		minimax.setText("Run Minimax / Get Hints");
 		
 		restart = new Button(parent,style);
 		restart.setText("Restart");
@@ -71,17 +64,12 @@ public class Buttons2048{
 		load.setText("Load");
 		
 		exit = new Button(parent, style);
-		exit.setText("Exit");
-		
-		
-		
+		exit.setText("Exit");		
 
 
-		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
+//		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 		minimax.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
-		
-		hint.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 
 		restart.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
@@ -92,7 +80,7 @@ public class Buttons2048{
 		save.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 		exit.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
-		
+			
 	}
 
 
