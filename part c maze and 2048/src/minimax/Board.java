@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import model.Game2048Model;
 
 /**
  * The main class of the Game 2048.

@@ -59,8 +59,8 @@ public class BoardView extends Canvas {
 						maxX = board.getSize().x;
 						maxY = board.getSize().y;
 			
-						int sqrWidth 	= (maxX-25)/boardData.length;
-						int sqrHeight 	= (maxY-25)/boardData[0].length;
+						int sqrWidth 	= (maxX-((int)(10*boardData.length)))/boardData.length;
+						int sqrHeight 	= (maxY-((int)(10*boardData[0].length)))/boardData[0].length;
 						int min 		= Math.min(sqrWidth, sqrHeight);
 						//drawing the pictures
 						if(boardData != null){	

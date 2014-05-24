@@ -22,6 +22,7 @@ public class Server implements Runnable, Serializable {
 	boolean stop 			= false;
 	int port;
 	int noc 				= 1;
+//	private static int pav  = 0;
 	
 	public Server(int port, int noc, ClientHandler ch){
 		this.port = port;
@@ -33,7 +34,7 @@ public class Server implements Runnable, Serializable {
 		try {  
 		
 			ss = new ServerSocket(port); 
-			ss.setSoTimeout(360000); 
+			ss.setSoTimeout(60000*5); 
 			
 			ExecutorService tp = Executors.newFixedThreadPool(noc);
 			
@@ -42,14 +43,13 @@ public class Server implements Runnable, Serializable {
 					final Socket someClient = ss.accept();  
 					System.out.println("client connected");
 					
-					final ObjectInputStream input=new ObjectInputStream(someClient.getInputStream());
-					final ObjectOutputStream output=new ObjectOutputStream(someClient.getOutputStream());
-					
 					tp.execute(new Runnable() {					
 						@Override
 						public void run() {
-							handler.handleClient(input,output);
 							try{
+								final ObjectInputStream input=new ObjectInputStream(someClient.getInputStream());
+								final ObjectOutputStream output=new ObjectOutputStream(someClient.getOutputStream());
+								handler.handleClient(input,output);
 								input.close();
 								output.close();
 								someClient.close();

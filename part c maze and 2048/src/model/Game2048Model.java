@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
+
 import algorithms.AlphaBeta;
 import algorithms.Solver;
 
@@ -48,9 +49,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 * @return The constructor initilaize the game with 2 tiles.
 	 */
 	 
-	private final int size; 					//	size of row / column (same size for us)
+	private final int size;
 	private int score					= 0;
-	private int [][] board2048; // 			= new int[size][size];
+	private int [][] board2048;
 	private Stack <Integer> old_score 	= new Stack <Integer>();
 	private Stack <int[][]> old_moves 	= new Stack <int[][]>();
 	private boolean succeed				= false;
@@ -58,16 +59,15 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private boolean check				= true;
 	private boolean stop 				= false;
 	private int tempScore				= 0;
-	private String fileName; 			           		//holds path name to save
+	private String fileName;
 	private String host					= "localhost";
 	private int port					= 2032;
-	private Solver sol; //					= new AlphaBeta();
+	private Solver sol;
 	@SuppressWarnings("unused")
 	private int command;
-//	private Board algoGame				= new Board();
 	private int hint					= 0;
 	private int hintsNum				= Integer.MAX_VALUE;
-	private int depth					= 7; 
+	private int depth					= 7;
 	
 	// for the main script:
 	private int sqr1val;
@@ -75,6 +75,20 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private int sqr1plc;
 	private int sqr2plc;
 	
+	
+	/**
+	 * Default C'tor
+	 * 
+	 */
+	public Game2048Model(){
+		this.size 	= 4;
+		board2048 	= new int[size][size];
+		this.sqr1val = squareVal();
+		this.sqr2val = squareVal();
+		this.sqr1plc = squarePlace(getFreeSpotsNum());
+		this.sqr2plc = squarePlace(getFreeSpotsNum());
+		initGame();	
+	}
 	/**
 	 * c'tor for the tests main (algorithms compare)
 	 * @param size
@@ -117,7 +131,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				this.board2048[i][j] = gm.board2048[i][j];
 			}
 		}
-	//	this.algoGame = gm.algoGame;
 	}
 
 	/**
@@ -129,15 +142,12 @@ public class Game2048Model extends Observable implements Model, Serializable {
 				this.board2048[i][j]	= 	0;
 			}
 		}
+		// for test
 		//board2048[1][2] = 1024;
 		//board2048[2][3] = 1024;
 		
 		// initialize 2 random Squares with the value: 2 OR 4 --> 90% for 2 and 10% for 4
-	//	int sqr1val = squareVal();		
-	//	int sqr1plc = squarePlace(getFreeSpotsNum());
 		setSquare(sqr1val,sqr1plc);
-	//	int sqr2val = squareVal();
-	//	int sqr2plc = squarePlace(getFreeSpotsNum());
 		setSquare(sqr2val,sqr2plc);	
 		score = 0;
 		old_moves.clear();
@@ -145,14 +155,14 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		succeed 	= false;
 		stuck 		= false;
 		check 		= true;
-		
-		// algoGame = new Board(board2048, score);
-
+		hint		= 0;
+		hintsNum	= Integer.MAX_VALUE;
+		depth		= 7;
 	}
 
 	/**
 	 * 
-	 * @return 2 with 90% of success and 4 with 10% of success.
+	 * @return int - value 2 with 90% of success and value 4 with 10% of success.
 	 */
 	private int squareVal(){
 		Random rand = new Random();
@@ -454,6 +464,12 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return vals;
 	}
 	
+	/**
+	 * Check if two boards have the same values.
+	 * @param src
+	 * @param dst
+	 * @return true\false
+	 */
 	// src - source -> the board before the move. dst - destination -> the board after the move.
 	private boolean boardChanged(int [][]src, int [][]dst) { 
 		for (int i = 0 ; i < size ; i++){
@@ -552,11 +568,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		return hint;
 	}
 
-
-//	public Board getAlgoGame() {
-//		return algoGame;
-//	}
-	
 	/**
 	 * initialize a new game from begining and notify the presenter.
 	 */	
@@ -581,8 +592,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 					board2048[i][j] = last_board2048[i][j];
 				}	
 			}
-			
-//			algoGame.setBoardArr(board2048);
 			setChanged();
 			notifyObservers();
 		}		
@@ -621,7 +630,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			out.close();
 		} catch (IOException e) {
 			System.out.println("io exception occured, Nevermore5");
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -728,10 +736,11 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	}
 
 	/**
-	 * We recive a integer that represent a command from the 'Presenter' after the user did an action.
-	 * @param num is get {0 for init game, 1 for up,2 for down,3 for right,4 for left, 5 for retart game, 6 for undo move, 
-	 * 7 for save game, 8 for load game, 11 for continue the game after tile 2048, 12 for getAi for MyAlgo, 
-	 * 13 for getAi for Minimax, 14 for hint}.
+	 * We receive a integer that represent a command from the 'Presenter' after the user did an action.
+	 * @param  num 
+	 * method receive number that represent - { 0 for init game, 1 for up,2 for down,3 for right,4 for left, 5 for restart game, 6 for undo move, 
+	 * 7 for save game, 8 for load game, 11 for continue the game after tile 2048, 12 stop AI running, 
+	 * 13 getAI with Minimax-Alphabeta }.
 	 */
 	@Override
 	public void doUserCommand(int num) {
@@ -743,7 +752,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 1:
 			if(moveUp()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
-				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -751,7 +759,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 2:
 			if(moveDown()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -759,7 +766,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 3:
 			if(moveRight()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));	
-				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -767,7 +773,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 4:
 			if(moveLeft()){
 				setSquare(squareVal(),squarePlace(getFreeSpotsNum()));
-				// algoGame.setBoardArr(board2048);
 				setChanged();
 				notifyObservers();
 			}
@@ -796,9 +801,6 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		case 13:
 			// minimax - alpha beta -  run
 			getAI(host, port); 
-			break;
-		case 14:
-			// hint
 			break;
 		default:
 			break;
@@ -923,44 +925,41 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		
 		sol = new AlphaBeta();
 
-	//	while(!isSucceed() && (!stop) && hintsNum>0) {
-			try{
-				Socket s = new Socket(host,port);  
-				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
-				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-				oos.writeObject(new String("Solver-Alpha-Beta "+sol.getClass().toString()+" sent from the client"));
-				oos.writeObject(sol); 
+		try{
+			Socket s = new Socket(host,port);  
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+			oos.writeObject(new String("Solver-Alpha-Beta "+sol.getClass().toString()+" sent from the client"));
+			oos.writeObject(sol); 
+		
+		while(!isSucceed() && (!stop) && hintsNum>0) {
+		
+			oos.writeObject(new String("Model-2048 sent from the client"));
+			oos.writeObject(new Game2048Model(this));
 			
-			while(!isSucceed() && (!stop) && hintsNum>0) {
+			Object obj = ois.readObject();
 			
-				oos.writeObject(new String("Model-2048 sent from the client"));
-				oos.writeObject(new Game2048Model(this));
-				//	oos.writeObject(new String("exit"));
-				
-				Object obj = ois.readObject();
-				
-				if(obj != null){
-					if(obj instanceof Integer){
-						Integer x  = (Integer) obj;
-						hint = x.intValue();
-						System.out.println("Hint: "+hint);
-						doUserCommand(hint);
-					}	
-				}
-				--hintsNum;
+			if(obj != null){
+				if(obj instanceof Integer){
+					Integer x  = (Integer) obj;
+					hint = x.intValue();
+					System.out.println("Hint: "+hint);
+					doUserCommand(hint);
+				}	
 			}
+			--hintsNum;
+		}
 			
-			oos.writeObject(new String("exit"));
+		oos.writeObject(new String("exit"));
+		
+			oos.close();    
+			ois.close();
+			s.close(); 
 			
-				oos.close();    
-				ois.close();
-				s.close(); 
-				
-			}catch (Exception e) {
-				System.out.println("AB "+ e.getMessage());
-			}
-//			--hintsNum;
-//		}
+		}catch (Exception e) {
+			System.out.println("AB "+ e.getMessage());
+		}
+			
 		hintsNum 	= Integer.MAX_VALUE;
 		depth 		= 7;
 		System.out.println("done AlphaBeta.");
