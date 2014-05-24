@@ -968,5 +968,11 @@ public class MazeModel extends Observable implements Model{
 		return 0;
 	}
 
+	@Override
+	public boolean isChanged(int[][] arr1, int[][] arr2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

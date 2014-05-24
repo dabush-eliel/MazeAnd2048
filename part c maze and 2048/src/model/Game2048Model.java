@@ -37,7 +37,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 * @param old_moves A stack, that holds the old boards for the method undo.
 	 * @param succeed A boolean, if you get the tile 2048 will be true, otherwise false.
 	 * @param stuck A boolean, if you get stuck, will be true, otherwise false.
-	 * @param check A boolean, for coninue the game after get tile 2048.
+	 * @param check A boolean, for continue the game after get tile 2048.
 	 * @param stop A boolean, the game should stop , will be true , otherwise false.
 	 * @param tempScore A score before the moving up,down,right or left, also used for copy constructor.
 	 * @param fileName A string that holds the path for load/save.
@@ -45,7 +45,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 * @param port The port of the server.
 	 * @param sol Holds a solver Minimax or MyAlgo that implements the Solver interface.
 	 * @param command Used for the method getAi for switch the solvers.
-	 * @return The constructor initilaize the game with 2 tiles.
+	 * @return The constructor initialize the game with 2 tiles.
 	 */
 	 
 	private final int size;
@@ -80,7 +80,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 * 
 	 */
 	public Game2048Model(){
-		this.size 	= 4;
+		this.size 	= 8;
 		board2048 	= new int[size][size];
 		this.sqr1val = squareVal();
 		this.sqr2val = squareVal();
@@ -146,6 +146,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		//board2048[2][3] = 1024;
 		
 		// initialize 2 random Squares with the value: 2 OR 4 --> 90% for 2 and 10% for 4
+		
+		while(sqr1plc == sqr2plc){
+			sqr2plc = squarePlace(getFreeSpotsNum());			
+		}
 		setSquare(sqr1val,sqr1plc);
 		setSquare(sqr2val,sqr2plc);	
 		score = 0;
@@ -572,6 +576,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 */	
 	@Override
 	public void restartGame() {
+		this.sqr1val = squareVal();
+		this.sqr2val = squareVal();
+		this.sqr1plc = squarePlace(getFreeSpotsNum());
+		this.sqr2plc = squarePlace(getFreeSpotsNum());
 		initGame();
 		setChanged();
 		notifyObservers();
@@ -962,6 +970,10 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		hintsNum 	= Integer.MAX_VALUE;
 		depth 		= 7;
 		System.out.println("done AlphaBeta.");
+	}
+	@Override
+	public boolean isChanged(int [][] arr1, int [][] arr2) {
+		return boardChanged(arr1, arr2);
 	}
 		
 

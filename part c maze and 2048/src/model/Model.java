@@ -33,4 +33,5 @@ public interface Model {
 	public void setHintsNum(int num);
 	public void setDepth(int num);
 	public int getDepth();
+	public boolean isChanged(int [][] arr1, int [][] arr2);
 }

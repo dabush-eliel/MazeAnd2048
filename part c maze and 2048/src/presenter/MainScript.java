@@ -3,6 +3,8 @@ package presenter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Random;
+
 import minimax.AIsolver;
 import model.Game2048Model;
 import model.Model;
@@ -38,11 +40,11 @@ public class MainScript {
 
 				if(elapsedTimeSec > 60){
 					elapsedTime = elapsedTimeSec/60;
-					result += ""+elapsedTime+"min ";
+					result += "TimeToSolution#"+elapsedTime+"min ";
 					
 				}else{
 					elapsedTime = elapsedTimeSec;
-					result += ""+elapsedTime+"sec ";
+					result += "TimeToSolution#"+elapsedTime+"sec ";
 				}
 				pw.println("Game#"+j+","+"BoardSize#"+4*(1+i)+","+"FirstTileVal#"+states[j][0]+","+"FirstTilePosition#"+states[j][1]+","+"SecondTileVal#"+states[j][2]+","+"SecondTilePosition#"+states[j][3]+","+result);
 			}
@@ -52,15 +54,27 @@ public class MainScript {
 	
 	
 	public static String startGame(int size, int sqr1val, int sqr1plc,int sqr2val, int sqr2plc){
-		
-		long counter = 0;
-		Model model2048	= new Game2048Model( size,  sqr1val,  sqr1plc, sqr2val,  sqr2plc);	
 
+		long counter 	= 0;
+		AlphaBeta ab 	= new AlphaBeta();
+		Model model2048	= new Game2048Model( size,  sqr1val,  sqr1plc, sqr2val,  sqr2plc);	
+		int [][] lastB = new int [model2048.getData().length][model2048.getData()[0].length];
+		
 		while(!model2048.isStuck() && !model2048.isSucceed()){
-			AlphaBeta ab = new AlphaBeta();
-			model2048.doUserCommand(ab.calculator(model2048));
-			counter +=  AIsolver.statesCounter;
-			
+			// save last board data
+			for(int i = 0 ; i < size ; i++){
+				for(int j = 0 ; j < size ; j++){
+					lastB[i][j] = model2048.getData()[i][j];
+				}
+			}
+			// perform a user command
+			int hint = ab.calculator(model2048);
+			model2048.doUserCommand(hint);
+			while(!model2048.isChanged(model2048.getData(), lastB)){
+				Random rand = new Random();
+				model2048.doUserCommand(rand.nextInt(4));
+			}
+			counter +=  AIsolver.statesCounter;	
 			System.out.println("score: "+model2048.getScore());
 		}
 			
