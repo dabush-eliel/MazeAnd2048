@@ -10,6 +10,8 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -21,7 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-
+import org.eclipse.swt.widgets.Text;
 import view.View;
 
 /**
@@ -96,7 +98,35 @@ public class Game2048View extends Observable implements View, Runnable{
 		
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
+<<<<<<< HEAD
+		hintLabel = new HintLabel(shell,SWT.FILL);
+		
+		Text t = new Text(shell, SWT.BORDER);
+		
+		t.addVerifyListener(new VerifyListener(){
+			  public void verifyText(VerifyEvent event) {
+			 
+			    // Assume we don't allow it
+				event.doit = false;
+			 
+			    // Get the character typed
+			    char myChar = event.character;
+			    String text = ((Text) event.widget).getText();
+			 
+			 // Allow 0-9
+			   if (Character.isDigit(myChar)) event.doit = true;
+			 
+			   // Allow backspace
+			  if (myChar == '\b') {
+			  event.doit = true;
+			  	
+			    }
+			 }
+					  
+			});
+=======
 		hint = new Hint(shell,SWT.FILL);		
+>>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
 		
 		
 		this.board = new BoardView(shell, SWT.BORDER);
@@ -156,6 +186,22 @@ public class Game2048View extends Observable implements View, Runnable{
 	/**
 	 * the hint is..
 	 */
+<<<<<<< HEAD
+	public void displayHint(int hint){
+		switch (hint) {
+		case 1:
+			hintLabel.setText("UP");
+			break;
+		case 2:
+			hintLabel.setText("DOWN");
+			break;
+		case 3:
+			hintLabel.setText("RIGHT");
+			break;
+		case 4:
+			hintLabel.setText("LEFT");
+			break;
+=======
 	public void displayHint(final int num){
 		display.syncExec(new Runnable() {
 			
@@ -174,6 +220,7 @@ public class Game2048View extends Observable implements View, Runnable{
 				case 4:
 					hint.setText("Hint: LEFT");
 					break;
+>>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
 
 				default:
 					break;

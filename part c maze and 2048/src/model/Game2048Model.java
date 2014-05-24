@@ -14,7 +14,6 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
-
 import algorithms.AlphaBeta;
 import algorithms.Solver;
 
