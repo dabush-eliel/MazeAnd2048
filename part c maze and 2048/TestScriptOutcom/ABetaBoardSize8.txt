@@ -1,0 +1,10 @@
+Game#0,BoardSize#8,FirstTileVal#2,FirstTilePosition#2,SecondTileVal#2,SecondTilePosition#6,won,GameScore#22084,StatesDeveloped#266586507TimeToSolution#2.775267min 
+Game#1,BoardSize#8,FirstTileVal#2,FirstTilePosition#6,SecondTileVal#2,SecondTilePosition#15,won,GameScore#21740,StatesDeveloped#180834597TimeToSolution#1.8581333min 
+Game#2,BoardSize#8,FirstTileVal#2,FirstTilePosition#11,SecondTileVal#2,SecondTilePosition#14,won,GameScore#20932,StatesDeveloped#69058481TimeToSolution#43.022sec 
+Game#3,BoardSize#8,FirstTileVal#2,FirstTilePosition#1,SecondTileVal#2,SecondTilePosition#13,won,GameScore#20812,StatesDeveloped#65279731TimeToSolution#40.696sec 
+Game#4,BoardSize#8,FirstTileVal#2,FirstTilePosition#3,SecondTileVal#4,SecondTilePosition#9,won,GameScore#22388,StatesDeveloped#80900041TimeToSolution#50.961sec 
+Game#5,BoardSize#8,FirstTileVal#4,FirstTilePosition#1,SecondTileVal#2,SecondTilePosition#5,won,GameScore#20772,StatesDeveloped#157030155TimeToSolution#1.62495min 
+Game#6,BoardSize#8,FirstTileVal#4,FirstTilePosition#1,SecondTileVal#2,SecondTilePosition#16,won,GameScore#20784,StatesDeveloped#64455853TimeToSolution#40.268sec 
+Game#7,BoardSize#8,FirstTileVal#4,FirstTilePosition#11,SecondTileVal#4,SecondTilePosition#13,won,GameScore#22668,StatesDeveloped#80180386TimeToSolution#49.464sec 
+Game#8,BoardSize#8,FirstTileVal#4,FirstTilePosition#3,SecondTileVal#4,SecondTilePosition#4,won,GameScore#21048,StatesDeveloped#385433558TimeToSolution#3.3933833min 
+Game#9,BoardSize#8,FirstTileVal#4,FirstTilePosition#6,SecondTileVal#4,SecondTilePosition#11,won,GameScore#21648,StatesDeveloped#283062159TimeToSolution#2.2781832min 

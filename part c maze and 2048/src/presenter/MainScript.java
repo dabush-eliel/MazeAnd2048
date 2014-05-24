@@ -13,6 +13,7 @@ import algorithms.AlphaBeta;
 /**
  * Main that runs a memory test for Minimax algorithm and AlpaBeta pruning algorithm
  * compare between them by test 10 different board states and the both algorithms on them
+ * takes very long time to get result.
  * 
  */
 public class MainScript {
@@ -25,12 +26,14 @@ public class MainScript {
 
 	public static void main(String[] args) throws IOException {
 		
-		String filename = "TestScriptOutcom/ABvsMiniCompare.txt"; //+size+"#"+sqr1val+""+sqr1plc+""+sqr2val+""+sqr2plc;
-		FileWriter file = new FileWriter(filename);
-		PrintWriter pw = new PrintWriter(file);
-		
-		for(int i = 0 ; i<3 ; i++){
-			for(int j = 0 ; j < 1 ; j++){
+			
+		for(int i = 0 ; i<1 ; i++){
+			
+			String filename = "TestScriptOutcom/"+"MinimaxBoardSize"+4*(i+1)+".csv"; 
+			FileWriter file = new FileWriter(filename);
+			PrintWriter pw = new PrintWriter(file);
+			
+			for(int j = 0 ; j < 10 ; j++){
 				long startTime = System.currentTimeMillis();
 				String result = startGame(4*(1+i),states[j][0],states[j][1],states[j][2],states[j][3]);
 
@@ -40,16 +43,16 @@ public class MainScript {
 
 				if(elapsedTimeSec > 60){
 					elapsedTime = elapsedTimeSec/60;
-					result += "TimeToSolution#"+elapsedTime+"min ";
+					result += ",TimeToSolution#"+elapsedTime+"min ";
 					
 				}else{
 					elapsedTime = elapsedTimeSec;
 					result += "TimeToSolution#"+elapsedTime+"sec ";
 				}
-				pw.println("Game#"+j+","+"BoardSize#"+4*(1+i)+","+"FirstTileVal#"+states[j][0]+","+"FirstTilePosition#"+states[j][1]+","+"SecondTileVal#"+states[j][2]+","+"SecondTilePosition#"+states[j][3]+","+result);
+				pw.println("Game#"+j+",BoardSize#"+4*(1+i)+",FirstTileVal#"+states[j][0]+",FirstTilePosition#"+states[j][1]+",SecondTileVal#"+states[j][2]+",SecondTilePosition#"+states[j][3]+","+result);
 			}
-		}
-		pw.close();		
+			pw.close();	
+		}	
 	}
 	
 	

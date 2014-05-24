@@ -57,9 +57,9 @@ public class AIsolver {
     public static Direction findBestMove(Board theBoard, int depth) throws CloneNotSupportedException {
     	statesCounter = 0;
     	
-        //Map<String, Object> result = minimax(theBoard, depth, Player.USER);
+        Map<String, Object> result = minimax(theBoard, depth, Player.USER);
         
-        Map<String, Object> result = alphabeta(theBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, Player.USER);
+    //    Map<String, Object> result = alphabeta(theBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, Player.USER);
         
         return (Direction)result.get("Direction");
     }

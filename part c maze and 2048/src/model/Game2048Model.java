@@ -80,7 +80,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 * 
 	 */
 	public Game2048Model(){
-		this.size 	= 8;
+		this.size 	= 4;
 		board2048 	= new int[size][size];
 		this.sqr1val = squareVal();
 		this.sqr2val = squareVal();
