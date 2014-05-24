@@ -48,9 +48,9 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 * @return The constructor initilaize the game with 2 tiles.
 	 */
 	 
-	private final int size 				= 4;				//	size of row / column (same size for us)
+	private final int size; 					//	size of row / column (same size for us)
 	private int score					= 0;
-	private int [][] board2048 			= new int[size][size];
+	private int [][] board2048; // 			= new int[size][size];
 	private Stack <Integer> old_score 	= new Stack <Integer>();
 	private Stack <int[][]> old_moves 	= new Stack <int[][]>();
 	private boolean succeed				= false;
@@ -69,11 +69,27 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	private int hintsNum				= Integer.MAX_VALUE;
 	private int depth					= 7; 
 	
+	// for the main script:
+	private int sqr1val;
+	private int sqr2val;
+	private int sqr1plc;
+	private int sqr2plc;
 	
 	/**
-	 * default c'tor
+	 * c'tor for the tests main (algorithms compare)
+	 * @param size
+	 * @param sqr1val
+	 * @param sqr1plc
+	 * @param sqr2val
+	 * @param sqr2plc
 	 */
-	public Game2048Model() {
+	public Game2048Model(int size, int sqr1val, int sqr1plc,int sqr2val, int sqr2plc) {
+		this.size 	= size;
+		board2048 	= new int[size][size];
+		this.sqr1val = sqr1val;
+		this.sqr2val = sqr2val;
+		this.sqr1plc = sqr1plc;
+		this.sqr2plc = sqr2plc;
 		initGame();	
 	}
 	
@@ -83,6 +99,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	 */
 	public Game2048Model(Game2048Model gm) {
 		
+		this.size = gm.size;
 		this.score = gm.score;
 		this.old_score = gm.old_score;
 		this.old_moves = gm.old_moves;
@@ -94,7 +111,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		this.host = gm.host;			// host to connect to get AI / hint
 		this.port = gm.port;
 		this.sol = gm.sol;
-		
+		board2048 	= new int[size][size];
 		for(int i=0 ; i<size ; i++){
 			for(int j=0 ; j<size ; j++){
 				this.board2048[i][j] = gm.board2048[i][j];
@@ -116,11 +133,11 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		//board2048[2][3] = 1024;
 		
 		// initialize 2 random Squares with the value: 2 OR 4 --> 90% for 2 and 10% for 4
-		int sqr1val = squareVal();		
-		int sqr1plc = squarePlace(getFreeSpotsNum());
+	//	int sqr1val = squareVal();		
+	//	int sqr1plc = squarePlace(getFreeSpotsNum());
 		setSquare(sqr1val,sqr1plc);
-		int sqr2val = squareVal();
-		int sqr2plc = squarePlace(getFreeSpotsNum());
+	//	int sqr2val = squareVal();
+	//	int sqr2plc = squarePlace(getFreeSpotsNum());
 		setSquare(sqr2val,sqr2plc);	
 		score = 0;
 		old_moves.clear();
@@ -900,6 +917,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 
 	/**
 	 *  Create connection with a remote server and asks for a solution for the 2048 game by AlphaBeta pruning algorithm.
+	 *  connection is open until the algorithm done (win \ stuck \ user stopped).
 	 */
 	private void AlphaBetaRun(String host, int port) {
 		
@@ -949,7 +967,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	}
 		
 
-// 		fminimax algo running
+// 	minimax algo running
 //	private void MinimaxRun(){
 //		
 //		sol = new Minimax();
