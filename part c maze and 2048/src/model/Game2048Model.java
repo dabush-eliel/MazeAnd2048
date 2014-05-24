@@ -9,11 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
+
 import algorithms.Minimax;
 import algorithms.MyAlgo;
 import algorithms.Solver;
@@ -833,10 +835,30 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		stop = false;
 		switch (command) {
 		case 12:
-			MyAlgoRun(2048);			
+			Thread threadForMyAlgo = new Thread (new Runnable() {
+				
+				@Override
+				public void run() {
+					MyAlgoRun(2048);
+				}
+			});
+			threadForMyAlgo.start();
+						
 			break;
 		case 13:
+			
 			MinimaxRun();
+			/*
+			Thread threadForMinimax = new Thread (new Runnable() {
+				
+				@Override
+				public void run() {
+					MinimaxRun();
+				}
+			});
+			threadForMinimax.start();
+			
+			*/
 			break;
 		case 14:
 			// Hint !!!
@@ -857,41 +879,51 @@ public class Game2048Model extends Observable implements Model, Serializable {
 		int goal = 2048;
 		int hTile = calcHighTile(board2048);
 		sol = new Minimax();
-		while((hTile < goal && (!stop))){		
-			try{  
-					
-				Socket s = new Socket(host,port);  
-				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
-				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-				oos.writeObject(board2048);  
-				oos.writeObject(new String("Model - data - 2048 sent from the client"));  
-				oos.writeObject(sol);  
-				oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
-				oos.writeObject(new String("exit"));
-				Object obj = ois.readObject();
-					
-				if(obj != null){
-					if(obj instanceof Integer){
-						Integer x = (Integer) obj;
-						doUserCommand(x);
-						System.out.println(x);
+		
+		try{  
+						
+			Socket s = new Socket(host,port);  
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());  
+			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+			oos.writeObject(board2048);  
+			oos.writeObject(new String("Model - data - 2048 sent from the client"));  
+			oos.writeObject(sol);  
+			oos.writeObject(new String("Solver - "+sol.getClass().toString()+" sent from the client"));  
+			oos.writeObject(new String("exit"));
+			Object obj = ois.readObject();
+						
+			if(obj != null){
+				if(obj instanceof Integer){
+					Integer x = (Integer) obj;
+					if (x.intValue() == -1){
+						stop = true;
+						stuck = true;
+						setChanged();
+						notifyObservers();
 					}
-				}			
-					
-					
-				oos.close();    
-				ois.close();
-				s.close();  
-					
+					else{
+						doUserCommand(x);
+							
+					}
 				}
-			catch(Exception e){
+			}			
 					
-				System.out.println(e.getCause());
-				System.out.println("EXCEPTION, Nevermore4");
-				System.out.println(e);
-				}
+			oos.close();    
+			ois.close();
+			s.close();  
+					
 			}
-	}
+		catch(Exception e){
+				
+			e.printStackTrace();
+			
+			System.out.println("the cause is:" + e.getCause());
+			System.out.println("EXCEPTION, Nevermore4");
+			System.out.println(e);
+			}
+		}
+	
+	
 	
 	
 	
@@ -976,4 +1008,7 @@ public class Game2048Model extends Observable implements Model, Serializable {
 			System.out.println(k++);
 		}*/
 	 
+	public Solver getSol(){
+		return sol;
+	}
 }

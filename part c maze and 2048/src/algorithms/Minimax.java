@@ -5,17 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-
-
-
-
-
-
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
-
 import model.Game2048Model;
 import model.Model;
 
@@ -30,6 +19,9 @@ public class Minimax implements Solver,Serializable{
 	private Integer cache_emptyCells = null;
 	
 	
+	//the problem is in score need to fix, and sync exception 2 bugs tomorow..
+	
+	
 	public Minimax(){
 		
 	}
@@ -40,30 +32,31 @@ public class Minimax implements Solver,Serializable{
 		System.out.println("Minimax calculator started.");
 		int depth = 7;
 		
-		Map<String, Integer> result = new HashMap<>();
-		
+		Map<String, Integer> result ;// = new HashMap<>();
 		result = alphabeta(model, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, user);
+
 		
-		Integer x = (Integer) result.get("Direction");
-		System.out.println("get from minimax x:" + x);
+		Integer hint = (Integer) result.get("Direction");	
+		System.out.println("get from minimax hint = " + hint);
 		System.out.println("**FINISHED CALCULATOR.**");
-		return x;
+		return hint;
 		
 	}
 	
 	
 	public Map<String, Integer> alphabeta(Model model, int depth, int alpha, int beta, String player){
+		
         Map<String, Integer> result = new HashMap<>();
         
-        int bestDirection = -1;
-        int bestScore = -1;
+        Integer bestDirection = null;
+        int bestScore;
         
         if(gameTerminated(model)) {
             if(model.isSucceed()) {
-                bestScore=Integer.MAX_VALUE; //highest possible score
+                bestScore = Integer.MAX_VALUE; //highest possible score
             }
             else {
-                bestScore=Math.min(model.getScore(), 1); //lowest possible score
+                bestScore = Math.min(model.getScore(), 1); //lowest possible score
             }
         }
         else if(depth == 0) {
@@ -74,30 +67,34 @@ public class Minimax implements Solver,Serializable{
                 for(int i = 1; i < 5; i++) {
                     Model copyModel = new Game2048Model((Game2048Model)model);
                     int pointsBeforeMove = model.getScore();
-                    int points = -1;
+                    int points = 0;
                     
                     if(i == 1){
-                    	copyModel.moveUp();
-                    	int pointsAfterMove = copyModel.getScore();
-                    	points = pointsAfterMove - pointsBeforeMove;
+                    	if(copyModel.moveUp()){
+	                    	int pointsAfterMove = copyModel.getScore();
+	                    	points = pointsAfterMove - pointsBeforeMove;
+                    	}
                     }
                     else if(i == 2){
-                    	copyModel.moveDown();
-                    	int pointsAfterMove = copyModel.getScore();
-                    	points = pointsAfterMove - pointsBeforeMove;
+                    	if(copyModel.moveDown()){
+	                    	int pointsAfterMove = copyModel.getScore();
+	                    	points = pointsAfterMove - pointsBeforeMove;
+                    	}
                     }
                     else if(i == 3){
-                    	copyModel.moveRight();
-                    	int pointsAfterMove = copyModel.getScore();
-                    	points = pointsAfterMove - pointsBeforeMove;
+                    	if(copyModel.moveRight()){
+	                    	int pointsAfterMove = copyModel.getScore();
+	                    	points = pointsAfterMove - pointsBeforeMove;
+                    	}
                     }
                     else if(i == 4){
-                    	copyModel.moveLeft();
-                    	int pointsAfterMove = copyModel.getScore();
-                    	points = pointsAfterMove - pointsBeforeMove;
+                    	if(copyModel.moveLeft()){
+	                    	int pointsAfterMove = copyModel.getScore();
+	                    	points = pointsAfterMove - pointsBeforeMove;
+                    	}
                     }
                     
-                    if(points == 0 && arrayEquals(model.getData(), copyModel.getData())) {
+                    if(points == 0 && isEqual(model.getData(), copyModel.getData())) {
                     	continue;
                     }
                     
@@ -122,8 +119,8 @@ public class Minimax implements Solver,Serializable{
 
                 int i,j;
                 abloop: for(Integer cellId : moves) {
-                    i = cellId/(model.getData().length);
-                    j = cellId%((model.getData())[0]).length;
+                    i = cellId/model.getData().length;
+                    j = cellId%((model.getData()[0]).length);
 
                     for(int value : possibleValues) {
                         Model copyModel = new Game2048Model((Game2048Model)model);
@@ -149,9 +146,9 @@ public class Minimax implements Solver,Serializable{
             }
         }
         
+        //System.out.println("Score" + bestScore + "," + "Direction" + "," + bestDirection);
         result.put("Score", bestScore);
         result.put("Direction", bestDirection);
-        
         return result;
     }
 	
@@ -288,48 +285,48 @@ public class Minimax implements Solver,Serializable{
 		return copyBoard;
 	}
 
-	public int heuristicScore(int actualScore, int numberOfEmptyCells, int clusteringScore) {
-		int score = (int) (actualScore+Math.log(actualScore)*numberOfEmptyCells - clusteringScore);
+	private static int heuristicScore(int actualScore, int numberOfEmptyCells, int clusteringScore) {
+		int score = (int) (actualScore + Math.log(actualScore)*numberOfEmptyCells - clusteringScore);
 	    return Math.max(score, Math.min(actualScore, 1));
     }
 
 
-	public int calculateClusteringScore(int[][] boardArray) {
+	private static int calculateClusteringScore(int[][] boardArray) {
 		 int clusteringScore=0;
 	        
 	        int[] neighbors = {-1,0,1};
 	        
 	        for(int i=0;i<boardArray.length;++i) {
 	            for(int j=0;j<boardArray.length;++j) {
-	                if(boardArray[i][j]==0) {
+	                if(boardArray[i][j] == 0) {
 	                    continue; //ignore empty cells
 	                }
 	                
 	                //clusteringScore-=boardArray[i][j];
 	                
 	                //for every pixel find the distance from each neightbors
-	                int numOfNeighbors=0;
-	                int sum=0;
+	                int numOfNeighbors = 0;
+	                int sum = 0;
 	                for(int k : neighbors) {
-	                    int x=i+k;
-	                    if(x<0 || x>=boardArray.length) {
+	                    int x = i + k;
+	                    if(x < 0 || x >= boardArray.length) {
 	                        continue;
 	                    }
 	                    for(int l : neighbors) {
-	                        int y = j+l;
-	                        if(y<0 || y>=boardArray.length) {
+	                        int y = j + l;
+	                        if(y < 0 || y >= boardArray.length) {
 	                            continue;
 	                        }
 	                        
-	                        if(boardArray[x][y]>0) {
+	                        if(boardArray[x][y] > 0) {
 	                            ++numOfNeighbors;
-	                            sum+=Math.abs(boardArray[i][j]-boardArray[x][y]);
+	                            sum += Math.abs(boardArray[i][j] - boardArray[x][y]);
 	                        }
 	                        
 	                    }
 	                }
 	                
-	                clusteringScore+=sum/numOfNeighbors;
+	                clusteringScore += (sum/numOfNeighbors);
 	            }
 	        }
 	        
@@ -393,36 +390,40 @@ public class Minimax implements Solver,Serializable{
 		
 		//check if stuck for all sides (up,down,Right,Left)
 		modelCopy1.doUserCommand(1);
-		if(arrayEquals(modelCopy1.getData(), copyArrayModel1)){
+		if(isEqual(modelCopy1.getData(), copyArrayModel1)){
 			stuckUp = true;
 		}
 		modelCopy2.doUserCommand(2);
-		if(arrayEquals(modelCopy2.getData(), copyArrayModel2)){
+		if(isEqual(modelCopy2.getData(), copyArrayModel2)){
 			stuckDown = true;
 		}
 		modelCopy3.doUserCommand(3);
-		if(arrayEquals(modelCopy3.getData(), copyArrayModel3)){
+		if(isEqual(modelCopy3.getData(), copyArrayModel3)){
 			stuckRight = true;
 		}
 		modelCopy4.doUserCommand(4);
-		if(arrayEquals(modelCopy4.getData(), copyArrayModel4)){
+		if(isEqual(modelCopy4.getData(), copyArrayModel4)){
 			stuckLeft = true;
 		}
 		
 		return (stuckUp && stuckDown && stuckRight && stuckLeft);
 	}
 	
-	public boolean arrayEquals(int[][] arr1, int[][] arr2){
-		for(int i = 0 ; i < arr1.length; i++){
-			for(int j = 0; j < arr1[0].length; j++){
-				if(arr1[i][j] != arr2[i][j]){
-					
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+    public boolean isEqual(int[][] currBoardArray, int[][] newBoardArray) {
+
+    	boolean equal = true;
+        
+        for(int i=0;i<currBoardArray.length;i++) {
+            for(int j=0;j<currBoardArray.length;j++) {
+                if(currBoardArray[i][j]!= newBoardArray[i][j]) {
+                    equal = false; //The two boards are not same.
+                    return equal;
+                }
+            }
+        }
+        
+        return equal;
+    }
 }
 
 
