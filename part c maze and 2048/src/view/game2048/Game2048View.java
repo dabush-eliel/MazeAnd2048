@@ -98,8 +98,6 @@ public class Game2048View extends Observable implements View, Runnable{
 		
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
-<<<<<<< HEAD
-		hintLabel = new HintLabel(shell,SWT.FILL);
 		
 		Text t = new Text(shell, SWT.BORDER);
 		
@@ -124,11 +122,8 @@ public class Game2048View extends Observable implements View, Runnable{
 			 }
 					  
 			});
-=======
+
 		hint = new Hint(shell,SWT.FILL);		
->>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
-		
-		
 		this.board = new BoardView(shell, SWT.BORDER);
 		board.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true,2,10));
 		board.setBoardData(data);	
@@ -186,22 +181,6 @@ public class Game2048View extends Observable implements View, Runnable{
 	/**
 	 * the hint is..
 	 */
-<<<<<<< HEAD
-	public void displayHint(int hint){
-		switch (hint) {
-		case 1:
-			hintLabel.setText("UP");
-			break;
-		case 2:
-			hintLabel.setText("DOWN");
-			break;
-		case 3:
-			hintLabel.setText("RIGHT");
-			break;
-		case 4:
-			hintLabel.setText("LEFT");
-			break;
-=======
 	public void displayHint(final int num){
 		display.syncExec(new Runnable() {
 			
@@ -220,8 +199,6 @@ public class Game2048View extends Observable implements View, Runnable{
 				case 4:
 					hint.setText("Hint: LEFT");
 					break;
->>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
-
 				default:
 					break;
 				}
