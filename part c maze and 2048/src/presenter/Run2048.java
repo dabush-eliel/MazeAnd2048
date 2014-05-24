@@ -1,7 +1,6 @@
 package presenter;
 
 import java.util.Observable;
-
 import model.Game2048Model;
 import model.Model;
 import view.View;
@@ -21,7 +20,8 @@ import view.game2048.Game2048View;
 public class Run2048 {
 	
 	public static void main(String[] args) {
-		Model model2048				= new Game2048Model();	
+		Model model2048				= new Game2048Model( 4,  2,  3, 4,  9);
+	//	Model model2048				= new Game2048Model( size,  sqr1val,  sqr1plc, sqr2val,  sqr2plc);	
 		View view2048				= new Game2048View(model2048.getData());
 		System.out.println("game2048 model&view initialized!");
 		Presenter presenter 		= new Presenter(model2048, view2048);		
@@ -31,7 +31,7 @@ public class Run2048 {
 
 		Thread viewThread = new Thread((Game2048View) view2048);
 		viewThread.start();
-		System.out.println("Game 2048 started.");				
-		
+		System.out.println("Game 2048 started.");		
+			
 	}
 }

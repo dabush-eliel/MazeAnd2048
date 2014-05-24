@@ -1,9 +1,8 @@
 package model;
 
 
-
 /**
- *Inteface Model, which holds the logic of the game.
+ * Interface Model, which holds the logic of the game.
  * @author Eliel Dabush and Oleg Glizerin.
  *
  */
@@ -13,10 +12,10 @@ public interface Model {
 	public boolean moveDown();
 	public boolean moveRight();
 	public boolean moveLeft();
-	public void moveUpRight();
-	public void moveUpLeft();
-	public void moveDownRight();
-	public void moveDownLeft();
+	public boolean moveUpRight();
+	public boolean moveUpLeft();
+	public boolean moveDownRight();
+	public boolean moveDownLeft();
 	public int[][] getData();
 	public void restartGame();
 	public void undoMove();
@@ -30,5 +29,8 @@ public interface Model {
 	public String getFileName();
 	public void setFileName(String s);
 	public void getAI(String host, int port);
-	public void setData(int[][] data);
+	public int getHint();
+	public void setHintsNum(int num);
+	public void setDepth(int num);
+	public int getDepth();
 }

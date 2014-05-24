@@ -1,7 +1,4 @@
-package presenter;
-
-import Network2048.GameHandler;
-import Network2048.Server;
+package Network2048;
 
 
 /**
@@ -12,10 +9,11 @@ import Network2048.Server;
  * @author Eliel Dabush and Oleg Glizerin.
  *
  */
+
 public class ServerRun {
 
 	public static void main(String[] args) {
-		Server server = new Server(2022, 1, new GameHandler());		
+		Server server = new Server(2032, 1, new GameHandler());		
 		Thread sThread = new Thread(server);
 		sThread.start();	
 		

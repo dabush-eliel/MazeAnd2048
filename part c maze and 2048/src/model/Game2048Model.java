@@ -1011,4 +1011,24 @@ public class Game2048Model extends Observable implements Model, Serializable {
 	public Solver getSol(){
 		return sol;
 	}
+	@Override
+	public int getHint() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void setHintsNum(int num) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setDepth(int num) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -750,4 +750,16 @@ public class MazeView extends Observable implements View,Runnable {
 		
 	}
 
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getHintNum() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

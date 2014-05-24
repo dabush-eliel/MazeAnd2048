@@ -14,4 +14,6 @@ public interface View {
 	public void gameOver(boolean succeed);
 	public String getFileNamePath();
 	public void setFileNamePath(String save);
+	public int getDepth();
+	public int getHintNum();
 }

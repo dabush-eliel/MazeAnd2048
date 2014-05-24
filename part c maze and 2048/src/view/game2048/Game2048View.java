@@ -24,13 +24,16 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+<<<<<<< HEAD
 
 import org.eclipse.swt.widgets.Text;
 
+=======
+>>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
 import view.View;
 
 /**
- * An Obserable class that conatins the view of the game, it notify the presenter when view changed.
+ * An Observable class that contains the view of the game, it notify the presenter when view changed.
  * @author Eliel Dabush and Oleg Glizerin.
  *
  */
@@ -54,7 +57,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Display display;	// = new Display();
 	private Shell shell 	;	//= new Shell(display);
 	private ScoreLabel scoreLabel;
-	private HintLabel hintLabel;
+	private Hint hint;
 	private Menu2048 menu ;		//= new Menu2048(shell, SWT.BAR);
 	private BoardView board;
 	private int userCommand = 0;
@@ -62,9 +65,12 @@ public class Game2048View extends Observable implements View, Runnable{
 	private Buttons2048 buttons;
 	private boolean succeed = false;
 //	private boolean gameOver = false;
-	public int scoreHolder;
-	int mouseDownX = 0;		    //when mouse pressed, its X
-	int mouseDownY = 0; 	    //when mouse pressed, its Y
+	@SuppressWarnings("unused")
+	private int scoreHolder;
+	private int depth;
+	private int hintsNum;
+	private int mouseDownX = 0;		    //when mouse pressed, its X
+	private int mouseDownY = 0; 	    //when mouse pressed, its Y
 	private String fileName = "";
 	
 	/**
@@ -80,23 +86,25 @@ public class Game2048View extends Observable implements View, Runnable{
 		}
 	}
 	
+		
 	/**
-	 * Initialize the view of the game with GUI.
+	 * Initialize the GUI of the game.
 	 * Button lister the style of GUI and the Mouse listener.
 	 */
 	public void initView(){		
 		display = new Display();
 		shell 	= new Shell(display);
 		
-		shell.setText("2048 Eliel's edition");
+		shell.setText("2048 Eliel's & Oleg's edition");
 		shell.setLayout(new GridLayout(3,true));
-		shell.setSize(650 , 500);
+		shell.setSize(450 , 480);
 		
 		menu = new Menu2048(shell, SWT.BAR);
 		shell.setMenuBar(menu.getMenuBar());
 		
 		
 		scoreLabel = new ScoreLabel(shell,SWT.FILL);
+<<<<<<< HEAD
 		hintLabel = new HintLabel(shell,SWT.FILL);
 		
 		Text t = new Text(shell, SWT.BORDER);
@@ -122,6 +130,9 @@ public class Game2048View extends Observable implements View, Runnable{
 			 }
 					  
 			});
+=======
+		hint = new Hint(shell,SWT.FILL);		
+>>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
 		
 		
 		this.board = new BoardView(shell, SWT.BORDER);
@@ -139,7 +150,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	}
 	
 	/**
-	 * Synchronize thread that redraw the board.
+	 * Synchronize thread that redraw the board - display the data.
 	 */
 	@Override
 	public void displayData(int [][] d) {
@@ -151,8 +162,9 @@ public class Game2048View extends Observable implements View, Runnable{
 			}
 		});
 	}
-	
+
 	/**
+	 * Presenter take the userCommand from here to give it to the model
 	 * 1 up, 2 down, 3 right, 4 left, 7 save , 8 load, 5 restart, 6 undo, 12 algo , 13 minimax.
 	 * @return the command that has to be redrawed or did.
 	 */
@@ -160,17 +172,27 @@ public class Game2048View extends Observable implements View, Runnable{
 	public int getUserCommand() {
 		return userCommand;
 	}
+
 	/**
-	 * Shows score Label.
+	 * displayc score Label.
 	 */
 	@Override
-	public void displayScore(int score) {
-		scoreHolder = score;
-		scoreLabel.setText("Score: "+score);
+	public void displayScore(final int score) {
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				scoreHolder = score;
+				scoreLabel.setText("Score: "+score);
+				
+			}
+		});
 	}
+
 	/**
 	 * the hint is..
 	 */
+<<<<<<< HEAD
 	public void displayHint(int hint){
 		switch (hint) {
 		case 1:
@@ -185,23 +207,53 @@ public class Game2048View extends Observable implements View, Runnable{
 		case 4:
 			hintLabel.setText("LEFT");
 			break;
+=======
+	public void displayHint(final int num){
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				switch (num) {
+				case 1:
+					hint.setText("Hint: UP");
+					break;
+				case 2:
+					hint.setText("Hint: DOWN");
+					break;
+				case 3:
+					hint.setText("Hint: RIGHT");
+					break;
+				case 4:
+					hint.setText("Hint: LEFT");
+					break;
+>>>>>>> branch 'master' of https://github.com/dlieldx/MazeAnd2048.git
 
-		default:
-			break;
-		}
+				default:
+					break;
+				}
+			}
+		});
 	}
+	
 	/**
-	 * Game Over.
+	 * open a game over window - if we won we can continue, restart or leave the game
+	 * if we lost we can start a new game or exit.
 	 */
 	@Override
 	public void gameOver(boolean succeed) {
 		this.succeed = succeed;		
-		gameOverAction();
+		display.syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				gameOverAction();				
+			}
+		});
 	}
 	
 	/**
-	 * init the view.
-	 */
+	* Run of Runnable Implements
+	*/
 	@Override
 	public void run() {	
 		initView();
@@ -215,10 +267,15 @@ public class Game2048View extends Observable implements View, Runnable{
 	
 	
 	// ----------			LISTENERS          ----------
-	
 	/**
-	 * Listeners that listen to action of a user.
+	 * Listeners that listen to actions of the user.
+	 * 
 	 */
+	 
+	 
+	/**
+	* drop down menu bar listeners
+	*/
 	// menu buttons listener
 	public void menuListeners(){
 		display.asyncExec(new Runnable() {
@@ -323,7 +380,6 @@ public class Game2048View extends Observable implements View, Runnable{
 		});
 	}
 	
-	
 	/**
 	 * the movement listener.
 	 */
@@ -421,7 +477,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	
 	/**
 	 * buttons listener.
-	 */
+	 */	
 	// buttons listener
 	public void buttonsListenerstener(){
 		display.asyncExec(new Runnable() {
@@ -429,34 +485,37 @@ public class Game2048View extends Observable implements View, Runnable{
 			@Override
 			public void run() {
 				
-				
-				buttons.getSolve().addSelectionListener(new SelectionListener() {
-					
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						//run solver
-						userCommand  = 12;
-						setChanged();
-						notifyObservers();
-						board.setFocus();
-					
-					}
-					
-					@Override
-					public void widgetDefaultSelected(SelectionEvent arg0) {
-						
-					}
-				});
-				
 				buttons.getMinimax().addSelectionListener(new SelectionListener() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
 							//get Minimax
-							userCommand  = 13;
-							setChanged();
-							notifyObservers();
-							board.setFocus();
+							if(buttons.getMinimax().getText().contains("Run Minimax")){
+								if(hint.getCombo1().getText().toString().contains("7")){
+									depth = 7;
+								}else{
+									depth = Integer.parseInt(hint.getCombo1().getText());
+								}
+								if(hint.getCombo2().getText().toString().contains("F")){
+									hintsNum = Integer.MAX_VALUE;
+									buttons.getMinimax().setText("Stop Minimax");
+								}else{
+									hintsNum = Integer.parseInt(hint.getCombo2().getText());
+								}
+								
+								userCommand  = 13;
+								setChanged();
+								notifyObservers("solve");
+								board.setFocus();
+								
+							}else{
+								buttons.getMinimax().setText("Run Minimax/Get Hints");
+								userCommand  = 12;
+								setChanged();
+								notifyObservers();
+								board.setFocus();
+							}
+		
 						}
 						
 						@Override
@@ -559,15 +618,37 @@ public class Game2048View extends Observable implements View, Runnable{
 						
 					}
 				});
-			}
+				
+		/*		hint.getHintText().addVerifyListener(new VerifyListener() {
+					
+					@Override
+					public void verifyText(VerifyEvent e) {
+						e.doit = false;
+						
+						char ch = e.character;
+						String text = ((Text) e.widget).getText();
+						
+						// allow only 0-9
+						if (Character.isDigit(ch)){
+							e.doit = true;
+						}
+						
+						if(ch == '\b'){
+							e.doit = true;							
+						}
+					}
+				});
+		*/	}
 		});
 	}
 	
-	
 	/**
-	 * The Game Over Action with Message box.
+	 * Game is over. who won?
 	 */
 	public void gameOverAction(){
+		if(buttons.getMinimax().getText().contains("Stop Minimax")){
+			buttons.getMinimax().setText("Run Minimax");
+		}
 		if(!succeed){
 			MessageBox gameOverBox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 			gameOverBox.setText("Game Over");
@@ -675,7 +756,7 @@ public class Game2048View extends Observable implements View, Runnable{
 	/**
 	 * 
 	 * @return path where it should be saved.
-	 */
+	 */	
 	public String saveAction(){
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setText("save");
@@ -730,34 +811,52 @@ public class Game2048View extends Observable implements View, Runnable{
 	public void setFileNamePath(String save) {
 		this.fileName = save;
 	}
+	
 	/**
-	 * 
-	 * @param x from mouse pressed.
+	 * get how deep the user wants the algorithm to run
+	 */
+	@Override
+	public int getDepth() {
+		return depth;
+	}
+
+	/**
+	 * get how many hints the user wants
+	 */
+	@Override
+	public int getHintNum() {
+		return hintsNum;
+	}
+	
+	/**
+	 * set mouse (x,  )
+	 * @param x
 	 */
 	public void setMouseDownX(int x){
 		mouseDownX = x;
 	}
 	/**
-	 * 
-	 * @return the x of mouse pressed.
+	 * get mouse (x, )
+	 * @return
 	 */
 	public int getMouseDownX(){
 		return mouseDownX;
 	}
 	/**
-	 * 
-	 * @param y from mouse pressed.
+	 * set mouse( ,y)
+	 * @param y
 	 */
 	public void setMouseDownY(int y){
 		mouseDownY = y;
 	}
 	/**
-	 * 
-	 * @return the y of mouse pressed.
+	 * get mouse ( ,y)
+	 * @return
 	 */
 	public int getMouseDownY(){
 		return mouseDownY;
 	}
+
 
 
 	

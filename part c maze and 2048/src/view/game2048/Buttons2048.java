@@ -5,22 +5,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-/**
- * Init the buttons with Grid style.
- * @author Eliel DAbush and Oleg Glizerin
- * 
- *
- */
 public class Buttons2048{
-	
 	private Button solve;
-	private Button hint;
 	private Button restart;
 	private Button undo;
 	private Button save;
 	private Button load;
 	private Button exit;
+	
 	private Button minimax;
+	
 	
 	/**
 	 * @return minimax button.
@@ -34,13 +28,8 @@ public class Buttons2048{
 	public Button getSolve() {
 		return solve;
 	}
-	/**
-	 * @return hint button.
-	 */
-	public Button getHint() {
-		return hint;
-	}
-	/**
+
+		/**
 	 * @return restart button.
 	 */
 	public Button getRestart() {
@@ -72,19 +61,16 @@ public class Buttons2048{
 	}
 	
 	/**
-	 * 
+ 	 * Init the buttons with Grid style
 	 * @param parent shell.
 	 * @param style style.
 	 */
 	public Buttons2048(Composite parent, int style) {
-		solve = new Button(parent,style);
-		solve.setText("Solve Game with Algo");
+//		solve = new Button(parent,style);
+//		solve.setText("Solve Game with Algo");
 		
 		minimax = new Button(parent, style);
-		minimax.setText("Solve With Minimax");
-		
-		hint = new Button(parent,style);
-		hint.setText("Hint");
+		minimax.setText("Run Minimax / Get Hints");
 		
 		restart = new Button(parent,style);
 		restart.setText("Restart");
@@ -99,17 +85,12 @@ public class Buttons2048{
 		load.setText("Load");
 		
 		exit = new Button(parent, style);
-		exit.setText("Exit");
-		
-		
-		
+		exit.setText("Exit");		
 
 
-		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
+//		solve.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 		minimax.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
-		
-		hint.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 
 		restart.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
@@ -120,7 +101,7 @@ public class Buttons2048{
 		save.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
 		
 		exit.setLayoutData(new GridData(SWT.FILL,SWT.TOP,true,false,1,1));
-		
+			
 	}
 
 
