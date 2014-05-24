@@ -22,10 +22,7 @@ public class AlphaBeta implements Solver, Serializable {
 			int hintDepth 	= model.getDepth();
 			Board newGame 	= new Board(model.getData(), model.getScore());	
 			Direction hint 	= AIsolver.findBestMove(newGame, hintDepth);
-			
-			// debug syso
-			System.out.println("alpha beta model score: "+model.getScore());
-			
+
 			if(hint==Direction.UP) {
 				return 1;
 		    }

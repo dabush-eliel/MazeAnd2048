@@ -1,0 +1,1 @@
+Game#0,BoardSize#4,FirstTileVal#2,FirstTilePosition#2,SecondTileVal#2,SecondTilePosition#6,lost,GameScore#15728,StatesDeveloped#2916107815.858sec 

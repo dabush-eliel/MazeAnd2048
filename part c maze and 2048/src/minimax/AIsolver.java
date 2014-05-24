@@ -26,6 +26,10 @@ import java.util.Map;
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
 public class AIsolver {
+	/**
+	 * Counts the number of states the algorithm developed until the hint returned.
+	 */
+	public static long statesCounter;
     
     /**
      * Player vs Computer enum class
@@ -51,6 +55,8 @@ public class AIsolver {
      * @throws CloneNotSupportedException 
      */
     public static Direction findBestMove(Board theBoard, int depth) throws CloneNotSupportedException {
+    	statesCounter = 0;
+    	
         //Map<String, Object> result = minimax(theBoard, depth, Player.USER);
         
         Map<String, Object> result = alphabeta(theBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, Player.USER);
@@ -68,7 +74,9 @@ public class AIsolver {
      * @throws CloneNotSupportedException 
      */
     private static Map<String, Object> minimax(Board theBoard, int depth, Player player) throws CloneNotSupportedException {
-        Map<String, Object> result = new HashMap<>();
+    	++statesCounter;
+    	
+    	Map<String, Object> result = new HashMap<>();
         
         Direction bestDirection = null;
         int bestScore;
@@ -144,7 +152,9 @@ public class AIsolver {
      * @throws CloneNotSupportedException 
      */
     private static Map<String, Object> alphabeta(Board theBoard, int depth, int alpha, int beta, Player player) throws CloneNotSupportedException {
-        Map<String, Object> result = new HashMap<>();
+    	++statesCounter;
+    	
+    	Map<String, Object> result = new HashMap<>();
         
         Direction bestDirection = null;
         int bestScore;
